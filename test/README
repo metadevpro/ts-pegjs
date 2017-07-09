@@ -1,0 +1,8 @@
+1. Launch
+
+```
+npm install
+npm test
+```
+
+2. Review source samples at `examples/` folder and output samples at `output/` folder.

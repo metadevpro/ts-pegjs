@@ -1,0 +1,64 @@
+{
+  "name": "ts-pegjs",
+  "version": "0.1.0",
+  "description": "TS target for PEG.js parser generator",
+  "main": "src/tspegjs.js",
+  "author": "Pedro J. Molina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metadevpro/ts-pegjs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metadevpro/ts-pegjs.git"
+  },
+  "keywords": [
+    "pegjs",
+    "plugin",
+    "ts",
+    "typescript",
+    "parser",
+    "generator"
+  ],
+  "files": [
+    "LICENSE",
+    "package-lock.json",
+    "package.json",
+    "README.md",
+    "tslint.json",
+    ".eslintrc.json",
+    "examples/arithmetics.pegjs",
+    "examples/css.pegjs",
+    "examples/javascript.pegjs",
+    "examples/json.pegjs",
+    "examples/digits.pegjs",
+    "examples/st.pegjs",
+    "src/tspegjs.js",
+    "src/passes/generate-bytecode-ts.js",
+    "src/passes/generate-ts.js",
+    "test/README",
+    "test/test.js"
+  ],
+  "scripts": {
+    "clean": "rimraf output",
+    "pretest": "npm run clean",
+    "test": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint",
+    "gen:samples": "node test/test.js",
+    "compile:samples": "tsc output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts",
+    "lint:samples": "tslint output/*.ts",
+    "test:cli": "./bin/tspegjs -o output/arit2.ts -o examples/arithmetics.pegjs && tsc output/arit2.ts && tslint output/arit2.ts",
+    "lint": "eslint src/"
+  },
+  "peerDependencies": {
+    "pegjs": "~0.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.2.0",
+    "rimraf": "^2.6.1",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.1"
+  },
+  "dependencies": {
+    "pegjs": "^0.10.0"
+  }
+}

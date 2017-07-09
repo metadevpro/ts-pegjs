@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+bin="$BASH_SOURCE"
+[ -z "${bin}" ] && bin="$0"
+
+bindir="$(dirname "${bin}")"
+topdir="$(cd "${bindir}/.." && pwd -P)"
+
+"${topdir}/node_modules/.bin/pegjs" \
+--plugin \
+"${topdir}/src/tspegjs.js" \
+$@
