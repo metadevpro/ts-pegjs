@@ -2,6 +2,8 @@
 
 TS PEG.js is a TS code generation plugin for [PEG.js](https://pegjs.org).
 
+[![Build Status](https://travis-ci.org/metadevpro/ts-pegjs.svg?branch=master)](https://travis-ci.org/metadevpro/ts-pegjs)
+
 ## Requirements
 
 * [PEG.js](https://pegjs.org)
