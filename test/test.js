@@ -10,7 +10,7 @@ var examples = {
   "ST4": "st.pegjs"
 };
 
-function generateParser(input_file, output_file, classname) {
+function generateParser(input_file, output_file) {
   fs.readFile(input_file, function (err, data) {
     if (err) throw err;
 
@@ -33,6 +33,6 @@ if (!fs.existsSync("output")) fs.mkdirSync("output");
 
 for (var classname in examples) {
   generateParser("./examples/" + examples[classname],
-    "output/" + examples[classname].replace(/\.[^/.]+$/, ".ts"),
-    classname);
+    "output/" + examples[classname].replace(/\.[^/.]+$/, ".ts")
+  );
 }
