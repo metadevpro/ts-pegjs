@@ -1,6 +1,6 @@
 {
   "name": "ts-pegjs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "TS target for PEG.js parser generator",
   "main": "src/tspegjs.js",
   "author": "Pedro J. Molina",
@@ -27,6 +27,8 @@
     "README.md",
     "tslint.json",
     ".eslintrc.json",
+    "bin/tspegjs",
+    "bin/tspegjs.cmd",
     "examples/arithmetics.pegjs",
     "examples/css.pegjs",
     "examples/javascript.pegjs",
