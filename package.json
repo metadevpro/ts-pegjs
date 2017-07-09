@@ -20,6 +20,9 @@
     "parser",
     "generator"
   ],
+  "bin": {
+    "tspegjs": "bin/tspegjs"
+  },
   "files": [
     "LICENSE",
     "package-lock.json",
