@@ -54,7 +54,7 @@ Supported options of `pegjs.generate`:
 Sample usage:
 
 ```
-./bin/tspegjs -o exmples/arithmetics.ts examples/arithmetics.pegjs
+./bin/tspegjs -o examples/arithmetics.ts examples/arithmetics.pegjs
 ```
 
 It will generarate the parser in the TS flavour.
