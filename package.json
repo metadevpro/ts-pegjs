@@ -1,6 +1,6 @@
 {
   "name": "ts-pegjs",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "TS target for PEG.js parser generator",
   "main": "src/tspegjs.js",
   "author": "Pedro J. Molina",
@@ -20,6 +20,9 @@
     "parser",
     "generator"
   ],
+  "bin": {
+    "tspegjs": "src/cli.js"
+  },
   "files": [
     "LICENSE",
     "package-lock.json",
@@ -27,14 +30,13 @@
     "README.md",
     "tslint.json",
     ".eslintrc.json",
-    "bin/tspegjs",
-    "bin/tspegjs.cmd",
     "examples/arithmetics.pegjs",
     "examples/css.pegjs",
     "examples/javascript.pegjs",
     "examples/json.pegjs",
     "examples/digits.pegjs",
     "examples/st.pegjs",
+    "src/cli.js",
     "src/tspegjs.js",
     "src/passes/generate-bytecode-ts.js",
     "src/passes/generate-ts.js",
@@ -48,7 +50,7 @@
     "gen:samples": "node test/test.js",
     "compile:samples": "tsc output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts",
     "lint:samples": "tslint output/*.ts",
-    "test:cli": "./bin/tspegjs -o output/arit2.ts -o examples/arithmetics.pegjs && tsc output/arit2.ts && tslint output/arit2.ts",
+    "test:cli": "tspegjs -o output/arit2.ts examples/arithmetics.pegjs && tsc output/arit2.ts && tslint output/arit2.ts",
     "lint": "eslint src/"
   },
   "peerDependencies": {
