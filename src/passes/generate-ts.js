@@ -1326,7 +1326,8 @@ function generateTS(ast, options) {
         parts.push([
           toplevelCode,
           "",
-          "module.exports = " + generateParserObject() + ";",
+          //"module.exports = " + generateParserObject() + ";",
+          generateParserObject(),
           ""
         ].join("\n"));
 
