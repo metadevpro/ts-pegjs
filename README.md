@@ -38,7 +38,7 @@ To generate a TS parser, pass to `pegjs.generate` ts-pegjs plugin and your gramm
         plugins: [tspegjs]
     });
 
-The method will return source code of generated parser as a string. 
+The method will return source code of generated parser as a string.
 
 Supported options of `pegjs.generate`:
 
@@ -49,6 +49,11 @@ Supported options of `pegjs.generate`:
   * `allowedStartRules` — rules the parser will be allowed to start parsing from
     (default: the first rule in the grammar)
 
+### Plugin options
+
+  * `--no-tslint` — Excludes the default tslint rules exclusions (defaults to false).
+  * `--tslint-ignores` — A custom list of tslint rules to be excluded (comma separated, if no provided, a default tslint rule exclusion list will be applied).
+  
 ### Generating a Parser from CLI
 
 Sample usage:
@@ -80,7 +85,7 @@ Using the Parser
     }
 ```
 
-Acknoledgements
+Acknowledgments
 ---------------
 
 Thanks to:

@@ -23,24 +23,30 @@ args.map((arg, index) => {
     }
 });
 let allowedStartRules = null;
+let tslintIgnores = null;
 args.map((arg, index) => {
     if (arg === "--allowed-start-rules") {
         allowedStartRules = args[index + 1];
+    }
+    if (arg === "--tslint-ignores") {
+        tslintIgnores = args[index + 1];
     }
 });
 
 const trace = args.find(a => a === "--trace") ? true : false;
 const cache = args.find(a => a === "--cache") ? true : false;
+const noTslint = args.find(a => a === "--no-tslint") ? true : false;
 
 
 function showHelp() {
     /* eslint-disable no-console */
     console.log("tspegjs v." + version + "      TS target for pegjs");
     console.log("Usage:");
-    console.log("  tspegjs [-o outFile.ts] [--allowed-start-rules <rule1,rule2>] [--trace] [--cache] <inGrammar.pegjs>");
+    console.log("  tspegjs [-o outFile.ts] [--allowed-start-rules <rule1,rule2>] [--trace] [--cache] [--no-tslint] [--tslint-ignores <rule1,rule2>] <inGrammar.pegjs>");
 }
 
-function generateParser(input_file, output_file, trace, cache, allowedStartRules) {
+function generateParser(input_file, output_file, trace, cache, 
+                        allowedStartRules, noTslint, tslintIgnores) {
   fs.readFile(input_file, function (err, data) {
     if (err) throw err;
 
@@ -49,7 +55,10 @@ function generateParser(input_file, output_file, trace, cache, allowedStartRules
       trace: trace,
       cache: cache,
       plugins: [tspegjs],
-      tspegjs: {}
+      tspegjs: {
+          noTslint: noTslint,
+          tslintIgnores: tslintIgnores
+      }
     };
     if (allowedStartRules) {
         opts.allowedStartRules = allowedStartRules;
@@ -60,4 +69,4 @@ function generateParser(input_file, output_file, trace, cache, allowedStartRules
   });
 }
 
-generateParser(inFile, outFile, trace, cache, allowedStartRules);
+generateParser(inFile, outFile, trace, cache, allowedStartRules, noTslint, tslintIgnores);

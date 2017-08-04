@@ -18,10 +18,10 @@ function generateParser(input_file, output_file) {
       output: "source",
       trace: true,
       cache: true,
-      plugins: [tspegjs],
+      plugins: [ tspegjs ],
       tspegjs: {
-        // parserNamespace: 'Parser', 
-        // parserClassName: classname
+        noTslint: false
+        // tslintIgnores: "rule1,rule2" // coma separated list of tslint rules to be ignored
       }
     });
     fs.writeFileSync(output_file, parser);
