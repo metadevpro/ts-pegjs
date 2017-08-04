@@ -1,6 +1,6 @@
 {
   "name": "ts-pegjs",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "TS target for PEG.js parser generator",
   "main": "src/tspegjs.js",
   "author": "Pedro J. Molina",
