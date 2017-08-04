@@ -64,7 +64,11 @@ pegjs --plugin ./src/tspegjs -o examples/arithmetics.ts --cache examples/arithme
 
 It will generarate the parser in the TS flavour.
 
-If you need to pass specific plugin options you can use the option `--extra-options-file` provided by pegjs and pass specific options like the following JSON sample:
+If you need to pass specific plugin options you can use the option `--extra-options-file` provided by pegjs and pass it a filename (e.g. pegconfig.json) containing specific options like the following JSON sample:
+
+```
+pegjs --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/arithmetics.ts --cache examples/arithmetics.pegjs
+```
 
 ```
 {
@@ -75,6 +79,7 @@ If you need to pass specific plugin options you can use the option `--extra-opti
 }
 ```
 
+> Make sure to pass any additional CLI options, like `--extra-options-file` before the parameter `-o` as these will otherwise be treated as arguments to that one.
 
 Using the Parser
 ----------------
