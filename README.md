@@ -51,8 +51,8 @@ Supported options of `pegjs.generate`:
 
 ### Plugin options
 
-  * `--no-tslint` — Excludes the default tslint rules exclusions (defaults to false).
-  * `--tslint-ignores` — A custom list of tslint rules to be excluded (comma separated, if no provided, a default tslint rule exclusion list will be applied).
+  * `no-tslint` — Excludes the default tslint rules exclusions (defaults to false).
+  * `tslint-ignores` — A custom list of tslint rules to be excluded (comma separated, if no provided, a default tslint rule exclusion list will be applied).
   
 ### Generating a Parser from CLI
 
@@ -63,6 +63,17 @@ pegjs --plugin ./src/tspegjs -o examples/arithmetics.ts --cache examples/arithme
 ```
 
 It will generarate the parser in the TS flavour.
+
+If you need to pass specific plugin options you can use the option `--extra-options-file` provided by pegjs and pass specific options like the following JSON sample:
+
+```
+{
+    "tspegjs": {
+        "noTslint": false,
+        "tslintIgnores": "rule1,rule2"
+    }
+}
+```
 
 
 Using the Parser

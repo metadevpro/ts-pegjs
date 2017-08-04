@@ -50,7 +50,7 @@
     "gen:samples": "node test/test.js --cache --trace",
     "compile:samples": "tsc output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts",
     "lint:samples": "tslint output/*.ts",
-    "test:cli": "pegjs --plugin ./src/tspegjs --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
+    "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
     "lint": "eslint src/"
   },
   "peerDependencies": {
