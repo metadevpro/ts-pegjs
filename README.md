@@ -75,7 +75,8 @@ pegjs --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 {
     "tspegjs": {
         "noTslint": false,
-        "tslintIgnores": "rule1,rule2"
+        "tslintIgnores": "rule1,rule2",
+        "customHeader": "// import lib\nimport { Lib } from 'mylib';"
     }
 }
 ```
