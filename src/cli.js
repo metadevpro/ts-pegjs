@@ -24,12 +24,21 @@ args.map((arg, index) => {
 });
 let allowedStartRules = null;
 let tslintIgnores = null;
+let customHeaderFile = null;
+let customHeader = null;
+
 args.map((arg, index) => {
     if (arg === "--allowed-start-rules") {
         allowedStartRules = args[index + 1];
     }
     if (arg === "--tslint-ignores") {
         tslintIgnores = args[index + 1];
+    }
+    if (arg === "--custom-header") {
+        customHeader = args[index + 1];
+    }
+    if (arg === "--custom-header-file") {
+        customHeaderFile = args[index + 1];
     }
 });
 
@@ -42,13 +51,18 @@ function showHelp() {
     /* eslint-disable no-console */
     console.log("tspegjs v." + version + "      TS target for pegjs");
     console.log("Usage:");
-    console.log("  tspegjs [-o outFile.ts] [--allowed-start-rules <rule1,rule2>] [--trace] [--cache] [--no-tslint] [--tslint-ignores <rule1,rule2>] <inGrammar.pegjs>");
+    console.log("  tspegjs [-o outFile.ts] [--allowed-start-rules <rule1,rule2>] [--trace] [--cache] [--no-tslint] [--tslint-ignores <rule1,rule2>] [--custom-header <header>] [--custom-header-file <headerFile>] <inGrammar.pegjs>");
 }
 
 function generateParser(input_file, output_file, trace, cache, 
-                        allowedStartRules, noTslint, tslintIgnores) {
+                        allowedStartRules, noTslint, tslintIgnores, 
+                        customHeader, customHeaderFile) {
   fs.readFile(input_file, function (err, data) {
     if (err) throw err;
+
+    if (customHeaderFile && !customHeader) {
+        customHeader = fs.readFileSync(customHeaderFile).toString();
+    } 
 
     const opts = {
       output: "source",
@@ -57,7 +71,8 @@ function generateParser(input_file, output_file, trace, cache,
       plugins: [tspegjs],
       tspegjs: {
           noTslint: noTslint,
-          tslintIgnores: tslintIgnores
+          tslintIgnores: tslintIgnores,
+          customHeader: customHeader
       }
     };
     if (allowedStartRules) {
@@ -69,4 +84,7 @@ function generateParser(input_file, output_file, trace, cache,
   });
 }
 
-generateParser(inFile, outFile, trace, cache, allowedStartRules, noTslint, tslintIgnores);
+generateParser(inFile, outFile, trace, cache, 
+               allowedStartRules, 
+               noTslint, tslintIgnores,
+               customHeader, customHeaderFile);

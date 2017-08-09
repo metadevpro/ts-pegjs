@@ -760,17 +760,11 @@ function generateTS(ast, options) {
   function generateToplevel() {
     let parts = [];
 
+    if (options.tspegjs.customHeader) {
+      parts.push(options.tspegjs.customHeader);
+    }
     parts.push([
-      // "function peg$subclass(child, parent) {",
-      // "  function C() { this.constructor = child; }",
-      // "  C.prototype = parent.prototype;",
-      // "  child.prototype = new C();",
-      // "}",
-      // "",
-
       "export class SyntaxError extends Error {",
-      // "",
-      // "  peg$subclass(peg$SyntaxError, Error);",
       "  public static buildMessage(expected: string, found: string) {",
       "    const DESCRIBE_EXPECTATION_FNS = {",
       "      literal(expectation) {",

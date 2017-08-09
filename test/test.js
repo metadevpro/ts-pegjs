@@ -20,7 +20,8 @@ function generateParser(input_file, output_file) {
       cache: true,
       plugins: [ tspegjs ],
       tspegjs: {
-        noTslint: false
+        noTslint: false,
+        customHeader: "// a\n// b"
         // tslintIgnores: "rule1,rule2" // coma separated list of tslint rules to be ignored
       }
     });

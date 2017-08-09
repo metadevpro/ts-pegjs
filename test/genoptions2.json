@@ -1,6 +1,7 @@
 {
     "tspegjs": {
         "noTslint": false,
-        "tslintIgnores": null
+        "tslintIgnores": null,
+        "customHeader": "// a\n// b"
     }
 }
