@@ -3,7 +3,6 @@ exports.use = function (config, options) {
     require("./passes/generate-bytecode-ts"),
     require("./passes/generate-ts")
   ];
-  options.output = "source";
   if (!options.tspegjs) {
     options.tspegjs = {};
   }
