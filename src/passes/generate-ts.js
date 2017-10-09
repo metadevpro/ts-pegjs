@@ -990,7 +990,7 @@ function generateTS(ast, options) {
       "  let peg$savedPos = 0;",
       "  const peg$posDetailsCache = [{ line: 1, column: 1 }];",
       "  let peg$maxFailPos = 0;",
-      "  let peg$maxFailExpected = [];",
+      "  let peg$maxFailExpected: any[] = [];",
       "  let peg$silentFails = 0;", // 0 = report failures, > 0 = silence failures
       ""
     ].join("\n"));
@@ -1164,7 +1164,7 @@ function generateTS(ast, options) {
       "  }",
       "",
       "  function peg$buildSimpleError(message, location1) {",
-      "    return new SyntaxError(message, null, null, location1);",
+      "    return new SyntaxError(message, \"\", \"\", location1);",
       "  }",
       "",
       "  function peg$buildStructuredError(expected1, found, location1) {",
