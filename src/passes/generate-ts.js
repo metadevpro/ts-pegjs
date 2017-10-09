@@ -945,7 +945,6 @@ function generateTS(ast, options) {
         ""
       ].join("\n"));
     }
-
     parts.push([
       "function peg$parse(input, options) {",
       "  options = options !== undefined ? options : {};",

@@ -1,4 +1,5 @@
 exports.use = function (config, options) {
+
   config.passes.generate = [
     require("./passes/generate-bytecode-ts"),
     require("./passes/generate-ts")
