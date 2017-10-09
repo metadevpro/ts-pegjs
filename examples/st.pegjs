@@ -660,7 +660,6 @@ mapExpr
 mapExpr
     = m1:memberExpr zip:( mn:( __ "," __ m:memberExpr { return m; } )+ __ ":" __ tr:mapTemplateRef { return [ mn, tr ]; } )?
         maps:( __ ":" __ first:mapTemplateRef rest:( __ "," __ r:mapTemplateRef { return r; } )* { return makeList(first, rest); } )* {
-                let expr;
                 let res = m1;
                 if (zip) {
                     res = {
@@ -679,10 +678,9 @@ mapExpr
                     };
                     // need to handle the implicit first argument
                     // xxx deal with array of arrays here
-                    for (let i = 0; i < maps[0].length; i++) {
-                        expr = maps[0][i];
-                        if (expr.type === "INCLUDE") {
-                            expr.args.splice(0, 0, {
+                    for (const expr2 of maps[0]) {
+                        if (expr2.type === "INCLUDE") {
+                            expr2.args.splice(0, 0, {
                                                    type: "STRING",
                                                    loc: getLocation(),
                                                    value: ""
