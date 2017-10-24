@@ -36,6 +36,11 @@ To generate a TS parser, pass to `pegjs.generate` ts-pegjs plugin and your gramm
 
     var parser = pegjs.generate("start = ('a' / 'b')+", {
         plugins: [tspegjs]
+        "tspegjs": {
+            "noTslint": false,
+            "tslintIgnores": "rule1,rule2",
+            "customHeader": "// import lib\nimport { Lib } from 'mylib';"
+        }
     });
 
 The method will return source code of generated parser as a string.
