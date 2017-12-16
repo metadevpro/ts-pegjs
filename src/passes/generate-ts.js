@@ -1258,9 +1258,20 @@ function generateTS(ast, options) {
     }
 
     function generateParserObject() {
+      const optionsType = `export interface IParseOptions {
+  filename?: string;
+  startRule?: string;
+  tracer?: any;
+  [key: string]: any;
+}`;
+      const parseFunctionType = "export type ParseFunction = (input: string, options: IParseOptions) => any;";
+      const parseExport = "export const parse: ParseFunction = peg$parse;";
+
       return options.trace ?
         [
-          "export const parse = peg$parse;",
+          optionsType,
+          parseFunctionType,
+          parseExport,
           ""
           // "{",
           // "  SyntaxError: peg$SyntaxError,",
@@ -1269,7 +1280,9 @@ function generateTS(ast, options) {
           // "}"
         ].join("\n") :
         [
-          "export const parse = peg$parse;",
+          optionsType,
+          parseFunctionType,
+          parseExport,
           ""
           // "{",
           // "  SyntaxError: peg$SyntaxError,",
