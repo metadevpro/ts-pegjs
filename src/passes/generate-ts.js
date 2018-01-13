@@ -730,7 +730,7 @@ function generateTS(ast, options) {
 
     code = compile(rule.bytecode);
 
-    parts.push("function peg$parse" + rule.name + "() {");
+    parts.push("function peg$parse" + rule.name + "(): any {");
 
     if (options.trace) {
       parts.push("  const startPos = peg$currPos;");
@@ -764,36 +764,49 @@ function generateTS(ast, options) {
       parts.push(options.tspegjs.customHeader);
     }
     parts.push([
+      "export interface IFilePosition {",
+      "  offset: number",
+      "  line: number",
+      "  column: number",
+      "}",
+      "",
+      "export interface IFileRange {",
+      "  start: IFilePosition",
+      "  end: IFilePosition",
+      "}",
+      "",
+      "interface ILiteralExpectation {",
+      "  type: \"literal\";",
+      "  text: string;",
+      "  ignoreCase: boolean;",
+      "}",
+      "",
+      "interface IClassParts extends Array<string | IClassParts> {}",
+      "",
+      "interface IClassExpectation {",
+      "  type: \"class\";",
+      "  parts: IClassParts;",
+      "  inverted: boolean;",
+      "  ignoreCase: boolean;",
+      "}",
+      "",
+      "interface IAnyExpectation {",
+      "  type: \"any\";",
+      "}",
+      "",
+      "interface IEndExpectation {",
+      "  type: \"end\";",
+      "}",
+      "",
+      "interface IOtherExpectation {",
+      "  type: \"other\";",
+      "  description: string;",
+      "}",
+      "",
+      "type Expectation = ILiteralExpectation | IClassExpectation | IAnyExpectation | IEndExpectation | IOtherExpectation;",
+      "",
       "export class SyntaxError extends Error {",
-      "  public static buildMessage(expected: string, found: string) {",
-      "    const DESCRIBE_EXPECTATION_FNS = {",
-      "      literal(expectation) {",
-      "        return \"\\\"\" + literalEscape(expectation.text) + \"\\\"\";",
-      "      },",
-      "",
-      "      class(expectation) {",
-      "        const escapedParts = expectation.parts.map((part) => {",
-      "          return Array.isArray(part)",
-      "            ? classEscape(part[0]) + \"-\" + classEscape(part[1])",
-      "            : classEscape(part);",
-      "        });",
-      "",
-      "        return \"[\" + (expectation.inverted ? \"^\" : \"\") + escapedParts + \"]\";",
-      "      },",
-      "",
-      "      any(): string {",
-      "        return \"any character\";",
-      "      },",
-      "",
-      "      end(): string {",
-      "        return \"end of input\";",
-      "      },",
-      "",
-      "      other(expectation): string {",
-      "        return expectation.description;",
-      "      }",
-      "    };",
-      "",
+      "  public static buildMessage(expected: Expectation[], found: string | null) {",
       "    function hex(ch: string): string {",
       "      return ch.charCodeAt(0).toString(16).toUpperCase();",
       "    }",
@@ -824,11 +837,28 @@ function generateTS(ast, options) {
       "        .replace(/[\\x10-\\x1F\\x7F-\\x9F]/g, (ch) => \"\\\\x\"  + hex(ch) );",
       "    }",
       "",
-      "    function describeExpectation(expectation) {",
-      "      return DESCRIBE_EXPECTATION_FNS[expectation.type](expectation);",
+      "    function describeExpectation(expectation: Expectation) {",
+      "      switch (expectation.type) {",
+      "        case \"literal\":",
+      "          return \"\\\"\" + literalEscape(expectation.text) + \"\\\"\";",
+      "        case \"class\":",
+      "          const escapedParts = expectation.parts.map((part) => {",
+      "            return Array.isArray(part)",
+      "              ? classEscape(part[0] as string) + \"-\" + classEscape(part[1] as string)",
+      "              : classEscape(part);",
+      "          });",
+      "",
+      "          return \"[\" + (expectation.inverted ? \"^\" : \"\") + escapedParts + \"]\";",
+      "        case \"any\":",
+      "          return \"any character\";",
+      "        case \"end\":",
+      "          return \"end of input\";",
+      "        case \"other\":",
+      "          return expectation.description;",
+      "      }",
       "    }",
       "",
-      "    function describeExpected(expected1) {",
+      "    function describeExpected(expected1: Expectation[]) {",
       "      const descriptions = expected1.map(describeExpectation);",
       "      let i;",
       "      let j;",
@@ -859,7 +889,7 @@ function generateTS(ast, options) {
       "      }",
       "    }",
       "",
-      "    function describeFound(found1) {",
+      "    function describeFound(found1: string | null) {",
       "      return found1 ? \"\\\"\" + literalEscape(found1) + \"\\\"\" : \"end of input\";",
       "    }",
       "",
@@ -867,12 +897,12 @@ function generateTS(ast, options) {
       "  }",
       "",
       "  public message: string;",
-      "  public expected: string;",
-      "  public found: string;",
-      "  public location: any;",
+      "  public expected: Expectation[];",
+      "  public found: string | null;",
+      "  public location: IFileRange;",
       "  public name: string;",
       "",
-      "  constructor(message: string, expected: string, found: string, location) {",
+      "  constructor(message: string, expected: Expectation[], found: string | null, location: IFileRange) {",
       "    super();",
       "    this.message = message;",
       "    this.expected = expected;",
@@ -946,7 +976,7 @@ function generateTS(ast, options) {
       ].join("\n"));
     }
     parts.push([
-      "function peg$parse(input, options) {",
+      "function peg$parse(input: string, options?: IParseOptions) {",
       "  options = options !== undefined ? options : {};",
       "",
       "  const peg$FAILED = {};",
@@ -974,8 +1004,8 @@ function generateTS(ast, options) {
       let startRuleFunction = "peg$parse" + options.allowedStartRules[0];
 
       parts.push([
-        "  const peg$startRuleFunctions = " + startRuleFunctions + ";",
-        "  let peg$startRuleFunction = " + startRuleFunction + ";"
+        "  const peg$startRuleFunctions: {[id: string]: any} = " + startRuleFunctions + ";",
+        "  let peg$startRuleFunction: () => any = " + startRuleFunction + ";"
       ].join("\n"));
     }
 
@@ -1028,7 +1058,7 @@ function generateTS(ast, options) {
 
     if (options.optimize === "size") {
       parts.push([
-        "  if (\"startRule\" in options) {",
+        "  if (options.startRule !== undefined) {",
         "    if (!(options.startRule in peg$startRuleIndices)) {",
         "      throw new Error(\"Can't start parsing from rule \\\"\" + options.startRule + \"\\\".\");",
         "    }",
@@ -1038,7 +1068,7 @@ function generateTS(ast, options) {
       ].join("\n"));
     } else {
       parts.push([
-        "  if (\"startRule\" in options) {",
+        "  if (options.startRule !== undefined) {",
         "    if (!(options.startRule in peg$startRuleFunctions)) {",
         "      throw new Error(\"Can't start parsing from rule \\\"\" + options.startRule + \"\\\".\");",
         "    }",
@@ -1054,11 +1084,11 @@ function generateTS(ast, options) {
       "    return input.substring(peg$savedPos, peg$currPos);",
       "  }",
       "",
-      "  function location() {",
+      "  function location(): IFileRange {",
       "    return peg$computeLocation(peg$savedPos, peg$currPos);",
       "  }",
       "",
-      "  function expected(description, location1?) {",
+      "  function expected(description: string, location1?: IFileRange) {",
       "    location1 = location1 !== undefined",
       "      ? location1",
       "      : peg$computeLocation(peg$savedPos, peg$currPos);",
@@ -1070,7 +1100,7 @@ function generateTS(ast, options) {
       "    );",
       "  }",
       "",
-      "  function error(message: string, location1?) {",
+      "  function error(message: string, location1?: IFileRange) {",
       "    location1 = location1 !== undefined",
       "      ? location1",
       "      : peg$computeLocation(peg$savedPos, peg$currPos);",
@@ -1078,23 +1108,23 @@ function generateTS(ast, options) {
       "    throw peg$buildSimpleError(message, location1);",
       "  }",
       "",
-      "  function peg$literalExpectation(text1: string, ignoreCase: boolean) {",
+      "  function peg$literalExpectation(text1: string, ignoreCase: boolean): ILiteralExpectation {",
       "    return { type: \"literal\", text: text1, ignoreCase: ignoreCase };",
       "  }",
       "",
-      "  function peg$classExpectation(parts, inverted, ignoreCase: boolean) {",
+      "  function peg$classExpectation(parts: IClassParts, inverted: boolean, ignoreCase: boolean): IClassExpectation {",
       "    return { type: \"class\", parts: parts, inverted: inverted, ignoreCase: ignoreCase };",
       "  }",
       "",
-      "  function peg$anyExpectation() {",
+      "  function peg$anyExpectation(): IAnyExpectation {",
       "    return { type: \"any\" };",
       "  }",
       "",
-      "  function peg$endExpectation() {",
+      "  function peg$endExpectation(): IEndExpectation {",
       "    return { type: \"end\" };",
       "  }",
       "",
-      "  function peg$otherExpectation(description) {",
+      "  function peg$otherExpectation(description: string): IOtherExpectation {",
       "    return { type: \"other\", description: description };",
       "  }",
       "",
@@ -1133,7 +1163,7 @@ function generateTS(ast, options) {
       "    }",
       "  }",
       "",
-      "  function peg$computeLocation(startPos: number, endPos: number) {",
+      "  function peg$computeLocation(startPos: number, endPos: number): IFileRange {",
       "    const startPosDetails = peg$computePosDetails(startPos);",
       "    const endPosDetails = peg$computePosDetails(endPos);",
       "",
@@ -1151,7 +1181,7 @@ function generateTS(ast, options) {
       "    };",
       "  }",
       "",
-      "  function peg$fail(expected1) {",
+      "  function peg$fail(expected1: Expectation) {",
       "    if (peg$currPos < peg$maxFailPos) { return; }",
       "",
       "    if (peg$currPos > peg$maxFailPos) {",
@@ -1162,11 +1192,11 @@ function generateTS(ast, options) {
       "    peg$maxFailExpected.push(expected1);",
       "  }",
       "",
-      "  function peg$buildSimpleError(message, location1) {",
-      "    return new SyntaxError(message, \"\", \"\", location1);",
+      "  function peg$buildSimpleError(message: string, location1: IFileRange) {",
+      "    return new SyntaxError(message, [], \"\", location1);",
       "  }",
       "",
-      "  function peg$buildStructuredError(expected1, found, location1) {",
+      "  function peg$buildStructuredError(expected1: Expectation[], found: string | null, location1: IFileRange) {",
       "    return new SyntaxError(",
       "      SyntaxError.buildMessage(expected1, found),",
       "      expected1,",
@@ -1394,7 +1424,7 @@ function generateTS(ast, options) {
             id => "\"" + js.stringEscape(id) + "\""
           ).join(", ") +
           "]";
-        let params = dependencyVars.join(", ");
+        let params = dependencyVars.map(v => v + ": any").join(", ");
 
         return [
           generateGeneratedByComment(),
@@ -1435,7 +1465,7 @@ function generateTS(ast, options) {
         let requires = dependencyIds.map(
           id => "require(\"" + js.stringEscape(id) + "\")"
         ).join(", ");
-        let params = dependencyVars.join(", ");
+        let params = dependencyVars.map(v => v + ": any").join(", ");
 
         parts.push([
           generateGeneratedByComment(),
