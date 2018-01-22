@@ -31,19 +31,25 @@ Usage
 
 In Node.js, require both the PEG.js parser generator and the ts-pegjs plugin:
 
-    var pegjs = require("pegjs");
-    var tspegjs = require("ts-pegjs");
+```typescript
+var pegjs = require("pegjs");
+var tspegjs = require("ts-pegjs");
+```
 
 To generate a TS parser, pass to `pegjs.generate` ts-pegjs plugin and your grammar:
 
-    var parser = pegjs.generate("start = ('a' / 'b')+", {
-        plugins: [tspegjs]
-        "tspegjs": {
-            "noTslint": false,
-            "tslintIgnores": "rule1,rule2",
-            "customHeader": "// import lib\nimport { Lib } from 'mylib';"
-        }
-    });
+```typescript
+var parser = pegjs.generate("start = ('a' / 'b')+", {
+    output: "source",
+    format: "commonjs",
+    plugins: [tspegjs],
+    "tspegjs": {
+        "noTslint": false,
+        "tslintIgnores": "rule1,rule2",
+        "customHeader": "// import lib\nimport { Lib } from 'mylib';"
+    }
+});
+```
 
 The method will return source code of generated parser as a string.
 
@@ -78,7 +84,7 @@ If you need to pass specific plugin options you can use the option `--extra-opti
 pegjs --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/arithmetics.ts --cache examples/arithmetics.pegjs
 ```
 
-```
+```json
 {
     "tspegjs": {
         "noTslint": false,
@@ -97,17 +103,17 @@ Using the Parser
 
 2) In client TS code:
 
-```
-    import { SyntaxError, parse } from './arithmetics';
+```typescript
+import { SyntaxError, parse } from './arithmetics';
 
-    try {
-        const sampleOutput = parse('my sample...');
-    }
-    catch (ex: SyntaxError)
-    {
-        // Handle parsing error
-        // [...]
-    }
+try {
+    const sampleOutput = parse('my sample...');
+}
+catch (ex: SyntaxError)
+{
+    // Handle parsing error
+    // [...]
+}
 ```
 
 Acknowledgments
