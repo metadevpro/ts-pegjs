@@ -5,7 +5,7 @@
 
 Expression
   = head:Term tail:(_ ("+" / "-") _ Term)* {
-      return tail.reduce(function(result, element) {
+      return tail.reduce(function(result: number, element: any[]) {
         if (element[1] === "+") { return result + element[3]; }
         if (element[1] === "-") { return result - element[3]; }
       }, head);
@@ -13,7 +13,7 @@ Expression
 
 Term
   = head:Factor tail:(_ ("*" / "/") _ Factor)* {
-      return tail.reduce(function(result, element) {
+      return tail.reduce(function(result: number, element: any[]) {
         if (element[1] === "*") { return result * element[3]; }
         if (element[1] === "/") { return result / element[3]; }
       }, head);

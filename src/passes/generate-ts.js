@@ -61,7 +61,7 @@ function generateTS(ast, options) {
     if (options.cache) {
       parts.push([
         "const key = peg$currPos * " + ast.rules.length + " + " + ruleIndexCode + ";",
-        "const cached = peg$resultsCache[key];",
+        "const cached: ICached = peg$resultsCache[key];",
         "",
         "if (cached) {",
         "  peg$currPos = cached.nextPos;",
@@ -920,61 +920,83 @@ function generateTS(ast, options) {
 
     if (options.trace) {
       parts.push([
-        "export function peg$DefaultTracer() {",
-        "  this.indentLevel = 0;",
+        "interface ITraceEvent {",
+        "  type: string;",
+        "  rule: string;",
+        "  result?: any;",
+        "  location: IFileRange;",
         "}",
         "",
-        "peg$DefaultTracer.prototype.trace = function(event) {",
-        "  const that = this;",
+        "export class DefaultTracer {",
+        "  private indentLevel: number;",
         "",
-        "  function log(evt) {",
-        "    function repeat(text, n) {",
-        "       let result = \"\", i;",
-        "",
-        "       for (i = 0; i < n; i++) {",
-        "         result += text;",
-        "       }",
-        "",
-        "       return result;",
-        "    }",
-        "",
-        "    function pad(text, length) {",
-        "      return text + repeat(\" \", length - text.length);",
-        "    }",
-        "",
-        "    if (typeof console === \"object\") {", // IE 8-10
-        "      console.log(",
-        "        evt.location.start.line + \":\" + evt.location.start.column + \"-\"",
-        "          + evt.location.end.line + \":\" + evt.location.end.column + \" \"",
-        "          + pad(evt.type, 10) + \" \"",
-        "          + repeat(\"  \", that.indentLevel) + evt.rule",
-        "      );",
-        "    }",
+        "  constructor() {",
+        "    this.indentLevel = 0;",
         "  }",
         "",
-        "  switch (event.type) {",
-        "    case \"rule.enter\":",
-        "      log(event);",
-        "      this.indentLevel++;",
-        "      break;",
+        "  public trace(event: ITraceEvent) {",
+        "    const that = this;",
         "",
-        "    case \"rule.match\":",
-        "      this.indentLevel--;",
-        "      log(event);",
-        "      break;",
+        "    function log(evt: ITraceEvent) {",
+        "      function repeat(text: string, n: number) {",
+        "         let result = \"\", i;",
         "",
-        "    case \"rule.fail\":",
-        "      this.indentLevel--;",
-        "      log(event);",
-        "      break;",
+        "         for (i = 0; i < n; i++) {",
+        "           result += text;",
+        "         }",
         "",
-        "    default:",
-        "      throw new Error(\"Invalid event type: \" + event.type + \".\");",
+        "         return result;",
+        "      }",
+        "",
+        "      function pad(text: string, length: number) {",
+        "        return text + repeat(\" \", length - text.length);",
+        "      }",
+        "",
+        "      if (typeof console === \"object\") {", // IE 8-10
+        "        console.log(",
+        "          evt.location.start.line + \":\" + evt.location.start.column + \"-\"",
+        "            + evt.location.end.line + \":\" + evt.location.end.column + \" \"",
+        "            + pad(evt.type, 10) + \" \"",
+        "            + repeat(\"  \", that.indentLevel) + evt.rule",
+        "        );",
+        "      }",
+        "    }",
+        "",
+        "    switch (event.type) {",
+        "      case \"rule.enter\":",
+        "        log(event);",
+        "        this.indentLevel++;",
+        "        break;",
+        "",
+        "      case \"rule.match\":",
+        "        this.indentLevel--;",
+        "        log(event);",
+        "        break;",
+        "",
+        "      case \"rule.fail\":",
+        "        this.indentLevel--;",
+        "        log(event);",
+        "        break;",
+        "",
+        "      default:",
+        "        throw new Error(\"Invalid event type: \" + event.type + \".\");",
+        "    }",
         "  }",
-        "};",
+        "}",
         ""
       ].join("\n"));
     }
+
+    if (options.cache) {
+      parts.push([
+        "interface ICached {",
+        "  nextPos: number;",
+        "  result: any;",
+        "}",
+        "",
+      ].join("\n"));
+    }
+
     parts.push([
       "function peg$parse(input: string, options?: IParseOptions) {",
       "  options = options !== undefined ? options : {};",
@@ -1026,7 +1048,7 @@ function generateTS(ast, options) {
 
     if (options.cache) {
       parts.push([
-        "  const peg$resultsCache = {};",
+        "  const peg$resultsCache: {[id: number]: ICached} = {};",
         ""
       ].join("\n"));
     }
@@ -1046,7 +1068,7 @@ function generateTS(ast, options) {
       }
 
       parts.push([
-        "  const peg$tracer = \"tracer\" in options ? options.tracer : new peg$DefaultTracer();",
+        "  const peg$tracer = \"tracer\" in options ? options.tracer : new DefaultTracer();",
         ""
       ].join("\n"));
     }
@@ -1325,14 +1347,14 @@ function generateTS(ast, options) {
       return options.trace ?
         [
           "{",
-          "  peg$SyntaxError as SyntaxError,",
-          "  peg$DefaultTracer as DefaultTracer,",
+          "  SyntaxError as SyntaxError,",
+          "  DefaultTracer as DefaultTracer,",
           "  peg$parse as parse",
           "}"
         ].join("\n") :
         [
           "{",
-          "  peg$SyntaxError as SyntaxError,",
+          "  SyntaxError as SyntaxError,",
           "  peg$parse as parse",
           "}"
         ].join("\n");
