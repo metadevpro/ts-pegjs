@@ -23,11 +23,34 @@ function generateParser(input_file, output_file) {
         noTslint: false,
         customHeader: "// a\n// b"
         // tslintIgnores: "rule1,rule2" // coma separated list of tslint rules to be ignored
+      },
+    });
+    fs.writeFileSync(output_file, parser);
+  });
+}
+
+function testTypedGenerationArithmetics(input_file, output_file) {
+  fs.readFile(input_file, function (err, data) {
+    if (err) throw err;
+
+    var parser = pegjs.generate(data.toString(), {
+      output: "source",
+      trace: true,
+      cache: true,
+      plugins: [ tspegjs ],
+      tspegjs: {
+        noTslint: false,
+        customHeader: "// a\n// b"
+      },
+      returnTypes: {
+        "Integer": "number",
+        "Expression": "number",
+        "Term": "number",
+        "Factor": "number"
       }
     });
     fs.writeFileSync(output_file, parser);
   });
-
 }
 
 if (!fs.existsSync("output")) fs.mkdirSync("output");
@@ -37,3 +60,5 @@ for (var classname in examples) {
     "output/" + examples[classname].replace(/\.[^/.]+$/, ".ts")
   );
 }
+
+testTypedGenerationArithmetics("./examples/arithmetics.pegjs", "output/arithmetics-typed.ts");
