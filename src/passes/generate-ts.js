@@ -730,7 +730,10 @@ function generateTS(ast, options) {
 
     code = compile(rule.bytecode);
 
-    parts.push("function peg$parse" + rule.name + "(): any {");
+    const outputType = (options && options.returnTypes && options.returnTypes[rule.name]) ?
+                       options.returnTypes[rule.name] : "any";
+    
+    parts.push("function peg$parse" + rule.name + "(): " + outputType +" {");
 
     if (options.trace) {
       parts.push("  const startPos = peg$currPos;");

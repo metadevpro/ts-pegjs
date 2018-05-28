@@ -67,6 +67,7 @@ Supported options of `pegjs.generate`:
   * `no-tslint` — Excludes the default tslint rules exclusions (defaults to false).
   * `tslint-ignores` — A custom list of tslint rules to be excluded (comma separated, if no provided, a default tslint rule exclusion list will be applied).
   * `custom-header` — A custom header of TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports.
+  * `returnTypes` — An object containing rule names as keys and return type as string.
 
 ### Generating a Parser from CLI
 
