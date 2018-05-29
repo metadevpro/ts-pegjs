@@ -806,7 +806,7 @@ function generateTS(ast, options) {
       "  description: string;",
       "}",
       "",
-      "type Expectation = ILiteralExpectation | IClassExpectation | IAnyExpectation | IEndExpectation | IOtherExpectation;",
+      "export type Expectation = ILiteralExpectation | IClassExpectation | IAnyExpectation | IEndExpectation | IOtherExpectation;",
       "",
       "export class SyntaxError extends Error {",
       "  public static buildMessage(expected: Expectation[], found: string | null) {",
