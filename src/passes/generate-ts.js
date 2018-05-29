@@ -923,7 +923,7 @@ function generateTS(ast, options) {
 
     if (options.trace) {
       parts.push([
-        "interface ITraceEvent {",
+        "export interface ITraceEvent {",
         "  type: string;",
         "  rule: string;",
         "  result?: any;",
