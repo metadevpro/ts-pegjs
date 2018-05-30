@@ -51,13 +51,15 @@
     "compile:samples": "tsc --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
     "lint:samples": "tslint output/*.ts",
     "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "prepush": "npm run lint"
   },
   "peerDependencies": {
     "pegjs": "~0.10.0"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
+    "husky": "^0.14.3",
     "rimraf": "^2.6.2",
     "tslint": "^5.10.0",
     "typescript": "^2.8.3"
