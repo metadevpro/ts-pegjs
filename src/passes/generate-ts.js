@@ -1319,7 +1319,7 @@ function generateTS(ast, options) {
   tracer?: any;
   [key: string]: any;
 }`;
-      const parseFunctionType = "export type ParseFunction = (input: string, options: IParseOptions) => any;";
+      const parseFunctionType = "export type ParseFunction = (input: string, options?: IParseOptions) => any;";
       const parseExport = "export const parse: ParseFunction = peg$parse;";
 
       return options.trace ?
