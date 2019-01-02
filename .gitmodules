@@ -1,0 +1,3 @@
+[submodule "pegjs"]
+	path = pegjs
+	url = https://github.com/pegjs/pegjs.git
