@@ -98,12 +98,15 @@ Rule
                 expression: expression,
             } );
 
-        return createNode( "rule", { name, expression } );
+
+        return createNode( "rule", { name, expression, typeSpec } );
 
     }
 
 TypeSpec
-  = [^=]+
+  = chars:([^=] / "=>")+ {
+    return chars.join('').trim();
+  }
 
 Expression
   = ChoiceExpression
