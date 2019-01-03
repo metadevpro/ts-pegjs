@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:8.15.0
+
+    steps:
+      - checkout
+      - run:
+          name: Populate Submodules
+          command: git submodule init && git submodule update
+#      - restore_cache:
+#          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: NPM install
+          command: npm install
+      - run:
+          name: Install pegjs (peer dependency)
+          command: npm install pegjs
+#      - save_cache:
+#          key: dependency-cache-{{ checksum "package.json" }}
+#          paths:
+#            - ./node_modules
+      - run:
+          name: Generate Parser
+          command: npm run build-parser
+      - run:
+          name: Test
+          command: npm run test:unit
+      - store_artifacts:
+          path: junit.xml
+          prefix: tests
+      - store_test_results:
+          path: junit.xml
+
+    
+        
+  

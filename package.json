@@ -52,7 +52,8 @@
     "lint:samples": "tslint output/*.ts",
     "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
     "lint": "eslint src/",
-    "build-parser": "mkdirp src/parser && node pegjs_head/packages/pegjs/bin/peg.js -c src/grammer/pegjs.config.js"
+    "build-parser": "mkdirp src/parser && node pegjs_head/packages/pegjs/bin/peg.js -c src/grammer/pegjs.config.js",
+    "test:unit": "jest"
   },
   "peerDependencies": {
     "pegjs": "~0.10.0"
@@ -61,6 +62,7 @@
     "chai": "^4.2.0",
     "eslint": "^5.0.0",
     "jest": "^23.6.0",
+    "jest-junit": "^5.2.0",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
     "tslint": "^5.10.0",

@@ -2,3 +2,4 @@
 node_modules/
 output/
 src/parser
+junit.xml
