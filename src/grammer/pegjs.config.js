@@ -9,8 +9,8 @@ module.exports = {
 
     dependencies: {
 
-        ast: "../../pegjs/packages/pegjs/lib/ast",
-        util: "../../pegjs/packages/pegjs/lib/ast"
+        ast: "../../pegjs_head/packages/pegjs/lib/ast",
+        util: "../../pegjs_head/packages/pegjs/lib/ast"
 
     },
 

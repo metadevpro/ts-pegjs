@@ -52,7 +52,7 @@
     "lint:samples": "tslint output/*.ts",
     "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
     "lint": "eslint src/",
-    "build-parser": "mkdir src/parser && node pegjs/packages/pegjs/bin/peg.js -c src/grammer/pegjs.config.js"
+    "build-parser": "mkdir src/parser && node pegjs_head/packages/pegjs/bin/peg.js -c src/grammer/pegjs.config.js"
   },
   "peerDependencies": {
     "pegjs": "~0.10.0"
