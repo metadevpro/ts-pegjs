@@ -10,7 +10,7 @@ function doTypeInference(node) {
 
     // If the node already has a calculated type, return it
     if (node.inferredType)
-        return inferredType;
+        return node.inferredType;
 
     let inferredType = null;
     switch(node.type) {
@@ -31,7 +31,7 @@ function doTypeInference(node) {
 
     case 'literal':
         // Predefined type
-        inferredType = 'string[]';
+        inferredType = 'string';
         break;
     }
 
