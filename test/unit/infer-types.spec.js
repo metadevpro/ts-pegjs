@@ -60,4 +60,23 @@ describe( "compiler pass |inferTypes|", function () {
         );
     });
 
+    it('Sequence', function() {
+        expect(pass).to.changeAST(
+            "start = 'a' 'b' 'c'",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        expression: { type: "sequence", elements: [
+                            { type: 'literal' },
+                            { type: 'literal' },
+                            { type: 'literal' }
+                        ] },
+                        inferredType: '[string,string,string]'
+                    }
+                ]
+            }
+        );
+    });
+
 } );

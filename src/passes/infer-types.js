@@ -33,6 +33,11 @@ function doTypeInference(node) {
         // Predefined type
         inferredType = 'string';
         break;
+
+    case 'sequence':
+        // An array of types (tuple)
+        inferredType = "[" + node.elements.map(e => doTypeInference(e)).join(",") + "]";
+        break;
     }
 
     // At this point, some kind of type must have been calculated
