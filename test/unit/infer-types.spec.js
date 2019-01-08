@@ -60,6 +60,111 @@ describe( "compiler pass |inferTypes|", function () {
         );
     });
 
+    it('Rule reference (in-order)', function() {
+        expect(pass).to.changeAST(
+            "rule1 => SomeType = 'x' {}\n" +
+            "rule2 = rule1\n",
+            {
+                rules: [
+                    {
+                        name: "rule1",
+                        inferredType: 'SomeType'
+                    },
+                    {
+                        name: "rule2",
+                        inferredType: 'SomeType'
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Rule reference (out-of-order)', function() {
+        expect(pass).to.changeAST(
+            "rule2 = rule1\n" +
+            "rule1 => SomeType = 'x' {}\n",
+            {
+                rules: [
+                    {
+                        name: "rule2",
+                        inferredType: 'SomeType'
+                    },
+                    {
+                        name: "rule1",
+                        inferredType: 'SomeType'
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Rule reference (out-of-order, multiple)', function() {
+        expect(pass).to.changeAST(
+            "rule4 = rule2\n" +
+            "rule3 = 'x'\n" +
+            "rule2 = rule1\n" +
+            "rule1 => SomeType = 'x' {}\n",
+            {
+                rules: [
+                    {
+                        name: "rule4",
+                        inferredType: 'SomeType'
+                    },
+                    {
+                        name: "rule3",
+                        inferredType: 'string'
+                    },
+                    {
+                        name: "rule2",
+                        inferredType: 'SomeType'
+                    },
+                    {
+                        name: "rule1",
+                        inferredType: 'SomeType'
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Rule reference (out-of-order, composite)', function() {
+        expect(pass).to.changeAST(
+            "rule1 = 'x'\n" +
+            "composite = rule1 rule2 rule3\n" +
+            "rule2 => number = 'x' {}\n" +
+            "rule3 = 'x'\n",
+            {
+                rules: [
+                    {
+                        name: "rule1",
+                        inferredType: 'string'
+                    },
+                    {
+                        name: "composite",
+                        inferredType: '[string,number,string]'
+                    },
+                    {
+                        name: "rule2",
+                        inferredType: 'number'
+                    },
+                    {
+                        name: "rule3",
+                        inferredType: 'string'
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Rule reference (cyclic)', function() {
+        expect(pass).to.reportError(
+            "rule1 = rule2\n" +
+            "rule2 = rule1\n",
+            
+            { message: "Cyclic rule reference in: rule1, rule2" }
+        );
+    });
+
     it('Sequence', function() {
         expect(pass).to.changeAST(
             "start = 'a' 'b' 'c'",
