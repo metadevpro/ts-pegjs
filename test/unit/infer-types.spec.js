@@ -10,14 +10,9 @@ const expect = chai.expect;
 
 describe( "compiler pass |inferTypes|", function () {
 
-    it('Fail on type spec without code block', function() {
-        expect( pass ).to.not.reportError("start => string = somename:'a' { doSomething() }");
-        expect( pass ).to.reportError("start => string = somename:'a'");
-    });
-
     it('Rule with type specification', function() {
         expect(pass).to.changeAST(
-            "start => boolean = 'x' {}",
+            "start = 'x' <boolean>{}",
             {
                 rules: [
                     {
@@ -62,7 +57,7 @@ describe( "compiler pass |inferTypes|", function () {
 
     it('Rule reference (in-order)', function() {
         expect(pass).to.changeAST(
-            "rule1 => SomeType = 'x' {}\n" +
+            "rule1 = 'x' <SomeType>{}\n" +
             "rule2 = rule1\n",
             {
                 rules: [
@@ -82,7 +77,7 @@ describe( "compiler pass |inferTypes|", function () {
     it('Rule reference (out-of-order)', function() {
         expect(pass).to.changeAST(
             "rule2 = rule1\n" +
-            "rule1 => SomeType = 'x' {}\n",
+            "rule1 = 'x' <SomeType>{}\n",
             {
                 rules: [
                     {
@@ -103,7 +98,7 @@ describe( "compiler pass |inferTypes|", function () {
             "rule4 = rule2\n" +
             "rule3 = 'x'\n" +
             "rule2 = rule1\n" +
-            "rule1 => SomeType = 'x' {}\n",
+            "rule1 = 'x' <SomeType>{}\n",
             {
                 rules: [
                     {
@@ -131,7 +126,7 @@ describe( "compiler pass |inferTypes|", function () {
         expect(pass).to.changeAST(
             "rule1 = 'x'\n" +
             "composite = rule1 rule2 rule3\n" +
-            "rule2 => number = 'x' {}\n" +
+            "rule2 = 'x' <number>{}\n" +
             "rule3 = 'x'\n",
             {
                 rules: [

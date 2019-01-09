@@ -24,12 +24,13 @@ function doTypeInference(node, meta) {
     let inferredType = null;
     switch(node.type) {
 
+    case 'action':
+        inferredType = node.typeSpec || "any";
+        break;
+
     case 'rule':
-        // Use a user-defined type, or inherit from the expression
-        if (node.typeSpec)
-            inferredType = node.typeSpec;
-        else
-            inferredType = doTypeInference(node.expression, meta);
+        // Transparent - inherit from expression
+        inferredType = doTypeInference(node.expression, meta);
 
         // Store the rule type in a map, so rule references can be
         // resolved.
@@ -37,7 +38,6 @@ function doTypeInference(node, meta) {
         break;
 
     case 'labeled':
-    case 'action':
         // Transparent - inherit from the expression
         inferredType = doTypeInference(node.expression, meta);
         break;
@@ -102,13 +102,6 @@ function inferTypes( ast ) {
 
     const inferencePass = visitor.build( {
         rule( node ) {
-
-            // If the rule has an explicit type specification, it MUST have
-            // a code block
-            if (node.typeSpec) {
-                if (node.expression.type !== 'action')
-                    throw new GrammarError(`Rule "${node.name}" has an explicit type specification, but no code block at line ${node.location.start.line}, column ${node.location.start.column}`)
-            }
 
             doTypeInference(node, meta);
         }
