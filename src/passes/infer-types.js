@@ -59,6 +59,10 @@ function doTypeInference(node, meta) {
         else
             inferredType = "[" + elementTypes.join(",") + "]";
         break;
+
+    //case 'choice':
+    //    // The type of the alternatives (must be identical)
+    //    const altTypes = node.alternatives.map(e => doTypeInference(e, meta))
     }
 
     if (inferredType) {

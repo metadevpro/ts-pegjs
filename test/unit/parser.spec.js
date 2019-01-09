@@ -62,11 +62,11 @@ describe( "PEG.js grammar parser", function () {
     };
     const groupLabeled      = { type: "group", expression: labeledAbcd };
     const groupSequence     = { type: "group", expression: sequence };
-    const actionAbcd        = { type: "action", expression: literalAbcd, code: " code " };
-    const actionEfgh        = { type: "action", expression: literalEfgh, code: " code " };
-    const actionIjkl        = { type: "action", expression: literalIjkl, code: " code " };
-    const actionMnop        = { type: "action", expression: literalMnop, code: " code " };
-    const actionSequence    = { type: "action", expression: sequence, code: " code " };
+    const actionAbcd        = { type: "action", expression: literalAbcd, code: " code ", typeSpec: null };
+    const actionEfgh        = { type: "action", expression: literalEfgh, code: " code ", typeSpec: null };
+    const actionIjkl        = { type: "action", expression: literalIjkl, code: " code ", typeSpec: null };
+    const actionMnop        = { type: "action", expression: literalMnop, code: " code ", typeSpec: null };
+    const actionSequence    = { type: "action", expression: sequence, code: " code ", typeSpec: null };
     const choice            = {
         type: "choice",
         alternatives: [ literalAbcd, literalEfgh, literalIjkl ]
@@ -80,27 +80,27 @@ describe( "PEG.js grammar parser", function () {
         alternatives: [ actionAbcd, actionEfgh, actionIjkl, actionMnop ]
     };
     const named             = { type: "named", name: "start rule", expression: literalAbcd };
-    const ruleA             = { type: "rule", name: "a", expression: literalAbcd, typeSpec: null };
-    const ruleB             = { type: "rule", name: "b", expression: literalEfgh, typeSpec: null };
-    const ruleC             = { type: "rule", name: "c", expression: literalIjkl, typeSpec: null };
-    const ruleStart         = { type: "rule", name: "start", expression: literalAbcd, typeSpec: null };
+    const ruleA             = { type: "rule", name: "a", expression: literalAbcd };
+    const ruleB             = { type: "rule", name: "b", expression: literalEfgh };
+    const ruleC             = { type: "rule", name: "c", expression: literalIjkl };
+    const ruleStart         = { type: "rule", name: "start", expression: literalAbcd };
     const initializer       = { type: "initializer", code: " code " };
 
-    function oneRuleGrammar( expression, typeSpec ) {
+    function oneRuleGrammar( expression ) {
 
         return {
             type: "grammar",
             initializer: null,
             comments: null,
-            rules: [ { type: "rule", name: "start", expression: expression, typeSpec: typeSpec || null } ]
+            rules: [ { type: "rule", name: "start", expression: expression || null } ]
         };
 
     }
 
-    function actionGrammar( code ) {
+    function actionGrammar( code, typeSpec ) {
 
         return oneRuleGrammar(
-            { type: "action", expression: literalAbcd, code: code }
+            { type: "action", expression: literalAbcd, code: code, typeSpec: typeSpec || null }
         );
 
     }
@@ -372,16 +372,75 @@ describe( "PEG.js grammar parser", function () {
     // Rule with type specification
     it( "parses Rule with Type Specification", function () {
 
-        expect( "start\n => SomeTypeName =\n'abcd';" ).to.parseAs(
-            oneRuleGrammar( literalAbcd, "SomeTypeName" )
-        );
-        expect( "start\n => (a: number) => string =\n'abcd';" ).to.parseAs(
-            oneRuleGrammar( literalAbcd, "(a: number) => string" )
-        );
-        expect( "start\n'start rule' => SomeTypeName\n=\n'abcd';" ).to.parseAs(
-            oneRuleGrammar( named, "SomeTypeName" )
+        expect( "start\n =\n'abcd' <SomeTypeName>{ code };" ).to.parseAs(
+            actionGrammar( " code ", "SomeTypeName" )
         );
 
+        expect( "start\n =\n'abcd' <SomeTypeName<T<Q as V>>>{ code };" ).to.parseAs(
+            actionGrammar( " code ", "SomeTypeName<T<Q as V>>" )
+        );
+
+        expect( "start\n =\n'abcd' <{ a:number, b:abc<T>, c:str<T<Q>> }>{ code };" ).to.parseAs(
+            actionGrammar( " code ", "{ a:number, b:abc<T>, c:str<T<Q>> }" )
+        );
+    } );
+
+    it( "parses Choice with Type Specification", function () {
+        expect(
+            "start = \n" +
+            "  'opt1' <TypeOfOne>{ code1 } /\n" +
+            "  'opt2' <TypeOfTwo<T>>{ code2 }\n"
+        )
+        .to.parseAs(
+            oneRuleGrammar({
+                type: "choice",
+                alternatives: [
+                    {
+                        type: "action",
+                        code: " code1 ",
+                        typeSpec: "TypeOfOne",
+                        expression: { type: "literal", value: "opt1", ignoreCase: false }
+                    },
+                    {
+                        type: "action",
+                        code: " code2 ",
+                        typeSpec: "TypeOfTwo<T>",
+                        expression: { type: "literal", value: "opt2", ignoreCase: false }
+                    }
+                ]
+            })
+        );
+    } );
+
+    it( "parses Inline Choice with Type Specification", function () {
+        expect(
+            "start = ('a' <boolean>{ code1 } / 'b' <number>{ code2 }) <Type1>{ code 3 }"
+        )
+        .to.parseAs(
+            oneRuleGrammar({
+                type: "action",
+                code: " code 3 ",
+                typeSpec: "Type1",
+                expression: {
+                    type: "choice",
+                    alternatives: [
+                        {
+                            type: "action",
+                            typeSpec: "boolean",
+                            code: " code1 ",
+                            expression: { type: "literal", value: "a", ignoreCase: false }
+                        },
+                        {
+                            type: "action",
+                            typeSpec: "number",
+                            code: " code2 ",
+                            expression: { type: "literal", value: "b", ignoreCase: false }
+                        }
+
+                    ]
+                }
+            })
+        );
     } );
 
     // Canonical Expression is "'abcd'".

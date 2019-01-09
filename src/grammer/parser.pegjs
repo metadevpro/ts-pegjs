@@ -89,7 +89,7 @@ Initializer
     }
 
 Rule
-  = name:Identifier __ displayName:(@StringLiteral __)? typeSpec:( "=>" @TypeSpec __)? "=" __ expression:Expression EOS {
+  = name:Identifier __ displayName:(@StringLiteral __)? "=" __ expression:Expression EOS {
 
         if ( displayName )
 
@@ -99,14 +99,9 @@ Rule
             } );
 
 
-        return createNode( "rule", { name, expression, typeSpec } );
+        return createNode( "rule", { name, expression } );
 
     }
-
-TypeSpec
-  = chars:([^=] / "=>")+ {
-    return chars.join('').trim();
-  }
 
 Expression
   = ChoiceExpression
@@ -123,11 +118,11 @@ ChoiceExpression
     }
 
 ActionExpression
-  = expression:SequenceExpression code:(__ @CodeBlock)? {
+  = expression:SequenceExpression code:(__ @TypedCodeBlock)? {
 
         if ( code === null ) return expression;
 
-        return createNode( "action", { expression, code } );
+        return createNode( "action", { expression, code: code.code, typeSpec: code.typeSpec } );
 
     }
 
@@ -440,6 +435,13 @@ AnyMatcher
 CodeBlock "code block"
   = "{" @Code "}"
   / "{" { error("Unbalanced brace."); }
+
+TypedCodeBlock "Typed code block"
+  = typeSpec:("<" @TypeSpec ">")? code:CodeBlock { return { code, typeSpec } }
+  / "{" { error("Unbalanced brace."); }
+
+TypeSpec
+  = $((![<>] SourceCharacter)+ / "<" TypeSpec ">")*
 
 Code
   = $((![{}] SourceCharacter)+ / "{" Code "}")*
