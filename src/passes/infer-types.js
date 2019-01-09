@@ -1,5 +1,6 @@
 "use strict";
 
+const uniq = require('lodash.uniq');
 const visitor = require('pegjs').compiler.visitor;
 const { GrammarError } = require('pegjs');
 
@@ -60,9 +61,26 @@ function doTypeInference(node, meta) {
             inferredType = "[" + elementTypes.join(",") + "]";
         break;
 
-    //case 'choice':
-    //    // The type of the alternatives (must be identical)
-    //    const altTypes = node.alternatives.map(e => doTypeInference(e, meta))
+    case 'choice':
+        // Resolve the type of the alternatives
+        const altTypes = node.alternatives.map(e => doTypeInference(e, meta))
+        // If any of them is not resolvable, bail out
+        if (anyIsNull(altTypes))
+            inferredType = null;
+        else {
+            // Remove duplicates
+            const t = uniq(altTypes);
+
+            if (t.length === 1) {
+                // All types are identical
+                inferredType = t[0];
+            }
+            else {
+                // Not all types identical - generate union type
+                inferredType = t.join('|');
+            }
+        }
+        break;
     }
 
     if (inferredType) {

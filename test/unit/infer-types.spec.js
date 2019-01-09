@@ -179,4 +179,50 @@ describe( "compiler pass |inferTypes|", function () {
         );
     });
 
+    it('Choice - identical types', function() {
+        expect(pass).to.changeAST(
+            "start = 'a' / 'b' / 'c'",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "string",
+                        expression: {
+                            type: "choice",
+                            inferredType: "string",
+                            alternatives: [
+                                { type: "literal", inferredType: "string" },
+                                { type: "literal", inferredType: "string" },
+                                { type: "literal", inferredType: "string" }
+                            ]
+                        }
+                    }
+                ]
+            }
+        )
+    });
+
+    it('Choice - different types', function() {
+        expect(pass).to.changeAST(
+            "start = 'a' <Type1>{} / 'b' / 'c' <Type1>{}",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "Type1|string",
+                        expression: {
+                            type: "choice",
+                            inferredType: "Type1|string",
+                            alternatives: [
+                                { type: "action", inferredType: "Type1" },
+                                { type: "literal", inferredType: "string" },
+                                { type: "action", inferredType: "Type1" }
+                            ]
+                        }
+                    }
+                ]
+            }
+        )
+    });
+
 } );
