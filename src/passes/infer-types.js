@@ -57,6 +57,8 @@ function doTypeInference(node, meta) {
         break;
 
     case 'labeled':
+    case 'group':
+    case 'named':
         // Transparent - inherit from the expression
         inferredType = doTypeInference(node.expression, meta);
         break;

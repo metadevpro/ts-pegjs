@@ -340,4 +340,48 @@ describe( "compiler pass |inferTypes|", function () {
         );
     });
 
+    it('Group', function() {
+        expect(pass).to.changeAST(
+            "start = ('a' 'b')",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        expression: {
+                            type: "group",
+                            inferredType: "[string,string]",
+                            expression: {
+                                type: "sequence",
+                                inferredType: "[string,string]",
+                                elements: [
+                                    { type: "literal", inferredType: "string", value: "a" },
+                                    { type: "literal", inferredType: "string", value: "b" }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Named', function() {
+        expect(pass).to.changeAST(
+            "start 'some name' = 'a'",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "string",
+                        expression: {
+                            type: "named",
+                            expression: { type: "literal" }
+                        }
+                        
+                    }
+                ]
+            }
+        );
+    })
+
 } );
