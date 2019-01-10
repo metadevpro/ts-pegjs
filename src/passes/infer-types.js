@@ -65,7 +65,9 @@ function doTypeInference(node, meta) {
         inferredType = meta.ruleTypeMap[node.name];
         break;
 
-    case 'literal':
+    case "literal":
+    case "text":
+    case "any":
         // Predefined type
         inferredType = 'string';
         break;
@@ -113,13 +115,10 @@ function doTypeInference(node, meta) {
 
     case "simple_and":
     case "simple_not":
+    case "semantic_and":
+    case "semantic_not":
         inferredType = "undefined";
         break;
-
-    case "text":
-        inferredType = "string";
-        break;
-
     }
 
     if (inferredType) {

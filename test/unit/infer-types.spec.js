@@ -303,4 +303,41 @@ describe( "compiler pass |inferTypes|", function () {
         );
     });
 
+    it('Semantic and/not', function() {
+        expect(pass).to.changeAST(
+            "start = &{ code1 } !{ code2 }",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "[undefined,undefined]",
+                        expression: {
+                            type: "sequence",
+                            inferredType: "[undefined,undefined]",
+                            elements: [
+                                { type: 'semantic_and', inferredType: 'undefined', code: " code1 " },
+                                { type: 'semantic_not', inferredType: 'undefined', code: " code2 " }
+                            ]
+                        }
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Any', function() {
+        expect(pass).to.changeAST(
+            "start = .",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "string",
+                        expression: { type: "any", inferredType: "string" }
+                    }
+                ]
+            }
+        );
+    });
+
 } );
