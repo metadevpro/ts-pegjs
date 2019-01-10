@@ -225,4 +225,82 @@ describe( "compiler pass |inferTypes|", function () {
         )
     });
 
+    it('Optional', function() {
+        expect(pass).to.changeAST(
+            "start = 'a'?",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: 'string|null',
+                        expression: {
+                            type: "optional",
+                            expression: {
+                                type: 'literal'
+                            }
+                        }
+                    }
+                ]
+            }
+        );
+    });
+
+    it('X or more', function() {
+        expect(pass).to.changeAST(
+            "start = 'a'+ 'b'*",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "[string[],string[]]",
+                        expression: {
+                            type: "sequence",
+                            inferredType: "[string[],string[]]",
+                            elements: [
+                                { type: 'one_or_more', inferredType: 'string[]' },
+                                { type: 'zero_or_more', inferredType: 'string[]' }
+                            ]
+                        }
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Prefix and/not', function() {
+        expect(pass).to.changeAST(
+            "start = &'a' !'b'",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "[undefined,undefined]",
+                        expression: {
+                            type: "sequence",
+                            inferredType: "[undefined,undefined]",
+                            elements: [
+                                { type: 'simple_and', inferredType: 'undefined' },
+                                { type: 'simple_not', inferredType: 'undefined' }
+                            ]
+                        }
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Text', function() {
+        expect(pass).to.changeAST(
+            "start = $('a'+ 'b'* ('c' / 'd'))",
+            {
+                rules: [
+                    {
+                        type: "rule",
+                        inferredType: "string"
+                    }
+                ]
+            }
+        );
+    });
+
 } );

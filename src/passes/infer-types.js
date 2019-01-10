@@ -16,6 +16,23 @@ function anyIsNull(seq) {
     return seq.reduce(( prev, v ) => prev || !v, false);
 }
 
+/**
+ * Performs type inference on a given expression, taking null into account. 
+ * 
+ * If the result is non-null, evaluates the string r, replacing
+ * the $ character with the result of the inference. Otherwise,
+ * return null.
+ * 
+ * @param node An AST node, on which the inference is performed
+ * @param meta Inference meta-data
+ * @param r A string expression, that will be return in case of
+ *          successful inference.
+ */
+function doSafeTypeInference(node, meta, r) {
+    const e = doTypeInference( node, meta );
+    return e && r.replace( "$", e );
+}
+
 function doTypeInference(node, meta) {
 
     // If the node already has a calculated type, return it
@@ -23,6 +40,7 @@ function doTypeInference(node, meta) {
         return node.inferredType;
 
     let inferredType = null;
+    let exprType;
     switch(node.type) {
 
     case 'action':
@@ -81,6 +99,27 @@ function doTypeInference(node, meta) {
             }
         }
         break;
+
+    case "optional":
+        // Either the type of the expression or null (if not specified)
+        inferredType = doSafeTypeInference(node.expression, meta, "$|null");
+        // TODO: In nested optional, "null" may appeare more than once
+        break;
+
+    case "zero_or_more":
+    case "one_or_more":
+        inferredType = doSafeTypeInference(node.expression, meta, "$[]");
+        break;
+
+    case "simple_and":
+    case "simple_not":
+        inferredType = "undefined";
+        break;
+
+    case "text":
+        inferredType = "string";
+        break;
+
     }
 
     if (inferredType) {
