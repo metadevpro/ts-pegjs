@@ -1,6 +1,9 @@
 exports.use = function (config, options) {
 
+  config.parser = require("./parser/parser")
+
   config.passes.generate = [
+    require("./passes/infer-types"),
     require("./passes/generate-bytecode-ts"),
     require("./passes/generate-ts")
   ];

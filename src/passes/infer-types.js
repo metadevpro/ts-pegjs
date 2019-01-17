@@ -45,6 +45,7 @@ function doTypeInference(node, meta) {
 
     case 'action':
         inferredType = node.typeSpec || "any";
+        doTypeInference(node.expression); // Continue the recursion, ignore the result
         break;
 
     case 'rule':
@@ -70,6 +71,7 @@ function doTypeInference(node, meta) {
     case "literal":
     case "text":
     case "any":
+    case "class":
         // Predefined type
         inferredType = 'string';
         break;

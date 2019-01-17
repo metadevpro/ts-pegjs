@@ -198,9 +198,11 @@ function generateBytecode(ast) {
     return index === -1 ? consts.push(value) - 1 : index;
   }
 
-  function addFunctionConst(params, code) {
+  function addFunctionConst(env, code) {
+    const params = Object.keys(env);
+
     return addConst(
-      "function(" + params.map(v => v + ": any").join(", ") + ") {" + code + "}"
+      "function(" + params.map(v => v + ": " + env[v].type).join(", ") + ") {" + code + "}"
     );
   }
 
@@ -208,7 +210,7 @@ function generateBytecode(ast) {
     let clone = {};
 
     Object.keys(env).forEach(name => {
-      clone[name] = env[name];
+      clone[name] = Object.assign({}, env[name]);
     });
 
     return clone;
@@ -231,7 +233,7 @@ function generateBytecode(ast) {
   }
 
   function buildCall(functionIndex, delta, env, sp) {
-    let params = Object.keys(env).map(name => sp - env[name]);
+    let params = Object.keys(env).map(name => sp - env[name].index);
 
     return [op.CALL, functionIndex, delta, params.length].concat(params);
   }
@@ -263,7 +265,7 @@ function generateBytecode(ast) {
   }
 
   function buildSemanticPredicate(code, negative, context) {
-    let functionIndex = addFunctionConst(Object.keys(context.env), code);
+    let functionIndex = addFunctionConst(context.env, code);
 
     return buildSequence(
       [op.UPDATE_SAVED_POS],
@@ -354,7 +356,7 @@ function generateBytecode(ast) {
         env: env,
         action: node
       });
-      let functionIndex = addFunctionConst(Object.keys(env), node.code);
+      let functionIndex = addFunctionConst(env, node.code);
 
       return emitCall
         ? buildSequence(
@@ -401,7 +403,7 @@ function generateBytecode(ast) {
         } else {
           if (context.action) {
             let functionIndex = addFunctionConst(
-              Object.keys(context.env),
+              context.env,
               context.action.code
             );
 
@@ -434,7 +436,10 @@ function generateBytecode(ast) {
     labeled(node, context) {
       let env = cloneEnv(context.env);
 
-      context.env[node.label] = context.sp + 1;
+      context.env[node.label] = {
+        index: context.sp + 1,
+        type: node.inferredType
+      }
 
       return generate(node.expression, {
         sp: context.sp,
