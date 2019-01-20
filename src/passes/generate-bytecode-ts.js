@@ -189,7 +189,7 @@ var visitor = require("pegjs/lib/compiler/visitor");
 // [29] SILENT_FAILS_OFF
 //
 //        silentFails--;
-function generateBytecode(ast) {
+function generateBytecode(ast, options) {
   let consts = [];
 
   function addConst(value) {
@@ -198,11 +198,13 @@ function generateBytecode(ast) {
     return index === -1 ? consts.push(value) - 1 : index;
   }
 
-  function addFunctionConst(env, code) {
+  function addFunctionConst(env, code, retType) {
     const params = Object.keys(env);
+    const strictTyping = (options || {}).strictTyping;
 
     return addConst(
-      "function(" + params.map(v => v + ": " + env[v].type).join(", ") + ") {" + code + "}"
+        "function(" + params.map(v => v + ": " + (strictTyping? env[v].type : 'any')).join(", ") + "):"
+        + (strictTyping? retType : 'any') + " {" + code + "}"
     );
   }
 
@@ -265,7 +267,7 @@ function generateBytecode(ast) {
   }
 
   function buildSemanticPredicate(code, negative, context) {
-    let functionIndex = addFunctionConst(context.env, code);
+    let functionIndex = addFunctionConst(context.env, code, "boolean");
 
     return buildSequence(
       [op.UPDATE_SAVED_POS],
@@ -356,7 +358,7 @@ function generateBytecode(ast) {
         env: env,
         action: node
       });
-      let functionIndex = addFunctionConst(env, node.code);
+      let functionIndex = addFunctionConst(env, node.code, node.inferredType);
 
       return emitCall
         ? buildSequence(
@@ -404,7 +406,8 @@ function generateBytecode(ast) {
           if (context.action) {
             let functionIndex = addFunctionConst(
               context.env,
-              context.action.code
+              context.action.code,
+              context.action.inferredType
             );
 
             return buildSequence(
