@@ -44,8 +44,9 @@ function doTypeInference(node, meta) {
     switch(node.type) {
 
     case 'action':
-        inferredType = node.typeSpec || "any";
-        doTypeInference(node.expression); // Continue the recursion, ignore the result
+        // Continue the recursion. Assign type for this node only if the sub-nodes are resolved
+        if (doTypeInference(node.expression, meta)) 
+            inferredType = node.typeSpec || "any";
         break;
 
     case 'rule':

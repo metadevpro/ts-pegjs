@@ -10,7 +10,7 @@ const expect = chai.expect;
 
 describe( "compiler pass |inferTypes|", function () {
 
-    it('Rule with type specification', function() {
+    it('Code block with type specification', function() {
         expect(pass).to.changeAST(
             "start = 'x' <boolean>{}",
             {
@@ -19,6 +19,21 @@ describe( "compiler pass |inferTypes|", function () {
                         name: "start",
                         expression: { type: "action" },
                         inferredType: 'boolean'
+                    }
+                ]
+            }
+        );
+    });
+
+    it('Code block without type specification', function() {
+        expect(pass).to.changeAST(
+            "start = 'x' {}",
+            {
+                rules: [
+                    {
+                        name: "start",
+                        expression: { type: "action" },
+                        inferredType: "any"
                     }
                 ]
             }
