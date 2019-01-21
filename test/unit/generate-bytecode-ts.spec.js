@@ -26,7 +26,7 @@ describe( "compiler pass |generateBytecodeTS|", function () {
         ast.rules[0].expression.expression.elements[0].inferredType = "string"; // element "a" of seq in rule "start"
         ast.rules[0].expression.expression.elements[1].inferredType = "number"; // element "b" of seq in rule "start"
         ast.rules[2].expression.expression.inferredType = "string"; // labeled inside rule2
-        pass ( ast, { strictTyping: true } );
+        pass ( ast, { tspegjs: { strictTyping: true } });
 
         expect(ast).to.include.keys("consts");
         expect(ast.consts).to.include("function(a: string, b: number):CustomType { code1 }");
@@ -73,7 +73,7 @@ describe( "compiler pass |generateBytecodeTS|", function () {
         ast.rules[0].expression.expression.elements[0].inferredType = "string";
         ast.rules[0].expression.expression.elements[1].inferredType = "CustomType";
         ast.rules[1].expression.expression.inferredType = "string";
-        pass ( ast, { strictTyping: true } );
+        pass ( ast, { tspegjs: { strictTyping: true } });
 
         expect(ast).to.include.keys("consts");
         expect(ast.consts).to.include("function(a: string, b: CustomType):boolean { predicate code }");
