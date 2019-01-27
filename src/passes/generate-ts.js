@@ -3,6 +3,8 @@
 // Adapted from base: (original file: generate-bycode.js for codegen JS)
 // Adapted for Typescript codegen (c) 2017, Pedro J. Molina
 
+var uniq = require("lodash.uniq");
+var camelCase = require("camelcase")
 var asts = require("pegjs/lib/compiler/asts");
 var js = require("pegjs/lib/compiler/js");
 var op = require("pegjs/lib/compiler/opcodes");
@@ -730,8 +732,9 @@ function generateTS(ast, options) {
 
     code = compile(rule.bytecode);
 
-    const outputType = (options && options.returnTypes && options.returnTypes[rule.name]) ?
+    const legacyOutputType = (options && options.returnTypes && options.returnTypes[rule.name]) ?
                        options.returnTypes[rule.name] : "any";
+    const outputType = (options && options.tspegjs && options.tspegjs.strictTyping)? rule.inferredType : legacyOutputType;                       
     
     parts.push("function peg$parse" + rule.name + "(): " + outputType +" {");
 
@@ -1032,7 +1035,7 @@ function generateTS(ast, options) {
         "  const peg$startRuleFunctions: {[id: string]: any} = " + startRuleFunctions + ";",
         "  let peg$startRuleFunction: () => any = " + startRuleFunction + ";"
       ].join("\n"));
-    }
+    }  
 
     parts.push("");
 
@@ -1273,10 +1276,23 @@ function generateTS(ast, options) {
       "}"
     ].join("\n"));
 
-    return parts.join("\n");
+    // Start rule types
+    const startRuleTypes = options.allowedStartRules.map(ruleName => {
+      // Find the type of the rule whose name is given
+      const r = ast.rules.find(rule => rule.name === ruleName);
+      if (!r)
+        throw new Error(`Start rule ${ruleName} not found`);
+
+      return ({
+        ruleName,
+        ruleType: r.inferredType
+      });
+    });
+    
+    return [ parts.join("\n"), startRuleTypes ];
   }
 
-  function generateWrapper(toplevelCode) {
+  function generateWrapper(toplevelCode, startRuleTypes) {
     function generateGeneratedByComment() {
       let res = [];
       if (!options.tspegjs.noTslint) {
@@ -1312,21 +1328,28 @@ function generateTS(ast, options) {
       return res.join("\n");
     }
 
-    function generateParserObject() {
+    function generateParserObject(startRuleTypes) {
       const optionsType = `export interface IParseOptions {
   filename?: string;
   startRule?: string;
   tracer?: any;
   [key: string]: any;
 }`;
-      const parseFunctionType = "export type ParseFunction = (input: string, options?: IParseOptions) => any;";
-      const parseExport = "export const parse: ParseFunction = peg$parse;";
+
+      const parseReturnType = startRuleTypes? uniq(startRuleTypes.map(t => t.ruleType)).join("|") : "any"
+      const parseFunctionType = "export type ParseFunction = (input: string, options?: IParseOptions) => " + parseReturnType + ";";
+      const mainParseExport = "export const parse: ParseFunction = peg$parse;";
+      
+      const helperParseExports = (startRuleTypes || []).map(rule => `export const ${camelCase("parse-" + rule.ruleName)}: (input: string, options?: IParseOptions) => ${rule.ruleType} =` + 
+        ` (input: string, options?: IParseOptions) => <${rule.ruleType}>peg$parse(input, {...options, startRule: '${rule.ruleName}'})`)
+        .join('\n');
 
       return options.trace ?
         [
           optionsType,
           parseFunctionType,
-          parseExport,
+          mainParseExport,
+          helperParseExports,
           ""
           // "{",
           // "  SyntaxError: peg$SyntaxError,",
@@ -1337,7 +1360,8 @@ function generateTS(ast, options) {
         [
           optionsType,
           parseFunctionType,
-          parseExport,
+          mainParseExport,
+          helperParseExports,
           ""
           // "{",
           // "  SyntaxError: peg$SyntaxError,",
@@ -1378,7 +1402,7 @@ function generateTS(ast, options) {
         ].join("\n");
       },
 
-      commonjs() {
+      commonjs(startRuleTypes) {
         let parts = [];
         let dependencyVars = Object.keys(options.dependencies);
 
@@ -1404,7 +1428,7 @@ function generateTS(ast, options) {
           toplevelCode,
           "",
           //"module.exports = " + generateParserObject() + ";",
-          generateParserObject(),
+          generateParserObject(startRuleTypes),
           ""
         ].join("\n"));
 
@@ -1524,10 +1548,10 @@ function generateTS(ast, options) {
       }
     };
 
-    return generators[options.format]();
+    return generators[options.format](startRuleTypes);
   }
 
-  ast.code = generateWrapper(generateToplevel());
+  ast.code = generateWrapper(...generateToplevel());
 }
 
 module.exports = generateTS;
