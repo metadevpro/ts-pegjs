@@ -1370,185 +1370,31 @@ function generateTS(ast, options) {
         ].join("\n");
     }
 
-    function generateParserExports() {
-      return options.trace ?
-        [
-          "{",
-          "  SyntaxError as SyntaxError,",
-          "  DefaultTracer as DefaultTracer,",
-          "  peg$parse as parse",
-          "}"
-        ].join("\n") :
-        [
-          "{",
-          "  SyntaxError as SyntaxError,",
-          "  peg$parse as parse",
-          "}"
-        ].join("\n");
+    
+    if (options.format !== 'commonjs')
+      throw new Error('ts-pegjs plugin only supports the CommonJS module format');
+    if (options.output !== 'source')
+      throw new Error('ts-pegjs plugin only supports source output');
+
+    let parts = [];
+
+    parts.push(generateGeneratedByComment());
+    parts.push("");
+
+    let dependencyVars = Object.keys(options.dependencies);
+    if (dependencyVars.length > 0) {
+      parts = parts.concat(dependencyVars.map(v => `import * as ${v} from '${js.stringEscape(options.dependencies[v])}';`));
     }
+    
 
-    let generators = {
-      bare() {
-        return [
-          generateGeneratedByComment(),
-          // "(function() {",
-          // "  \"use strict\";",
-          "",
-          toplevelCode,
-          "",
-          //indent2("return " + generateParserObject() + ";"),
-          generateParserObject(),
-          //"})()"
-        ].join("\n");
-      },
+    parts.push([
+      toplevelCode,
+      "",
+      generateParserObject(startRuleTypes),
+      ""
+    ].join("\n"));
 
-      commonjs(startRuleTypes) {
-        let parts = [];
-        let dependencyVars = Object.keys(options.dependencies);
-
-        parts.push([
-          generateGeneratedByComment(),
-          "",
-          "\"use strict\";",
-          ""
-        ].join("\n"));
-
-        if (dependencyVars.length > 0) {
-          dependencyVars.forEach(variable => {
-            parts.push("let " + variable +
-              " = require(\"" +
-              js.stringEscape(options.dependencies[variable]) +
-              "\");"
-            );
-          });
-          parts.push("");
-        }
-
-        parts.push([
-          toplevelCode,
-          "",
-          //"module.exports = " + generateParserObject() + ";",
-          generateParserObject(startRuleTypes),
-          ""
-        ].join("\n"));
-
-        return parts.join("\n");
-      },
-
-      es() {
-        let parts = [];
-        let dependencyVars = Object.keys(options.dependencies);
-
-        parts.push(
-          generateGeneratedByComment(),
-          ""
-        );
-
-        if (dependencyVars.length > 0) {
-          dependencyVars.forEach(variable => {
-            parts.push("import " + variable +
-              " from \"" +
-              js.stringEscape(options.dependencies[variable]) +
-              "\";"
-            );
-          });
-          parts.push("");
-        }
-
-        parts.push(
-          toplevelCode,
-          "",
-          "export " + generateParserExports() + ";",
-          ""
-        );
-
-        return parts.join("\n");
-      },
-
-      amd() {
-        let dependencyVars = Object.keys(options.dependencies);
-        let dependencyIds = dependencyVars.map(v => options.dependencies[v]);
-        let dependencies = "[" +
-          dependencyIds.map(
-            id => "\"" + js.stringEscape(id) + "\""
-          ).join(", ") +
-          "]";
-        let params = dependencyVars.map(v => v + ": any").join(", ");
-
-        return [
-          generateGeneratedByComment(),
-          "define(" + dependencies + ", function(" + params + ") {",
-          "  \"use strict\";",
-          "",
-          indent2(toplevelCode),
-          "",
-          indent2("return " + generateParserObject() + ";"),
-          "});",
-          ""
-        ].join("\n");
-      },
-
-      globals() {
-        return [
-          generateGeneratedByComment(),
-          "(function(root) {",
-          "  \"use strict\";",
-          "",
-          indent2(toplevelCode),
-          "",
-          indent2("root." + options.exportVar + " = " + generateParserObject() + ";"),
-          "})(this);",
-          ""
-        ].join("\n");
-      },
-
-      umd() {
-        let parts = [];
-        let dependencyVars = Object.keys(options.dependencies);
-        let dependencyIds = dependencyVars.map(v => options.dependencies[v]);
-        let dependencies = "[" +
-          dependencyIds.map(
-            id => "\"" + js.stringEscape(id) + "\""
-          ).join(", ") +
-          "]";
-        let requires = dependencyIds.map(
-          id => "require(\"" + js.stringEscape(id) + "\")"
-        ).join(", ");
-        let params = dependencyVars.map(v => v + ": any").join(", ");
-
-        parts.push([
-          generateGeneratedByComment(),
-          "(function(root, factory) {",
-          "  if (typeof define === \"function\" && define.amd) {",
-          "    define(" + dependencies + ", factory);",
-          "  } else if (typeof module === \"object\" && module.exports) {",
-          "    module.exports = factory(" + requires + ");"
-        ].join("\n"));
-
-        if (options.exportVar !== null) {
-          parts.push([
-            "  } else {",
-            "    root." + options.exportVar + " = factory();"
-          ].join("\n"));
-        }
-
-        parts.push([
-          "  }",
-          "})(this, function(" + params + ") {",
-          "  \"use strict\";",
-          "",
-          indent2(toplevelCode),
-          "",
-          indent2("return " + generateParserObject() + ";"),
-          "});",
-          ""
-        ].join("\n"));
-
-        return parts.join("\n");
-      }
-    };
-
-    return generators[options.format](startRuleTypes);
+    return parts.join("\n");
   }
 
   ast.code = generateWrapper(...generateToplevel());
