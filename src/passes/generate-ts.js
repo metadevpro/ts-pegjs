@@ -1385,7 +1385,10 @@ function generateTS(ast, options) {
     if (dependencyVars.length > 0) {
       parts = parts.concat(dependencyVars.map(v => `import * as ${v} from '${js.stringEscape(options.dependencies[v])}';`));
     }
-    
+
+    // Rule types
+    ast.ruleTypeMap.forEach(rt => parts.push(`type ${rt.typeName} = ${rt.ruleType}; // ${rt.ruleName}`));
+    parts.push("");
 
     parts.push([
       toplevelCode,

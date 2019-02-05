@@ -18,7 +18,14 @@ describe( "compiler pass |inferTypes|", function () {
                     {
                         name: "start",
                         expression: { type: "action" },
-                        inferredType: 'boolean'
+                        inferredType: 'T_start'
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'boolean'
                     }
                 ]
             }
@@ -33,9 +40,17 @@ describe( "compiler pass |inferTypes|", function () {
                     {
                         name: "start",
                         expression: { type: "action" },
-                        inferredType: "any"
+                        inferredType: "T_start"
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'any'
                     }
                 ]
+
             }
         );
     });
@@ -48,9 +63,17 @@ describe( "compiler pass |inferTypes|", function () {
                     {
                         name: "start",
                         expression: { type: "literal" },
-                        inferredType: 'string'
+                        inferredType: 'T_start'
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string'
                     }
                 ]
+
             }
         );
     });
@@ -63,9 +86,17 @@ describe( "compiler pass |inferTypes|", function () {
                     {
                         name: "start",
                         expression: { type: "labeled" },
-                        inferredType: 'string'
+                        inferredType: 'T_start'
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string'
                     }
                 ]
+
             }
         );
     });
@@ -78,59 +109,23 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         name: "rule1",
-                        inferredType: 'SomeType'
+                        inferredType: 'T_rule1'
                     },
                     {
                         name: "rule2",
-                        inferredType: 'SomeType'
+                        inferredType: 'T_rule2'
                     }
-                ]
-            }
-        );
-    });
-
-    it('Rule reference (out-of-order)', function() {
-        expect(pass).to.changeAST(
-            "rule2 = rule1\n" +
-            "rule1 = 'x' <SomeType>{}\n",
-            {
-                rules: [
+                ],
+                ruleTypeMap: [
                     {
-                        name: "rule2",
-                        inferredType: 'SomeType'
+                        ruleName: 'rule1',
+                        typeName: 'T_rule1',
+                        ruleType: 'SomeType'
                     },
                     {
-                        name: "rule1",
-                        inferredType: 'SomeType'
-                    }
-                ]
-            }
-        );
-    });
-
-    it('Rule reference (out-of-order, multiple)', function() {
-        expect(pass).to.changeAST(
-            "rule4 = rule2\n" +
-            "rule3 = 'x'\n" +
-            "rule2 = rule1\n" +
-            "rule1 = 'x' <SomeType>{}\n",
-            {
-                rules: [
-                    {
-                        name: "rule4",
-                        inferredType: 'SomeType'
-                    },
-                    {
-                        name: "rule3",
-                        inferredType: 'string'
-                    },
-                    {
-                        name: "rule2",
-                        inferredType: 'SomeType'
-                    },
-                    {
-                        name: "rule1",
-                        inferredType: 'SomeType'
+                        ruleName: 'rule2',
+                        typeName: 'T_rule2',
+                        ruleType: 'T_rule1'
                     }
                 ]
             }
@@ -147,31 +142,44 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         name: "rule1",
-                        inferredType: 'string'
+                        inferredType: 'T_rule1'
                     },
                     {
                         name: "composite",
-                        inferredType: '[string,number,string]'
+                        inferredType: 'T_composite'
                     },
                     {
                         name: "rule2",
-                        inferredType: 'number'
+                        inferredType: 'T_rule2'
                     },
                     {
                         name: "rule3",
-                        inferredType: 'string'
+                        inferredType: 'T_rule3'
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'rule1',
+                        typeName: 'T_rule1',
+                        ruleType: 'string'
+                    },
+                    {
+                        ruleName: 'composite',
+                        typeName: 'T_composite',
+                        ruleType: '[T_rule1,T_rule2,T_rule3]'
+                    },
+                    {
+                        ruleName: 'rule2',
+                        typeName: 'T_rule2',
+                        ruleType: 'number'
+                    },
+                    {
+                        ruleName: 'rule3',
+                        typeName: 'T_rule3',
+                        ruleType: 'string'
                     }
                 ]
             }
-        );
-    });
-
-    it('Rule reference (cyclic)', function() {
-        expect(pass).to.reportError(
-            "rule1 = rule2\n" +
-            "rule2 = rule1\n",
-            
-            { message: "Cyclic rule reference in: rule1, rule2" }
         );
     });
 
@@ -187,9 +195,17 @@ describe( "compiler pass |inferTypes|", function () {
                             { type: 'literal' },
                             { type: 'literal' }
                         ] },
-                        inferredType: '[string,string,string]'
+                        inferredType: 'T_start'
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: '[string,string,string]'
                     }
                 ]
+
             }
         );
     });
@@ -201,7 +217,7 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "string",
+                        inferredType: "T_start",
                         expression: {
                             type: "choice",
                             inferredType: "string",
@@ -211,6 +227,13 @@ describe( "compiler pass |inferTypes|", function () {
                                 { type: "literal", inferredType: "string" }
                             ]
                         }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string'
                     }
                 ]
             }
@@ -224,7 +247,7 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "Type1|string",
+                        inferredType: "T_start",
                         expression: {
                             type: "choice",
                             inferredType: "Type1|string",
@@ -234,6 +257,13 @@ describe( "compiler pass |inferTypes|", function () {
                                 { type: "action", inferredType: "Type1" }
                             ]
                         }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'Type1|string'
                     }
                 ]
             }
@@ -247,13 +277,20 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: 'string|null',
+                        inferredType: 'T_start',
                         expression: {
                             type: "optional",
                             expression: {
                                 type: 'literal'
                             }
                         }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string|null'
                     }
                 ]
             }
@@ -267,7 +304,7 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "[string[],string[]]",
+                        inferredType: "T_start",
                         expression: {
                             type: "sequence",
                             inferredType: "[string[],string[]]",
@@ -276,6 +313,13 @@ describe( "compiler pass |inferTypes|", function () {
                                 { type: 'zero_or_more', inferredType: 'string[]' }
                             ]
                         }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: '[string[],string[]]'
                     }
                 ]
             }
@@ -289,7 +333,7 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "[undefined,undefined]",
+                        inferredType: "T_start",
                         expression: {
                             type: "sequence",
                             inferredType: "[undefined,undefined]",
@@ -298,6 +342,13 @@ describe( "compiler pass |inferTypes|", function () {
                                 { type: 'simple_not', inferredType: 'undefined' }
                             ]
                         }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: '[undefined,undefined]'
                     }
                 ]
             }
@@ -311,7 +362,14 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "string"
+                        inferredType: "T_start"
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string'
                     }
                 ]
             }
@@ -325,7 +383,7 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "[undefined,undefined]",
+                        inferredType: "T_start",
                         expression: {
                             type: "sequence",
                             inferredType: "[undefined,undefined]",
@@ -334,6 +392,13 @@ describe( "compiler pass |inferTypes|", function () {
                                 { type: 'semantic_not', inferredType: 'undefined', code: " code2 " }
                             ]
                         }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: '[undefined,undefined]'
                     }
                 ]
             }
@@ -347,8 +412,15 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "string",
+                        inferredType: "T_start",
                         expression: { type: "any", inferredType: "string" }
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string'
                     }
                 ]
             }
@@ -387,12 +459,19 @@ describe( "compiler pass |inferTypes|", function () {
                 rules: [
                     {
                         type: "rule",
-                        inferredType: "string",
+                        inferredType: "T_start",
                         expression: {
                             type: "named",
                             expression: { type: "literal" }
                         }
                         
+                    }
+                ],
+                ruleTypeMap: [
+                    {
+                        ruleName: 'start',
+                        typeName: 'T_start',
+                        ruleType: 'string'
                     }
                 ]
             }
