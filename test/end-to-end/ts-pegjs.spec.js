@@ -6,7 +6,7 @@ const tss = require('typescript-simple');
 const path = require('path')
 
 function pseudoRequireTS(tsCode) {
-   const jsCode = tss(tsCode, { module: "commonjsx" });
+   const jsCode = tss(tsCode, { module: "commonjs" });
     return eval("() => { let exports = {} \n" + jsCode + "\nreturn exports; }")();
 }
 
