@@ -46,14 +46,13 @@
   "scripts": {
     "clean": "rimraf output",
     "pretest": "npm run clean",
-    "test": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint",
+    "test": "jest",
     "gen:samples": "node test/test.js --cache --trace",
     "compile:samples": "tsc --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
     "lint:samples": "tslint output/*.ts",
     "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
     "lint": "eslint src/",
-    "build-parser": "mkdirp src/parser && node pegjs_head/packages/pegjs/bin/peg.js -c src/grammer/pegjs.config.js",
-    "test:unit": "jest"
+    "build-parser": "mkdirp src/parser && node pegjs_head/packages/pegjs/bin/peg.js -c src/grammer/pegjs.config.js"
   },
   "peerDependencies": {
     "pegjs": "~0.10.0"
