@@ -32,18 +32,23 @@ function pseudoRequireTS(tsCode) {
 
 describe('Samples', function() {
 
-    it('arithmetic', function() {
+    const samples = [ 'arithmetics', 'css', 'javascript', 'json', 'st' ];
 
-        const grammar = fs.readFileSync(path.join(__dirname, '../../examples/arithmetics.pegjs')).toString();
-        const parserTS = pegjs.generate(grammar, {
-            output: 'source',
-            format: 'commonjs',
-            plugins: [ tspegjs ],
-            tspegjs: {
-                strictTyping: true
-            }
+    for (const sample of samples) {
+        it(`Complete sample: ${sample}`, function() {
+
+            const sampleFilename = path.resolve(__dirname, '../../examples', `${sample}.pegjs`)
+            const grammar = fs.readFileSync(sampleFilename).toString();
+            const parserTS = pegjs.generate(grammar, {
+                output: 'source',
+                format: 'commonjs',
+                plugins: [ tspegjs ],
+                tspegjs: {
+                    strictTyping: true
+                }
+            });
+
+            expect(parserTS).to.compileWithoutErrors;
         });
-
-        expect(parserTS).to.compileWithoutErrors;
-    });
+    }
 });
