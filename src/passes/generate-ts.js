@@ -731,12 +731,8 @@ function generateTS(ast, options) {
     }
 
     code = compile(rule.bytecode);
-
-    const legacyOutputType = (options && options.returnTypes && options.returnTypes[rule.name]) ?
-                       options.returnTypes[rule.name] : "any";
-    const outputType = (options && options.tspegjs && options.tspegjs.strictTyping)? rule.inferredType : legacyOutputType;                       
-    
-    parts.push("function peg$parse" + rule.name + "(): " + outputType +" {");
+  
+    parts.push("function peg$parse" + rule.name + "(): " + rule.inferredType +" {");
 
     if (options.trace) {
       parts.push("  const startPos = peg$currPos;");
@@ -1276,7 +1272,7 @@ function generateTS(ast, options) {
       "}"
     ].join("\n"));
 
-    // Start rule types
+    // Start rule types  
     const startRuleTypes = options.allowedStartRules.map(ruleName => {
       // Find the type of the rule whose name is given
       const r = ast.rules.find(rule => rule.name === ruleName);
@@ -1387,7 +1383,16 @@ function generateTS(ast, options) {
     }
 
     // Rule types
-    ast.ruleTypeMap.forEach(rt => parts.push(`type ${rt.typeName} = ${rt.ruleType}; // ${rt.ruleName}`));
+    const extRuleTypes = (options && options.returnTypes) || {};
+    ast.ruleTypeMap.forEach(rt => {
+      const extType = extRuleTypes [rt.ruleName] || 'any';
+      if (rt.ruleType !== 'any' && (rt.ruleType !== extType))
+        // The type of the rule, specified in the options (returnTypes)
+        // is different from the one specified in the code.
+        throw new Error(`Inconsistent types for rule ${rt.ruleName}`);
+
+      return parts.push(`type ${rt.typeName} = ${rt.ruleType}; // ${rt.ruleName}`) 
+    });
     parts.push("");
 
     parts.push([
