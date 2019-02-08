@@ -58,9 +58,9 @@
   },
   "devDependencies": {
     "eslint": "^5.0.0",
-    "rimraf": "^2.6.2",
-    "tslint": "^5.10.0",
-    "typescript": "^2.8.3"
+    "rimraf": "^2.6.3",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3"
   },
   "dependencies": {
     "pegjs": "^0.10.0"
