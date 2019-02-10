@@ -1385,13 +1385,19 @@ function generateTS(ast, options) {
     // Rule types
     const extRuleTypes = (options && options.returnTypes) || {};
     ast.ruleTypeMap.forEach(rt => {
-      const extType = extRuleTypes [rt.ruleName] || 'any';
-      if (rt.ruleType !== 'any' && (rt.ruleType !== extType))
-        // The type of the rule, specified in the options (returnTypes)
-        // is different from the one specified in the code.
-        throw new Error(`Inconsistent types for rule ${rt.ruleName}`);
+      const extType = extRuleTypes [rt.ruleName];
+      let { ruleType } = rt;
+      if (extType) {
+        if ((ruleType !== 'any') && (rt.ruleType !== extType)) {
+          // An external type (options.returnTypes) was specified,
+          // but it's different from the one specified inline
+          throw new Error(`Inconsistent types for rule ${rt.ruleName}`);
+        }
+        else
+          ruleType = extType;
+      }      
 
-      return parts.push(`type ${rt.typeName} = ${rt.ruleType}; // ${rt.ruleName}`) 
+      return parts.push(`type ${rt.typeName} = ${ruleType}; // ${rt.ruleName}`) 
     });
     parts.push("");
 
