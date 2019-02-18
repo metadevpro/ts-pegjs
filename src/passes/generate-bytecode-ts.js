@@ -200,7 +200,8 @@ function generateBytecode(ast, options) {
 
   function addFunctionConst(env, code, retType) {
     const params = Object.keys(env);
-    const strictTyping = options && options.tspegjs && options.tspegjs.strictTyping;
+    //const strictTyping = options && options.tspegjs && options.tspegjs.strictTyping;
+    const strictTyping = true;
 
     return addConst(
         "function(" + params.map(v => v + ": " + (strictTyping? env[v].type : 'any')).join(", ") + "):"

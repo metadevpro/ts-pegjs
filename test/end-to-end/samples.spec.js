@@ -26,10 +26,7 @@ describe('Samples', function() {
                     output: 'source',
                     format: 'commonjs',
                     plugins: [ tspegjs ],
-                    optimize,
-                    tspegjs: {
-                        strictTyping: true
-                    }
+                    optimize
                 });
 
                 expect(parserTS).to.compileWithoutErrors;

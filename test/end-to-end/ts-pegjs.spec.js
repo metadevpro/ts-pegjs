@@ -24,10 +24,7 @@ describe('ts-pegjs end-to-end', function() {
             output: 'source',
             format: 'commonjs',
             plugins: [ tspegjs ],
-            allowedStartRules: [ 'start', 'other' ],
-            tspegjs: {
-                strictTyping: true
-            }
+            allowedStartRules: [ 'start', 'other' ]
         });
 
         const parser = pseudoRequireTS(parserTS);
@@ -46,9 +43,6 @@ describe('ts-pegjs end-to-end', function() {
             format: 'commonjs',
             plugins: [ tspegjs ],
             allowedStartRules: [ 'start', 'other' ],
-            tspegjs: {
-                strictTyping: true
-            },
             trace: true
         });
 
@@ -64,9 +58,6 @@ describe('ts-pegjs end-to-end', function() {
             output: 'source',
             format: 'commonjs',
             plugins: [ tspegjs ],
-            tspegjs: {
-                strictTyping: true
-            },
             dependencies: {
                 'ab': 'cd'
             }
@@ -81,9 +72,6 @@ describe('ts-pegjs end-to-end', function() {
             output: 'source',
             format: 'commonjs',
             plugins: [ tspegjs ],
-            tspegjs: {
-                strictTyping: true
-            },
             returnTypes: {
                 start: 'string'
             }
@@ -99,9 +87,6 @@ describe('ts-pegjs end-to-end', function() {
             output: 'source',
             format: 'commonjs',
             plugins: [ tspegjs ],
-            tspegjs: {
-                strictTyping: true
-            },
             returnTypes: {
                 start: 'number'
             }
