@@ -41,7 +41,8 @@
     "src/passes/generate-bytecode-ts.js",
     "src/passes/generate-ts.js",
     "test/README",
-    "test/test.js"
+    "test/test.js",
+    "src/parser/parser.js"
   ],
   "scripts": {
     "clean": "rimraf output",
