@@ -26,6 +26,9 @@ Install PEG.js with ts-pegjs plugin
 Usage
 -----
 
+### Specifying Types in the Grammar
+See a guide [here](doc/typing.md).
+
 ### Generating a Parser from JS code
 
 In Node.js, require both the PEG.js parser generator and the ts-pegjs plugin:
