@@ -372,7 +372,7 @@ describe( "PEG.js grammar parser", function () {
     // Rule with type specification
     it( "parses Rule with Type Specification", function () {
 
-        expect( "start\n =\n'abcd' <SomeTypeName>{ code };" ).to.parseAs(
+        expect( "start\n =\n'abcd' <  SomeTypeName  >{ code };" ).to.parseAs(
             actionGrammar( " code ", "SomeTypeName" )
         );
 

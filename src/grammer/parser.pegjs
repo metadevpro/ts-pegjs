@@ -437,7 +437,9 @@ CodeBlock "code block"
   / "{" { error("Unbalanced brace."); }
 
 TypedCodeBlock "Typed code block"
-  = typeSpec:("<" @TypeSpec ">")? code:CodeBlock { return { code, typeSpec } }
+  = typeSpec:("<" @TypeSpec ">")? code:CodeBlock { 
+    return { code, typeSpec: typeSpec? typeSpec.trim() : typeSpec } 
+  }
   / "{" { error("Unbalanced brace."); }
 
 TypeSpec
