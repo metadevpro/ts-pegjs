@@ -190,7 +190,7 @@ individual element it includes. Identical types are folded in such way
 that they only appear once in the union type expression. As a consequence,
 if the return type of all elements is identical, it will be assigned to the
 result without the union operator. It must be noted that the comparison between
-the different type is textual, not semanical, so it must be completely identical including whitespace.
+the different type is textual, not semantical, so it must be completely identical including whitespace.
 
 Example:
 ```
