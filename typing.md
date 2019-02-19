@@ -22,10 +22,10 @@ type aliases or any valid combination of types.
 The next step would be to compile the grammar into a TypeScript source code (assuming the grammar is located in the file `grammar.pegjs`):
 
 ```
-pegjs --plugin node_modules/ts-pegjs --format ts -o grammar.ts grammar.pegjs
+pegjs --plugin node_modules/ts-pegjs --format commonjs -o grammar.ts grammar.pegjs
 ```
-Note that the module format is `ts`. This is the only format supported by the TS
-plugin, since TypeScript has its own way of specifying exports.
+Note that the module format is `commonjs`. This is the only format supported by the TS
+plugin.
 
 Now, we have the generated parser at hand, and we can consume it using TypeScript's `import` command:
 
@@ -76,7 +76,7 @@ move = dir:direction " " steps:number <number>{
     const sign = dir === "forward"? 1 : -1;
 
     // 'steps' is a number
-    return dir*steps;
+    return sign*steps;
 }
 direction = 'forward' / 'backward';
 number = digits:[0-9]+ <number>{ return parseInt(digits.join()); }
@@ -101,14 +101,14 @@ as_string = digits:[0-9]+ <string>{ return digits.join() }
 
 We compile it using pegjs, allowing both rules to be start rules:
 ```
-pegjs --plugin node_modules/ts-pegjs --format ts -o grammar.ts  --allowed-start-rules as_number,as_string grammar.pegjs
+pegjs --plugin node_modules/ts-pegjs --format commonjs -o parser.ts  --allowed-start-rules as_number,as_string grammar.pegjs
 ```
 
 Now, the parser can be used in any of the following forms:
 ```TypeScript
-import { parse, parseAsNumber, parseAsString } from './grammar.ts'
+import { parse, parseAsNumber, parseAsString } from './parser'
 
-const p1 = parse('123', 'as_number'); // p1 type is: number|string
+const p1 = parse('123', { startRule: 'as_number' }); // p1 type is: number|string
 const p2 = parseAsNumber('123');  // p2 type is: number
 const p3 = parseAsString('123');  // p3 type is: string
 ```
