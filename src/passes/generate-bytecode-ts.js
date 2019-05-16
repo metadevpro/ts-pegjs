@@ -200,7 +200,7 @@ function generateBytecode(ast) {
 
   function addFunctionConst(params, code) {
     return addConst(
-      "function(" + params.map(v => v + ": any").join(", ") + ") {" + code + "}"
+      "function(" + params.map(v => v + ": any").join(", ") + "): any {" + code + "}"
     );
   }
 
