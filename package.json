@@ -1,6 +1,6 @@
 {
   "name": "ts-pegjs",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "TS target for PEG.js parser generator",
   "main": "src/tspegjs.js",
   "author": "Pedro J. Molina",
@@ -57,10 +57,10 @@
     "pegjs": "~0.10.0"
   },
   "devDependencies": {
-    "eslint": "^5.0.0",
+    "eslint": "^5.16.0",
     "rimraf": "^2.6.3",
-    "tslint": "^5.12.1",
-    "typescript": "^3.3.3"
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
   },
   "dependencies": {
     "pegjs": "^0.10.0"
