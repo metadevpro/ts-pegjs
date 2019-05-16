@@ -1004,7 +1004,7 @@ function generateTS(ast, options) {
       "function peg$parse(input: string, options?: IParseOptions) {",
       "  options = options !== undefined ? options : {};",
       "",
-      "  const peg$FAILED = {};",
+      "  const peg$FAILED: any = {};",
       ""
     ].join("\n"));
 
