@@ -10,7 +10,11 @@ var pluginVersion = require("../../package.json").version;
 var pegJsVersion = require("pegjs/package.json").version;
 
 // Generates parser JavaScript code.
-function generateTS(ast, options) {
+function generateTS(ast, ...args) {
+  // pegjs 0.10  api pass(ast, options)
+  // pegjs 0.11+ api pass(ast, config, options);
+  const options = args[args.length -1];
+
   // These only indent non-empty lines to avoid trailing whitespace.
   function indent2(code) {
     return code.replace(/^(.+)$/gm, "  $1");
