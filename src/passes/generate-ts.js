@@ -190,7 +190,7 @@ function generateTS(ast, options) {
         "stack.splice(",
         "  stack.length - bc[ip + 2],",
         "  bc[ip + 2],",
-        "  peg$consts[bc[ip + 1]].apply(null, params)",
+        "  (peg$consts[bc[ip + 1]] as ((...args) => any)).apply(null, params)",
         ");",
         "",
         "ip += " + baseLength + " + " + paramsLengthCode + ";",
@@ -199,8 +199,8 @@ function generateTS(ast, options) {
     }
 
     parts.push([
-      "function peg$decode(s: string): number {",
-      "  return s.split(\"\").map((ch) => { return ch.charCodeAt(0) - 32; });",
+      "function peg$decode(s: string): number[] {",
+      "  return s.split(\"\").map((ch) =>  ch.charCodeAt(0) - 32 );",
       "}",
       "",
       "function peg$parseRule(index) {"
@@ -208,23 +208,23 @@ function generateTS(ast, options) {
 
     if (options.trace) {
       parts.push([
-        "  let bc = peg$bytecode[index];",
+        "  const bc = peg$bytecode[index];",
         "  let ip = 0;",
-        "  let ips = [];",
+        "  const ips = [];",
         "  let end = bc.length;",
-        "  let ends = [];",
-        "  let stack = [];",
+        "  const ends = [];",
+        "  const stack = [];",
         "  let startPos = peg$currPos;",
         "  let params;"
       ].join("\n"));
     } else {
       parts.push([
-        "  let bc = peg$bytecode[index];",
+        "  const bc = peg$bytecode[index];",
         "  let ip = 0;",
-        "  let ips = [];",
+        "  const ips = [];",
         "  let end = bc.length;",
-        "  let ends = [];",
-        "  let stack = [];",
+        "  const ends = [];",
+        "  const stack = [];",
         "  let params;"
       ].join("\n"));
     }
@@ -328,19 +328,19 @@ function generateTS(ast, options) {
       "",
       "        case " + op.MATCH_STRING + ":", // MATCH_STRING s, a, f, ...
       indent10(generateCondition(
-        "input.substr(peg$currPos, peg$consts[bc[ip + 1]].length) === peg$consts[bc[ip + 1]]",
+        "input.substr(peg$currPos, (peg$consts[bc[ip + 1]] as string).length) === peg$consts[bc[ip + 1]]",
         1
       )),
       "",
       "        case " + op.MATCH_STRING_IC + ":", // MATCH_STRING_IC s, a, f, ...
       indent10(generateCondition(
-        "input.substr(peg$currPos, peg$consts[bc[ip + 1]].length).toLowerCase() === peg$consts[bc[ip + 1]]",
+        "input.substr(peg$currPos, (peg$consts[bc[ip + 1]] as string).length).toLowerCase() === peg$consts[bc[ip + 1]]",
         1
       )),
       "",
       "        case " + op.MATCH_REGEXP + ":", // MATCH_REGEXP r, a, f, ...
       indent10(generateCondition(
-        "peg$consts[bc[ip + 1]].test(input.charAt(peg$currPos))",
+        "(peg$consts[bc[ip + 1]] as RegExp).test(input.charAt(peg$currPos))",
         1
       )),
       "",
@@ -352,14 +352,14 @@ function generateTS(ast, options) {
       "",
       "        case " + op.ACCEPT_STRING + ":", // ACCEPT_STRING s
       "          stack.push(peg$consts[bc[ip + 1]]);",
-      "          peg$currPos += peg$consts[bc[ip + 1]].length;",
+      "          peg$currPos += (peg$consts[bc[ip + 1]] as string).length;",
       "          ip += 2;",
       "          break;",
       "",
       "        case " + op.FAIL + ":", // FAIL e
       "          stack.push(peg$FAILED);",
       "          if (peg$silentFails === 0) {",
-      "            peg$fail(peg$consts[bc[ip + 1]]);",
+      "            peg$fail(peg$consts[bc[ip + 1]] as ILiteralExpectation);",
       "          }",
       "          ip += 2;",
       "          break;",
@@ -1018,7 +1018,7 @@ function generateTS(ast, options) {
 
       parts.push([
         "  const peg$startRuleIndices = " + startRuleIndices + ";",
-        "  const peg$startRuleIndex = " + startRuleIndex + ";"
+        "  let peg$startRuleIndex = " + startRuleIndex + ";"
       ].join("\n"));
     } else {
       let startRuleFunctions = "{ " +
