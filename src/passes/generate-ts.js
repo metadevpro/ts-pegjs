@@ -194,7 +194,7 @@ function generateTS(ast, ...args) {
         "stack.splice(",
         "  stack.length - bc[ip + 2],",
         "  bc[ip + 2],",
-        "  (peg$consts[bc[ip + 1]] as ((...args) => any)).apply(null, params)",
+        "  (peg$consts[bc[ip + 1]] as ((...args: any[]) => any)).apply(null, params)",
         ");",
         "",
         "ip += " + baseLength + " + " + paramsLengthCode + ";",
@@ -207,17 +207,17 @@ function generateTS(ast, ...args) {
       "  return s.split(\"\").map((ch) =>  ch.charCodeAt(0) - 32 );",
       "}",
       "",
-      "function peg$parseRule(index) {"
+      "function peg$parseRule(index: number): any {"
     ].join("\n"));
 
     if (options.trace) {
       parts.push([
         "  const bc = peg$bytecode[index];",
         "  let ip = 0;",
-        "  const ips = [];",
+        "  const ips: any[] = [];",
         "  let end = bc.length;",
-        "  const ends = [];",
-        "  const stack = [];",
+        "  const ends: any[] = [];",
+        "  const stack: any[] = [];",
         "  let startPos = peg$currPos;",
         "  let params;"
       ].join("\n"));
@@ -225,10 +225,10 @@ function generateTS(ast, ...args) {
       parts.push([
         "  const bc = peg$bytecode[index];",
         "  let ip = 0;",
-        "  const ips = [];",
+        "  const ips: any[] = [];",
         "  let end = bc.length;",
-        "  const ends = [];",
-        "  const stack = [];",
+        "  const ends: any[] = [];",
+        "  const stack: any[] = [];",
         "  let params;"
       ].join("\n"));
     }
@@ -1021,7 +1021,7 @@ function generateTS(ast, ...args) {
       let startRuleIndex = asts.indexOfRule(ast, options.allowedStartRules[0]);
 
       parts.push([
-        "  const peg$startRuleIndices = " + startRuleIndices + ";",
+        "  const peg$startRuleIndices: {[id: string]: number}  = " + startRuleIndices + ";",
         "  let peg$startRuleIndex = " + startRuleIndex + ";"
       ].join("\n"));
     } else {
