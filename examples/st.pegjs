@@ -42,7 +42,7 @@
   let delimiterStartChar = "<";
   let delimiterStopChar = ">";
   const curGroup = options.group;
-  let curDict = null;
+  let curDict: any = null;
   let outside = true; // tell if we are inside or outside a template: outside<inside>outside
   let subtemplateDepth = 0; // handle nesting of subtemplates: { ... {...} ...}
   let inConditional = false;
@@ -51,12 +51,12 @@
   let formalArgsHasOptional = false;
   const lineOffset = options.lineOffset || 0;
 
-  let logger = function(message) {
+  let logger = function(message: string) {
       // tslint:disable-next-line:no-console
       console.log(message);
   };
 
-  function verboseLog(message) {
+  function verboseLog(message: string) {
       if (verbose) {
           logger(message);
       }
@@ -90,7 +90,7 @@
     };
   }
 
-  function makeList(first, rest) {
+  function makeList(first: any, rest: any) {
     let list;
     if (first && rest) {
       list = [first].concat(rest);
@@ -104,7 +104,7 @@
     return list;
   }
 
-  function parseTemplate(template) {
+  function parseTemplate(template: any) {
     let ignoreNewLines2: boolean;
     let lineOffset2 = line() - 1;
 
@@ -281,7 +281,8 @@ formalArg
                 ret = {
                     type: "FORMAL_ARG",
                     loc: getLocation(),
-                    name: name.value
+                    name: name.value,
+                    defaultValue: undefined
                 };
                 if (defaultValue) {
                     ret.defaultValue = defaultValue;
