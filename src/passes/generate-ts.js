@@ -867,8 +867,8 @@ function generateTS(ast, ...args) {
       "",
       "    function describeExpected(expected1: Expectation[]) {",
       "      const descriptions = expected1.map(describeExpectation);",
-      "      let i;",
-      "      let j;",
+      "      let i: number;",
+      "      let j: number;",
       "",
       "      descriptions.sort();",
       "",
@@ -1008,7 +1008,7 @@ function generateTS(ast, ...args) {
       "function peg$parse(input: string, options?: IParseOptions) {",
       "  options = options !== undefined ? options : {};",
       "",
-      "  const peg$FAILED: any = {};",
+      "  const peg$FAILED: Readonly<{}> = {};",
       ""
     ].join("\n"));
 
@@ -1048,7 +1048,7 @@ function generateTS(ast, ...args) {
       "  let peg$savedPos = 0;",
       "  const peg$posDetailsCache = [{ line: 1, column: 1 }];",
       "  let peg$maxFailPos = 0;",
-      "  let peg$maxFailExpected: any[] = [];",
+      "  let peg$maxFailExpected: Expectation[] = [];",
       "  let peg$silentFails = 0;", // 0 = report failures, > 0 = silence failures
       ""
     ].join("\n"));
