@@ -60,10 +60,10 @@
     "pegjs": "~0.10.0"
   },
   "devDependencies": {
-    "eslint": "^6.0.0",
+    "eslint": "^6.0.1",
     "rimraf": "^2.6.3",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
+    "tslint": "^5.18.0",
+    "typescript": "^3.5.3"
   },
   "dependencies": {
     "pegjs": "^0.10.0"
