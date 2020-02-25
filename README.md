@@ -73,7 +73,7 @@ Supported options of `pegjs.generate`:
 Sample usage:
 
 ```
-pegjs --plugin ./src/tspegjs -o examples/arithmetics.ts --cache examples/arithmetics.pegjs
+pegjs --plugin ./node_modules/ts-pegjs -o examples/arithmetics.ts --cache examples/arithmetics.pegjs
 ```
 
 It will generarate the parser in the TS flavour.
