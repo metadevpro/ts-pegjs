@@ -767,9 +767,6 @@ function generateTS(ast, ...args) {
   function generateToplevel() {
     let parts = [];
 
-    if (options.tspegjs.customHeader) {
-      parts.push(options.tspegjs.customHeader);
-    }
     parts.push([
       "export interface IFilePosition {",
       "  offset: number;",
@@ -1283,6 +1280,9 @@ function generateTS(ast, ...args) {
   function generateWrapper(toplevelCode) {
     function generateGeneratedByComment() {
       let res = [];
+      if (options.tspegjs.customHeader) {
+        res.push(options.tspegjs.customHeader);
+      }
       if (!options.tspegjs.noTslint) {
         if (options.tspegjs.tslintIgnores) {
           // apply user custom exclusions
