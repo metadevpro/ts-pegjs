@@ -42,8 +42,6 @@ var parser = pegjs.generate("start = ('a' / 'b')+", {
     format: "commonjs",
     plugins: [tspegjs],
     "tspegjs": {
-        "noTslint": false,
-        "tslintIgnores": "rule1,rule2",
         "customHeader": "// import lib\nimport { Lib } from 'mylib';"
     }
 });
@@ -62,8 +60,6 @@ Supported options of `pegjs.generate`:
 
 ### Plugin options
 
-  * `no-tslint` — Excludes the default tslint rules exclusions (defaults to false).
-  * `tslint-ignores` — A custom list of tslint rules to be excluded (comma separated, if no provided, a default tslint rule exclusion list will be applied).
   * `custom-header` — A custom header of TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports.
   * `returnTypes` — An object containing rule names as keys and return type as string.
 
@@ -86,8 +82,6 @@ pegjs --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 ```json
 {
     "tspegjs": {
-        "noTslint": false,
-        "tslintIgnores": "rule1,rule2",
         "customHeader": "// import lib\nimport { Lib } from 'mylib';"
     }
 }
@@ -115,6 +109,11 @@ catch (ex: SyntaxError)
 }
 ```
 
+Changelog
+---------------
+
+[Changelog](./Changelog.md).
+
 Acknowledgments
 ---------------
 
@@ -132,4 +131,4 @@ License
 
 
 -----
-(c) 2017-2018, [Pedro J. Molina](https://github.com/pjmolina) at [metadev.pro](https://metadev.pro)
+(c) 2017-2021, [Pedro J. Molina](https://github.com/pjmolina) at [metadev.pro](https://metadev.pro)

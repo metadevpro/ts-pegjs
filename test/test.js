@@ -20,9 +20,7 @@ function generateParser(input_file, output_file) {
       cache: true,
       plugins: [ tspegjs ],
       tspegjs: {
-        noTslint: false,
-        customHeader: "// a\n// b"
-        // tslintIgnores: "rule1,rule2" // coma separated list of tslint rules to be ignored
+        customHeader: "// customHeader a\n// customHeader b"
       },
     });
     fs.writeFileSync(output_file, parser);
@@ -39,8 +37,7 @@ function testTypedGenerationArithmetics(input_file, output_file) {
       cache: true,
       plugins: [ tspegjs ],
       tspegjs: {
-        noTslint: false,
-        customHeader: "// a\n// b"
+        customHeader: "// customHeader a\n// customHeader b"
       },
       returnTypes: {
         "Integer": "number",

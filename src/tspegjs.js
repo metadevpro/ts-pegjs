@@ -7,9 +7,6 @@ exports.use = function (config, options) {
   if (!options.tspegjs) {
     options.tspegjs = {};
   }
-  if (options.tspegjs.noTslint === undefined) {
-    options.tspegjs.noTslint = false;
-  }
   if (options.tspegjs.customHeader === undefined) {
     options.tspegjs.customHeader = null;
   }

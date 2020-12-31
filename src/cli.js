@@ -23,16 +23,12 @@ args.map((arg, index) => {
     }
 });
 let allowedStartRules = null;
-let tslintIgnores = null;
 let customHeaderFile = null;
 let customHeader = null;
 
 args.map((arg, index) => {
     if (arg === "--allowed-start-rules") {
-        allowedStartRules = (args[index + 1] | '').split(',');
-    }
-    if (arg === "--tslint-ignores") {
-        tslintIgnores = args[index + 1];
+        allowedStartRules = (args[index + 1] | "").split(",");
     }
     if (arg === "--custom-header") {
         customHeader = args[index + 1];
@@ -44,8 +40,6 @@ args.map((arg, index) => {
 
 const trace = args.find(a => a === "--trace") ? true : false;
 const cache = args.find(a => a === "--cache") ? true : false;
-const noTslint = args.find(a => a === "--no-tslint") ? true : false;
-
 
 function showHelp() {
     /* eslint-disable no-console */
@@ -55,7 +49,7 @@ function showHelp() {
 }
 
 function generateParser(input_file, output_file, trace, cache, 
-                        allowedStartRules, noTslint, tslintIgnores, 
+                        allowedStartRules, 
                         customHeader, customHeaderFile) {
   fs.readFile(input_file, function (err, data) {
     if (err) throw err;
@@ -68,11 +62,9 @@ function generateParser(input_file, output_file, trace, cache,
       output: "source",
       trace: trace,
       cache: cache,
-      plugins: [tspegjs],
+      plugins: [ tspegjs ],
       tspegjs: {
-          noTslint: noTslint,
-          tslintIgnores: tslintIgnores,
-          customHeader: customHeader
+        customHeader
       }
     };
     if (allowedStartRules) {
@@ -86,5 +78,4 @@ function generateParser(input_file, output_file, trace, cache,
 
 generateParser(inFile, outFile, trace, cache, 
                allowedStartRules, 
-               noTslint, tslintIgnores,
                customHeader, customHeaderFile);

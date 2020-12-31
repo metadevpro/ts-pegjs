@@ -1005,7 +1005,7 @@ function generateTS(ast, ...args) {
       "function peg$parse(input: string, options?: IParseOptions) {",
       "  options = options !== undefined ? options : {};",
       "",
-      "  const peg$FAILED: Readonly<{}> = {};",
+      "  const peg$FAILED: Readonly<any> = {};",
       ""
     ].join("\n"));
 
@@ -1282,29 +1282,6 @@ function generateTS(ast, ...args) {
       let res = [];
       if (options.tspegjs.customHeader) {
         res.push(options.tspegjs.customHeader);
-      }
-      if (!options.tspegjs.noTslint) {
-        if (options.tspegjs.tslintIgnores) {
-          // apply user custom exclusions
-          res = res.concat(
-            options.tspegjs.tslintIgnores
-                .split(",")
-                .map((rule) => "// tslint:disable:" + rule)
-          );
-        } else {
-          // apply default tslint excusions
-          res = res.concat([
-            "// tslint:disable:only-arrow-functions",
-            "// tslint:disable:object-literal-shorthand",
-            "// tslint:disable:trailing-comma",
-            "// tslint:disable:object-literal-sort-keys",
-            "// tslint:disable:one-variable-per-declaration",
-            "// tslint:disable:max-line-length",
-            "// tslint:disable:no-consecutive-blank-lines",
-            "// tslint:disable:align",
-            options.trace ? "// tslint:disable:no-console" : ""
-          ]); 
-        }
       }
       res = res.concat([
         "",

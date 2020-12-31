@@ -1,6 +1,3 @@
 {
-    "tspegjs": {
-        "noTslint": false,
-        "tslintIgnores": "rule1,rule2"
-    }
+    "tspegjs": {}
 }

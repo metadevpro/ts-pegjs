@@ -1,6 +1,6 @@
 {
   "name": "ts-pegjs",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "TS target for PEG.js parser generator",
   "main": "src/tspegjs.js",
   "author": "Pedro J. Molina",
@@ -29,22 +29,24 @@
     "package.json",
     "README.md",
     "tslint.json",
-    ".eslintrc.json",
+    ".prettierrc",
     "examples/arithmetics.pegjs",
     "examples/css.pegjs",
     "examples/javascript.pegjs",
     "examples/json.pegjs",
     "examples/digits.pegjs",
     "examples/st.pegjs",
+    "src/.eslintrc",
     "src/cli.js",
     "src/tspegjs.js",
     "src/passes/generate-bytecode-ts.js",
     "src/passes/generate-ts.js",
+    "output/.eslintrc",
     "test/README",
     "test/test.js"
   ],
   "scripts": {
-    "clean": "rimraf output",
+    "clean": "rimraf output/*.ts output/*.js",
     "pretest": "npm run clean",
     "test": "npm run test:non-optimized && npm run test:optimize-size && npm run lint",
     "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint",
@@ -52,7 +54,8 @@
     "gen:samples": "node test/test.js --cache --trace",
     "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
     "compile:samples": "tsc --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
-    "lint:samples": "tslint output/*.ts",
+    "tslint:samples": "tslint output/*.ts",
+    "lint:samples": "eslint output/*.ts",
     "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && tslint output/st2.ts",
     "lint": "eslint src/"
   },
@@ -60,7 +63,12 @@
     "pegjs": "~0.10.0"
   },
   "devDependencies": {
-    "eslint": "^7.11.0",
+    "@typescript-eslint/eslint-plugin": "^4.11.1",
+    "@typescript-eslint/parser": "^4.11.1",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.0",
+    "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "tslint": "^5.20.1",
     "typescript": "^4.0.3"
