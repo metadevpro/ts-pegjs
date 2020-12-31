@@ -29,7 +29,7 @@ let customHeader = null;
 
 args.map((arg, index) => {
     if (arg === "--allowed-start-rules") {
-        allowedStartRules = args[index + 1];
+        allowedStartRules = (args[index + 1] | '').split(',');
     }
     if (arg === "--tslint-ignores") {
         tslintIgnores = args[index + 1];
