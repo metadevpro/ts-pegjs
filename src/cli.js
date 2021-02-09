@@ -28,7 +28,7 @@ let customHeader = null;
 
 args.map((arg, index) => {
     if (arg === "--allowed-start-rules") {
-        allowedStartRules = (args[index + 1] | "").split(",");
+        allowedStartRules = (args[index + 1] || "").split(",");
     }
     if (arg === "--custom-header") {
         customHeader = args[index + 1];
