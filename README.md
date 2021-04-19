@@ -120,7 +120,6 @@ Acknowledgments
 Thanks to:
 
 - [David Majda](https://github.com/dmajda) for creating pegjs
-- [Futago-za Ryuu](https://github.com/futagoza) for maintain pegjs
 - [Elantcev Mikhail](https://github.com/Nordth) for providing the pegjs PHP plugin, inspiration on this one.
 
 
