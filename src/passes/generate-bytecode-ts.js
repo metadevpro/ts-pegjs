@@ -2,10 +2,10 @@
 
 // Base: (original file: generate-bycode.js for codegen JS)
 
-var asts = require("pegjs/lib/compiler/asts");
-var js = require("pegjs/lib/compiler/js");
-var op = require("pegjs/lib/compiler/opcodes");
-var visitor = require("pegjs/lib/compiler/visitor");
+var asts = require("peggy/lib/compiler/asts");
+var js = require("peggy/lib/compiler/js");
+var op = require("peggy/lib/compiler/opcodes");
+var visitor = require("peggy/lib/compiler/visitor");
 
 // Generates bytecode.
 //
@@ -299,7 +299,7 @@ function generateBytecode(ast) {
     rule(node) {
       node.bytecode = generate(node.expression, {
         sp: -1,        // stack pointer
-        env: { },      // mapping of label names to stack positions
+        env: {},      // mapping of label names to stack positions
         action: null   // action nodes pass themselves to children here
       });
     },
@@ -331,13 +331,13 @@ function generateBytecode(ast) {
           }),
           alternatives.length > 1
             ? buildCondition(
-                [op.IF_ERROR],
-                buildSequence(
-                  [op.POP],
-                  buildAlternativesCode(alternatives.slice(1), context)
-                ),
-                []
-              )
+              [op.IF_ERROR],
+              buildSequence(
+                [op.POP],
+                buildAlternativesCode(alternatives.slice(1), context)
+              ),
+              []
+            )
             : []
         );
       }
@@ -348,7 +348,7 @@ function generateBytecode(ast) {
     action(node, context) {
       let env = cloneEnv(context.env);
       let emitCall = node.expression.type !== "sequence"
-                  || node.expression.elements.length === 0;
+        || node.expression.elements.length === 0;
       let expressionCode = generate(node.expression, {
         sp: context.sp + (emitCall ? 1 : 0),
         env: env,
@@ -358,18 +358,18 @@ function generateBytecode(ast) {
 
       return emitCall
         ? buildSequence(
-            [op.PUSH_CURR_POS],
-            expressionCode,
-            buildCondition(
-              [op.IF_NOT_ERROR],
-              buildSequence(
-                [op.LOAD_SAVED_POS, 1],
-                buildCall(functionIndex, 1, env, context.sp + 2)
-              ),
-              []
+          [op.PUSH_CURR_POS],
+          expressionCode,
+          buildCondition(
+            [op.IF_NOT_ERROR],
+            buildSequence(
+              [op.LOAD_SAVED_POS, 1],
+              buildCall(functionIndex, 1, env, context.sp + 2)
             ),
-            [op.NIP]
-          )
+            []
+          ),
+          [op.NIP]
+        )
         : expressionCode;
     },
 
@@ -539,15 +539,15 @@ function generateBytecode(ast) {
       if (node.value.length > 0) {
         let stringIndex = addConst("\""
           + js.stringEscape(
-              node.ignoreCase ? node.value.toLowerCase() : node.value
-            )
+            node.ignoreCase ? node.value.toLowerCase() : node.value
+          )
           + "\""
         );
         let expectedIndex = addConst(
           "peg$literalExpectation("
-            + "\"" + js.stringEscape(node.value) + "\", "
-            + node.ignoreCase
-            + ")"
+          + "\"" + js.stringEscape(node.value) + "\", "
+          + node.ignoreCase
+          + ")"
         );
 
         // For case-sensitive strings the value must match the beginning of the
@@ -573,27 +573,27 @@ function generateBytecode(ast) {
       let regexp = "/^["
         + (node.inverted ? "^" : "")
         + node.parts.map(part =>
-            Array.isArray(part)
-              ? js.regexpClassEscape(part[0])
-                + "-"
-                + js.regexpClassEscape(part[1])
-              : js.regexpClassEscape(part)
-          ).join("")
+          Array.isArray(part)
+            ? js.regexpClassEscape(part[0])
+            + "-"
+            + js.regexpClassEscape(part[1])
+            : js.regexpClassEscape(part)
+        ).join("")
         + "]/" + (node.ignoreCase ? "i" : "");
       let parts = "["
         + node.parts.map(part =>
-            Array.isArray(part)
-              ? "[\"" + js.stringEscape(part[0]) + "\", \"" + js.stringEscape(part[1]) + "\"]"
-              : "\"" + js.stringEscape(part) + "\""
-          ).join(", ")
+          Array.isArray(part)
+            ? "[\"" + js.stringEscape(part[0]) + "\", \"" + js.stringEscape(part[1]) + "\"]"
+            : "\"" + js.stringEscape(part) + "\""
+        ).join(", ")
         + "]";
       let regexpIndex = addConst(regexp);
       let expectedIndex = addConst(
         "peg$classExpectation("
-          + parts + ", "
-          + node.inverted + ", "
-          + node.ignoreCase
-          + ")"
+        + parts + ", "
+        + node.inverted + ", "
+        + node.ignoreCase
+        + ")"
       );
 
       return buildCondition(

@@ -3,17 +3,17 @@
 // Adapted from base: (original file: generate-bycode.js for codegen JS)
 // Adapted for Typescript codegen (c) 2017, Pedro J. Molina
 
-var asts = require("pegjs/lib/compiler/asts");
-var js = require("pegjs/lib/compiler/js");
-var op = require("pegjs/lib/compiler/opcodes");
+var asts = require("peggy/lib/compiler/asts");
+var js = require("peggy/lib/compiler/js");
+var op = require("peggy/lib/compiler/opcodes");
 var pluginVersion = require("../../package.json").version;
-var pegJsVersion = require("pegjs/package.json").version;
+var pegJsVersion = require("peggy/package.json").version;
 
 // Generates parser JavaScript code.
 function generateTS(ast, ...args) {
   // pegjs 0.10  api pass(ast, options)
   // pegjs 0.11+ api pass(ast, config, options);
-  const options = args[args.length -1];
+  const options = args[args.length - 1];
 
   // These only indent non-empty lines to avoid trailing whitespace.
   function indent2(code) {
@@ -638,12 +638,12 @@ function generateTS(ast, ...args) {
           case op.MATCH_STRING: // MATCH_STRING s, a, f, ...
             compileCondition(
               eval(ast.consts[bc[ip + 1]]).length > 1 ?
-              "input.substr(peg$currPos, " +
-              eval(ast.consts[bc[ip + 1]]).length +
-              ") === " +
-              c(bc[ip + 1]) :
-              "input.charCodeAt(peg$currPos) === " +
-              eval(ast.consts[bc[ip + 1]]).charCodeAt(0),
+                "input.substr(peg$currPos, " +
+                eval(ast.consts[bc[ip + 1]]).length +
+                ") === " +
+                c(bc[ip + 1]) :
+                "input.charCodeAt(peg$currPos) === " +
+                eval(ast.consts[bc[ip + 1]]).charCodeAt(0),
               1
             );
             break;
@@ -668,13 +668,13 @@ function generateTS(ast, ...args) {
           case op.ACCEPT_N: // ACCEPT_N n
             parts.push(stack.push(
               bc[ip + 1] > 1 ?
-              "input.substr(peg$currPos, " + bc[ip + 1] + ")" :
-              "input.charAt(peg$currPos)"
+                "input.substr(peg$currPos, " + bc[ip + 1] + ")" :
+                "input.charAt(peg$currPos)"
             ));
             parts.push(
               bc[ip + 1] > 1 ?
-              "peg$currPos += " + bc[ip + 1] + ";" :
-              "peg$currPos++;"
+                "peg$currPos += " + bc[ip + 1] + ";" :
+                "peg$currPos++;"
             );
             ip += 2;
             break;
@@ -683,8 +683,8 @@ function generateTS(ast, ...args) {
             parts.push(stack.push(c(bc[ip + 1])));
             parts.push(
               eval(ast.consts[bc[ip + 1]]).length > 1 ?
-              "peg$currPos += " + eval(ast.consts[bc[ip + 1]]).length + ";" :
-              "peg$currPos++;"
+                "peg$currPos += " + eval(ast.consts[bc[ip + 1]]).length + ";" :
+                "peg$currPos++;"
             );
             ip += 2;
             break;
@@ -735,9 +735,9 @@ function generateTS(ast, ...args) {
     code = compile(rule.bytecode);
 
     const outputType = (options && options.returnTypes && options.returnTypes[rule.name]) ?
-                       options.returnTypes[rule.name] : "any";
-    
-    parts.push("function peg$parse" + rule.name + "(): " + outputType +" {");
+      options.returnTypes[rule.name] : "any";
+
+    parts.push("function peg$parse" + rule.name + "(): " + outputType + " {");
 
     if (options.trace) {
       parts.push("  const startPos = peg$currPos;");

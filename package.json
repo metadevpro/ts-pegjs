@@ -1,79 +1,80 @@
 {
-  "name": "ts-pegjs",
-  "version": "0.3.1",
-  "description": "TS target for PEG.js parser generator",
-  "main": "src/tspegjs.js",
-  "author": "Pedro J. Molina",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/metadevpro/ts-pegjs/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/metadevpro/ts-pegjs.git"
-  },
-  "keywords": [
-    "pegjs",
-    "plugin",
-    "ts",
-    "typescript",
-    "parser",
-    "generator"
-  ],
-  "bin": {
-    "tspegjs": "src/cli.js"
-  },
-  "files": [
-    "LICENSE",
-    "package-lock.json",
-    "package.json",
-    "README.md",
-    "tslint.json",
-    ".prettierrc",
-    "examples/arithmetics.pegjs",
-    "examples/css.pegjs",
-    "examples/javascript.pegjs",
-    "examples/json.pegjs",
-    "examples/digits.pegjs",
-    "examples/st.pegjs",
-    "src/.eslintrc",
-    "src/cli.js",
-    "src/tspegjs.js",
-    "src/passes/generate-bytecode-ts.js",
-    "src/passes/generate-ts.js",
-    "output/.eslintrc",
-    "test/README",
-    "test/test.js"
-  ],
-  "scripts": {
-    "clean": "rimraf output/*.ts output/*.js",
-    "pretest": "npm run clean",
-    "test": "npm run test:non-optimized && npm run test:optimize-size && npm run lint",
-    "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint",
-    "test:optimize-size": "npm run gen:samples-optimize-size && npm run compile:samples && npm run lint:samples && npm run lint",
-    "gen:samples": "node test/test.js --cache --trace",
-    "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
-    "compile:samples": "tsc --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
-    "tslint:samples": "tslint output/*.ts",
-    "lint:samples": "eslint output/*.ts",
-    "test:cli": "pegjs --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && eslint output/st2.ts",
-    "lint": "eslint src/"
-  },
-  "peerDependencies": {
-    "pegjs": "~0.10.0"
-  },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
-    "@typescript-eslint/parser": "^4.21.0",
-    "eslint": "^7.24.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "prettier": "^2.2.1",
-    "rimraf": "^3.0.2",
-    "tslint": "^5.20.1",
-    "typescript": "^4.2.4"
-  },
-  "dependencies": {
-    "pegjs": "^0.10.0"
-  }
+    "name": "ts-pegjs",
+    "version": "1.0.0",
+    "description": "TS target for peggy parser generator",
+    "main": "src/tspegjs.js",
+    "author": "Pedro J. Molina",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/metadevpro/ts-pegjs/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/metadevpro/ts-pegjs.git"
+    },
+    "keywords": [
+        "peggy",
+        "pegjs",
+        "plugin",
+        "ts",
+        "typescript",
+        "parser",
+        "generator"
+    ],
+    "bin": {
+        "tspegjs": "src/cli.js"
+    },
+    "files": [
+        "LICENSE",
+        "package-lock.json",
+        "package.json",
+        "README.md",
+        "tslint.json",
+        ".prettierrc",
+        "examples/arithmetics.pegjs",
+        "examples/css.pegjs",
+        "examples/javascript.pegjs",
+        "examples/json.pegjs",
+        "examples/digits.pegjs",
+        "examples/st.pegjs",
+        "src/.eslintrc",
+        "src/cli.js",
+        "src/tspegjs.js",
+        "src/passes/generate-bytecode-ts.js",
+        "src/passes/generate-ts.js",
+        "output/.eslintrc",
+        "test/README",
+        "test/test.js"
+    ],
+    "scripts": {
+        "clean": "rimraf output/*.ts output/*.js",
+        "pretest": "npm run clean",
+        "test": "npm run test:non-optimized && npm run test:optimize-size && npm run lint",
+        "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint",
+        "test:optimize-size": "npm run gen:samples-optimize-size && npm run compile:samples && npm run lint:samples && npm run lint",
+        "gen:samples": "node test/test.js --cache --trace",
+        "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
+        "compile:samples": "tsc --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
+        "tslint:samples": "tslint output/*.ts",
+        "lint:samples": "eslint output/*.ts",
+        "test:cli": "peggy --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && eslint output/st2.ts",
+        "lint": "eslint src/"
+    },
+    "peerDependencies": {
+        "peggy": "1.1.0"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.25.0",
+        "@typescript-eslint/parser": "^4.25.0",
+        "eslint": "^7.27.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "prettier": "^2.3.0",
+        "rimraf": "^3.0.2",
+        "tslint": "^5.20.1",
+        "typescript": "^4.2.4"
+    },
+    "dependencies": {
+        "peggy": "1.1.0"
+    }
 }
