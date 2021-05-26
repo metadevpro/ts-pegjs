@@ -1,14 +1,20 @@
 # Changelog
 
+## Version 1.0.0
+
+2021.05.26
+
+-   Major change: [#59](https://github.com/metadevpro/ts-pegjs/issues/59). Changed dependency from [pegjs](https://github.com/pegjs/pegjs) (unmantained) in favour of [peggy](https://github.com/peggyjs/peggy) (a sensible mantained successor).
+
 ## Version 0.3.1
 
 2021.02.09
 
-- Fix [#53](https://github.com/metadevpro/ts-pegjs/issues/53). Errata in `--allowed-start-rules`.
+-   Fix [#53](https://github.com/metadevpro/ts-pegjs/issues/53). Errata in `--allowed-start-rules`.
 
 ## Version 0.3.0
 
 2020.12.31
 
-- Added ESLint for checking TS.
-- Removed support for TSLint rules. Removed options: `noTslint` and `tslintIgnores`
+-   Added ESLint for checking TS.
+-   Removed support for TSLint rules. Removed options: `noTslint` and `tslintIgnores`

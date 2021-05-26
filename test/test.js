@@ -1,5 +1,5 @@
 var fs = require("fs");
-var pegjs = require("pegjs");
+var peggy = require("peggy");
 var tspegjs = require("../src/tspegjs.js");
 
 var examples = {
@@ -14,11 +14,11 @@ function generateParser(input_file, output_file) {
   fs.readFile(input_file, function (err, data) {
     if (err) throw err;
 
-    var parser = pegjs.generate(data.toString(), {
+    var parser = peggy.generate(data.toString(), {
       output: "source",
       trace: true,
       cache: true,
-      plugins: [ tspegjs ],
+      plugins: [tspegjs],
       tspegjs: {
         customHeader: "// customHeader a\n// customHeader b"
       },
@@ -31,11 +31,11 @@ function testTypedGenerationArithmetics(input_file, output_file) {
   fs.readFile(input_file, function (err, data) {
     if (err) throw err;
 
-    var parser = pegjs.generate(data.toString(), {
+    var parser = peggy.generate(data.toString(), {
       output: "source",
       trace: true,
       cache: true,
-      plugins: [ tspegjs ],
+      plugins: [tspegjs],
       tspegjs: {
         customHeader: "// customHeader a\n// customHeader b"
       },
