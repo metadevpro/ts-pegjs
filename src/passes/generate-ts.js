@@ -620,15 +620,15 @@ function generateTS(ast, ...args) {
             break;
 
           case op.IF_ERROR: // IF_ERROR t, f
-            compileCondition(stack.top() + " === peg$FAILED", 0);
+            compileCondition(stack.top() + " as any === peg$FAILED", 0);
             break;
 
           case op.IF_NOT_ERROR: // IF_NOT_ERROR t, f
-            compileCondition(stack.top() + " !== peg$FAILED", 0);
+            compileCondition(stack.top() + " as any !== peg$FAILED", 0);
             break;
 
           case op.WHILE_NOT_ERROR: // WHILE_NOT_ERROR b
-            compileLoop(stack.top() + " !== peg$FAILED", 0);
+            compileLoop(stack.top() + " as any !== peg$FAILED", 0);
             break;
 
           case op.MATCH_ANY: // MATCH_ANY a, f, ...
