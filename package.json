@@ -61,7 +61,7 @@
         "lint": "eslint src/"
     },
     "peerDependencies": {
-        "peggy": "1.1.0"
+        "peggy": "^1.1.0"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^4.25.0",
@@ -75,6 +75,6 @@
         "typescript": "^4.2.4"
     },
     "dependencies": {
-        "peggy": "1.1.0"
+        "peggy": "^1.1.0"
     }
 }
