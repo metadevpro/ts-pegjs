@@ -30,21 +30,27 @@
 // [3] http://inimino.org/~inimino/blog/
 // [4] http://boshi.inimino.org/3box/asof/1270029991384/PEG/ECMAScript_unified.peg
 
+{{
+const TYPES_TO_PROPERTY_NAMES = {
+  CallExpression:   "callee",
+  MemberExpression: "object",
+};
+
+function filledArray(count, value) {
+  return Array.apply(null, new Array(count))
+    .map(function() { return value; });
+}
+
+function extractOptional(optional, index) {
+  return optional ? optional[index] : null;
+}
+
+function optionalList(value) {
+  return value !== null ? value : [];
+}
+}}
+
 {
-  const TYPES_TO_PROPERTY_NAMES = {
-    CallExpression:   "callee",
-    MemberExpression: "object",
-  };
-
-  function filledArray(count, value) {
-    return Array.apply(null, new Array(count))
-      .map(function() { return value; });
-  }
-
-  function extractOptional(optional, index) {
-    return optional ? optional[index] : null;
-  }
-
   function extractList(list, index) {
     return list.map(function(element) { return element[index]; });
   }
@@ -73,10 +79,6 @@
         right: element[3]
       };
     }, head);
-  }
-
-  function optionalList(value) {
-    return value !== null ? value : [];
   }
 }
 
