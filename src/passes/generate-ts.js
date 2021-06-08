@@ -1006,6 +1006,11 @@ function generateTS(ast, ...args) {
       ].join("\n"));
     }
 
+    if (ast.topLevelInitializer) {
+      parts.push(ast.topLevelInitializer.code);
+      parts.push("");
+    }
+
     parts.push([
       "function peg$parse(input: string, options?: IParseOptions) {",
       "  options = options !== undefined ? options : {};",
