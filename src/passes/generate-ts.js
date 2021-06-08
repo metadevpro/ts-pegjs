@@ -767,6 +767,11 @@ function generateTS(ast, ...args) {
   function generateToplevel() {
     let parts = [];
 
+    if (ast.topLevelInitializer) {
+      parts.push(ast.topLevelInitializer.code);
+      parts.push("");
+    }
+
     parts.push([
       "export interface IFilePosition {",
       "  offset: number;",
@@ -1004,11 +1009,6 @@ function generateTS(ast, ...args) {
         "}",
         "",
       ].join("\n"));
-    }
-
-    if (ast.topLevelInitializer) {
-      parts.push(ast.topLevelInitializer.code);
-      parts.push("");
     }
 
     parts.push([
