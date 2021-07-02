@@ -42,6 +42,7 @@
         "src/tspegjs.js",
         "src/passes/generate-bytecode-ts.js",
         "src/passes/generate-ts.js",
+        "src/passes/js.js",
         "output/.eslintrc",
         "test/README",
         "test/test.js"
