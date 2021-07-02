@@ -1,5 +1,20 @@
 # Changelog
 
+## Version 1.1.1
+
+2021.07.02
+
+-   Add missing file to package.json [#64](https://github.com/metadevpro/ts-pegjs/pull/64).
+
+## Version 1.1.0
+
+2021.07.02
+
+-   Small changes for peggy [#61](https://github.com/metadevpro/ts-pegjs/pull/61).
+-   Fixed peggy dependency version [#62](https://github.com/metadevpro/ts-pegjs/pull/62).
+-   Added top level initializer block [#63](https://github.com/metadevpro/ts-pegjs/pull/63).
+-   Update libs to latests versions.
+
 ## Version 1.0.0
 
 2021.05.26

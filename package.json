@@ -1,6 +1,6 @@
 {
     "name": "ts-pegjs",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "TS target for peggy parser generator",
     "main": "src/tspegjs.js",
     "author": "Pedro J. Molina",
