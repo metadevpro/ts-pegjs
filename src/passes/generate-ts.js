@@ -4,7 +4,7 @@
 // Adapted for Typescript codegen (c) 2017, Pedro J. Molina
 
 var asts = require("peggy/lib/compiler/asts");
-var js = require("peggy/lib/compiler/js");
+var js = require("./js");
 var op = require("peggy/lib/compiler/opcodes");
 var pluginVersion = require("../../package.json").version;
 var peggyVersion = require("peggy/package.json").version;

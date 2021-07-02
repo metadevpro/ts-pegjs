@@ -3,7 +3,7 @@
 // Base: (original file: generate-bycode.js for codegen JS)
 
 var asts = require("peggy/lib/compiler/asts");
-var js = require("peggy/lib/compiler/js");
+var js = require("./js");
 var op = require("peggy/lib/compiler/opcodes");
 var visitor = require("peggy/lib/compiler/visitor");
 
