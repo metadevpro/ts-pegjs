@@ -59,7 +59,8 @@
         "tslint:samples": "tslint output/*.ts",
         "lint:samples": "eslint output/*.ts",
         "test:cli": "peggy --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc output/st2.ts && eslint output/st2.ts",
-        "lint": "eslint src/"
+        "lint": "eslint src/",
+        "release": "npm test && npm publish"
     },
     "peerDependencies": {
         "peggy": "^1.2.0"
