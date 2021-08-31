@@ -1,5 +1,9 @@
 # Changelog
 
+## Version Next
+
+-   Add SyntaxError.format method [#67](https://github.com/metadevpro/ts-pegjs/issues/67).
+
 ## Version 1.1.1
 
 2021.07.02
