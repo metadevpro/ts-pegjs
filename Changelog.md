@@ -1,8 +1,9 @@
 # Changelog
 
-## Version Next
+## Version 1.2.0
 
 -   Add SyntaxError.format method [#67](https://github.com/metadevpro/ts-pegjs/issues/67).
+-   Now requires output to be ES6 at minimum (string.repeat needed).
 
 ## Version 1.1.1
 
