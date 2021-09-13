@@ -943,7 +943,7 @@ function generateTS(ast, ...args) {
       "  format(sources: { source: string; text: string }[]): string {",
       "    let str = 'Error: ' + this.message;",
       "    if (this.location) {",
-      "      let src = null;",
+      "      let src: string[] | null = null;",
       "      let k;",
       "      for (k = 0; k < sources.length; k++) {",
       "        if (sources[k].source === this.location.source) {",
