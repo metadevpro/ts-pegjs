@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 1.2.1
+
+-   Fix src Type for IntelliJ [#70](https://github.com/metadevpro/ts-pegjs/issues/70).
+
 ## Version 1.2.0
 
 -   Add SyntaxError.format method [#67](https://github.com/metadevpro/ts-pegjs/issues/67).
