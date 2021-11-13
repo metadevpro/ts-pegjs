@@ -58,8 +58,8 @@ Supported options of `pegjs.generate`:
 
 ### Plugin options
 
--   `custom-header` — A custom header of TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports.
--   `returnTypes` — An object containing rule names as keys and return type as string.
+-   `custom-header` — A string or an array of strings which are a valid TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports. 
+-   `returnTypes` — An object containing rule names as keys and a valid TS return type as string.
 
 ### Generating a Parser from CLI
 
@@ -81,9 +81,14 @@ peggy --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 {
     "tspegjs": {
         "customHeader": "// import lib\nimport { Lib } from 'mylib';"
+    },
+    "returnTypes": {
+        "Integer": "number",
+        "Expression": "number",
     }
 }
 ```
+> For rules not listed in `returnTypes` object `any` type is declared by default.
 
 > Make sure to pass any additional CLI options, like `--extra-options-file` before the parameter `-o` as these will otherwise be treated as arguments to that one.
 
