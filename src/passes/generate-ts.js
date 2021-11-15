@@ -1333,7 +1333,7 @@ function generateTS(ast, ...args) {
       let res = [];
       if (options.tspegjs.customHeader) {
         if (Array.isArray(options.tspegjs.customHeader)) {
-          res.concat(options.tspegjs.customHeader);
+          res = res.concat(options.tspegjs.customHeader);
         } else {
           res.push(options.tspegjs.customHeader);
         }
