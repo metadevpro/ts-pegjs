@@ -7,7 +7,8 @@ var examples = {
   "Json": "json.pegjs",
   "Css": "css.pegjs",
   "Javascript": "javascript.pegjs",
-  "ST4": "st.pegjs"
+  "ST4": "st.pegjs",
+  "bulkOpening": "bulkOpening.pegjs"
 };
 
 function generateParser(input_file, output_file) {
