@@ -58,7 +58,7 @@
         "gen:es": "node test/test.js --cache --trace --format es",
         "gen:samples": "node test/test.js --cache --trace",
         "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
-        "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts output/bulkOpening.ts",
+        "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts output/bulkOpening.ts output/minimal-typed.ts ",
         "tslint:samples": "tslint output/*.ts",
         "lint:samples": "eslint output/*.ts",
         "test:cli": "peggy --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc --target es6 output/st2.ts && eslint output/st2.ts",
