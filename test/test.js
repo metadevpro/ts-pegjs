@@ -7,7 +7,9 @@ var examples = {
   "Json": "json.pegjs",
   "Css": "css.pegjs",
   "Javascript": "javascript.pegjs",
-  "ST4": "st.pegjs"
+  "ST4": "st.pegjs",
+  "bulkOpening": "bulkOpening.pegjs",
+  "minimal": "minimal.pegjs",
 };
 
 function generateParser(input_file, output_file) {
@@ -50,6 +52,27 @@ function testTypedGenerationArithmetics(input_file, output_file) {
   });
 }
 
+function testTypedGenerationMinimal(input_file, output_file) {
+  fs.readFile(input_file, function (err, data) {
+    if (err) throw err;
+
+    var parser = peggy.generate(data.toString(), {
+      output: "source",
+      trace: true,
+      cache: true,
+      plugins: [tspegjs],
+      tspegjs: {
+        customHeader: "// Minimal"
+      },
+      returnTypes: {
+        "START": "string"
+      }
+    });
+    fs.writeFileSync(output_file, parser);
+  });
+}
+
+
 if (!fs.existsSync("output")) fs.mkdirSync("output");
 
 for (var classname in examples) {
@@ -59,3 +82,5 @@ for (var classname in examples) {
 }
 
 testTypedGenerationArithmetics("./examples/arithmetics.pegjs", "output/arithmetics-typed.ts");
+
+testTypedGenerationMinimal("./examples/minimal.pegjs", "output/minimal-typed.ts");

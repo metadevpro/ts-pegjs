@@ -1,6 +1,6 @@
 {
     "name": "ts-pegjs",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "TS target for peggy parser generator",
     "main": "src/tspegjs.js",
     "author": "Pedro J. Molina",
@@ -50,13 +50,15 @@
     "scripts": {
         "clean": "rimraf output/*.ts output/*.js",
         "pretest": "npm run clean",
-        "test": "npm run test:non-optimized && npm run test:optimize-size && npm run lint",
+        "test": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
+        "test:es": "npm run gen:es && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:optimize-size": "npm run gen:samples-optimize-size && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:samples": "node test/test-samples.js",
+        "gen:es": "node test/test.js --cache --trace --format es",
         "gen:samples": "node test/test.js --cache --trace",
         "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
-        "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
+        "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts output/bulkOpening.ts output/minimal-typed.ts ",
         "tslint:samples": "tslint output/*.ts",
         "lint:samples": "eslint output/*.ts",
         "test:cli": "peggy --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc --target es6 output/st2.ts && eslint output/st2.ts",
@@ -67,17 +69,14 @@
         "peggy": "^1.2.0"
     },
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^4.31.2",
-        "@typescript-eslint/parser": "^4.31.2",
-        "eslint": "^7.32.0",
-        "eslint-config-prettier": "^8.3.0",
+        "@typescript-eslint/eslint-plugin": "^5.15.0",
+        "@typescript-eslint/parser": "^5.15.0",
+        "eslint": "^8.11.0",
+        "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-prettier": "^4.0.0",
-        "prettier": "^2.4.1",
+        "prettier": "^2.6.0",
         "rimraf": "^3.0.2",
         "tslint": "^5.20.1",
-        "typescript": "^4.4.3"
-    },
-    "dependencies": {
-        "peggy": "^1.2.0"
+        "typescript": "^4.6.2"
     }
 }
