@@ -1,6 +1,6 @@
 {
     "name": "ts-pegjs",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "TS target for peggy parser generator",
     "main": "src/tspegjs.js",
     "author": "Pedro J. Molina",
@@ -50,10 +50,12 @@
     "scripts": {
         "clean": "rimraf output/*.ts output/*.js",
         "pretest": "npm run clean",
-        "test": "npm run test:non-optimized && npm run test:optimize-size && npm run lint",
+        "test": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
+        "test:es": "npm run gen:es && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:optimize-size": "npm run gen:samples-optimize-size && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:samples": "node test/test-samples.js",
+        "gen:es": "node test/test.js --cache --trace --format es",
         "gen:samples": "node test/test.js --cache --trace",
         "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
         "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts",
