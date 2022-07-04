@@ -1081,7 +1081,7 @@ function generateTS(ast, ...args) {
         " }";
       let startRuleFunction = options.allowedStartRules
         ? "peg$parse" + options.allowedStartRules[0]
-        : "peg$parse" + asts.getFirstRuleName(ast);
+        : "peg$parse" + getFirstRuleName(ast);
 
       parts.push([
         "  const peg$startRuleFunctions: {[id: string]: any} = " + startRuleFunctions + ";",
@@ -1572,3 +1572,7 @@ function generateTS(ast, ...args) {
 }
 
 module.exports = generateTS;
+
+const getFirstRuleName = (ast) => {
+  return ast.rules[0].name;
+};

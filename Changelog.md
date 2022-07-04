@@ -1,10 +1,10 @@
 # Changelog
 
-## Version 2.0.0
+## Version 2.0.1
 
 - Added support for peggy 2.0.1
 - Fix [#78](https://github.com/metadevpro/ts-pegjs/issues/78)
-
+- Fix missing helper function
 ## Version 1.2.2
 
 - Remove prod. dependency for peggy [#65](https://github.com/metadevpro/ts-pegjs/issues/65)
