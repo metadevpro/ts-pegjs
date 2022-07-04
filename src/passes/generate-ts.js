@@ -1061,11 +1061,13 @@ function generateTS(ast, ...args) {
 
     if (options.optimize === "size") {
       let startRuleIndices = "{ " +
-        options.allowedStartRules.map(
+        (options.allowedStartRules || []).map(
           r => r + ": " + asts.indexOfRule(ast, r)
         ).join(", ") +
         " }";
-      let startRuleIndex = asts.indexOfRule(ast, options.allowedStartRules[0]);
+      let startRuleIndex = options.allowedStartRules
+        ? asts.indexOfRule(ast, options.allowedStartRules[0])
+        : 0;
 
       parts.push([
         "  const peg$startRuleIndices: {[id: string]: number}  = " + startRuleIndices + ";",
@@ -1073,11 +1075,13 @@ function generateTS(ast, ...args) {
       ].join("\n"));
     } else {
       let startRuleFunctions = "{ " +
-        options.allowedStartRules.map(
+        (options.allowedStartRules || []).map(
           r => r + ": peg$parse" + r
         ).join(", ") +
         " }";
-      let startRuleFunction = "peg$parse" + options.allowedStartRules[0];
+      let startRuleFunction = options.allowedStartRules
+        ? "peg$parse" + options.allowedStartRules[0]
+        : "peg$parse" + asts.getFirstRuleName(ast);
 
       parts.push([
         "  const peg$startRuleFunctions: {[id: string]: any} = " + startRuleFunctions + ";",
@@ -1331,7 +1335,7 @@ function generateTS(ast, ...args) {
   function generateWrapper(toplevelCode) {
     function generateGeneratedByComment() {
       let res = [];
-      if (options.tspegjs.customHeader) {
+      if (options.tspegjs && options.tspegjs.customHeader) {
         if (Array.isArray(options.tspegjs.customHeader)) {
           res = res.concat(options.tspegjs.customHeader);
         } else {
@@ -1560,7 +1564,8 @@ function generateTS(ast, ...args) {
       }
     };
 
-    return generators[options.format]();
+    const format = options.format || "bare";
+    return generators[format]();
   }
 
   ast.code = generateWrapper(generateToplevel());
