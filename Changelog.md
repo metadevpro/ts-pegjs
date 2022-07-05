@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.0.2
+
+- Fix breaking change on peggy-to-plugin integration to receive peggy options. [#79](https://github.com/metadevpro/ts-pegjs/issues/79)
+
 ## Version 2.0.1
 
 - Added support for peggy 2.0.1

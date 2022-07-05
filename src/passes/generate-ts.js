@@ -10,10 +10,11 @@ var pluginVersion = require("../../package.json").version;
 var peggyVersion = require("peggy/package.json").version;
 
 // Generates parser JavaScript code.
-function generateTS(ast, ...args) {
+// eslint-disable-next-line no-unused-vars
+function generateTS(ast, options, session) {
   // pegjs 0.10  api pass(ast, options)
   // pegjs 0.11+ api pass(ast, config, options);
-  const options = args[args.length - 1];
+  // peggy 2.0.1 api pass(ast, config, session);
 
   // These only indent non-empty lines to avoid trailing whitespace.
   function indent2(code) {
