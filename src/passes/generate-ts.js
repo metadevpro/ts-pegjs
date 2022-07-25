@@ -616,6 +616,22 @@ function generateTS(ast, options, session) {
             ip++;
             break;
 
+          case op.PLUCK: {            // PLUCK n, k, p1, ..., pK
+            const baseLength = 3;
+            const paramsLength = bc[ip + baseLength - 1];
+            const n = baseLength + paramsLength;
+            value = bc.slice(ip + baseLength, ip + n);
+            value = paramsLength === 1
+              ? stack.index(value[0])
+              : `[ ${
+                value.map(p => stack.index(p)).join(", ")
+              } ]`;
+            stack.pop(bc[ip + 1]);
+            parts.push(stack.push(value));
+            ip += n;
+            break;
+          }
+
           case op.IF: // IF t, f
             compileCondition(stack.top(), 0);
             break;
