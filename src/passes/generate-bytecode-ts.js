@@ -72,6 +72,15 @@ var visitor = require("peggy/lib/compiler/visitor");
 //
 //        stack.push(input.substring(stack.pop(), currPos));
 //
+// [36] PLUCK n, k, p1, ..., pK
+//
+//        value = [stack[p1], ..., stack[pK]]; // when k != 1
+//        -or-
+//        value = stack[p1];                   // when k == 1
+//
+//        stack.pop(n);
+//        stack.push(value);
+//
 // Conditions and Loops
 // --------------------
 //
@@ -300,6 +309,7 @@ function generateBytecode(ast) {
       node.bytecode = generate(node.expression, {
         sp: -1,        // stack pointer
         env: {},      // mapping of label names to stack positions
+        pluck: [],
         action: null   // action nodes pass themselves to children here
       });
     },
@@ -382,6 +392,7 @@ function generateBytecode(ast) {
             generate(elements[0], {
               sp: context.sp,
               env: context.env,
+              pluck: context.pluck,
               action: null
             }),
             buildCondition(
@@ -389,6 +400,7 @@ function generateBytecode(ast) {
               buildElementsCode(elements.slice(1), {
                 sp: context.sp + 1,
                 env: context.env,
+                pluck: context.pluck,
                 action: context.action
               }),
               buildSequence(
@@ -399,6 +411,13 @@ function generateBytecode(ast) {
             )
           );
         } else {
+          if (context.pluck.length > 0) {
+            return buildSequence(
+              [op.PLUCK, node.elements.length + 1, context.pluck.length],
+              context.pluck.map(eSP => context.sp - eSP)
+            );
+          }
+
           if (context.action) {
             let functionIndex = addFunctionConst(
               Object.keys(context.env),
@@ -426,15 +445,25 @@ function generateBytecode(ast) {
         buildElementsCode(node.elements, {
           sp: context.sp + 1,
           env: context.env,
+          pluck: [],
           action: context.action
         })
       );
     },
 
     labeled(node, context) {
-      let env = cloneEnv(context.env);
+      let env = context.env;
+      const label = node.label;
+      const sp = context.sp + 1;
 
-      context.env[node.label] = context.sp + 1;
+      if (label) {
+        env = cloneEnv(context.env);
+        context.env[node.label] = sp;
+      }
+
+      if (node.pick) {
+        context.pluck.push(sp);
+      }
 
       return generate(node.expression, {
         sp: context.sp,
