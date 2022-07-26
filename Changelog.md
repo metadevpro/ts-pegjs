@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.1.0
+
+- Add support for the **pluck** operator. Thanks to @hildjj. [#66](https://github.com/metadevpro/ts-pegjs/issues/66)
+
 ## Version 2.0.2
 
 - Fix breaking change on peggy-to-plugin integration to receive peggy options. [#79](https://github.com/metadevpro/ts-pegjs/issues/79)
