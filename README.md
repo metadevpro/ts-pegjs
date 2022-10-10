@@ -68,6 +68,8 @@ Sample usage:
 peggy --plugin ./src/tspegjs -o examples/arithmetics.ts --cache examples/arithmetics.pegjs
 ```
 
+(Note `./src/tspegjs` is the path to `tspegjs.js` in the project. If you installed ts-pegjs using npm, it should probably be `./node_modules/ts-pegjs/src/tspegjs`.)
+
 It will generarate the parser in the TS flavour.
 
 If you need to pass specific plugin options you can use the option `--extra-options-file` provided by pegjs and pass it a filename (e.g. pegconfig.json) containing specific options like the following JSON sample:
