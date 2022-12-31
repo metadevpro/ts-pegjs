@@ -16,6 +16,8 @@ function generateTS(ast, options, session) {
   // pegjs 0.11+ api pass(ast, config, options);
   // peggy 2.0.1 api pass(ast, config, session);
 
+  let errorName = options.tspegjs && options.tspegjs.errorName ? options.tspegjs.errorName : "SyntaxError";
+
   // These only indent non-empty lines to avoid trailing whitespace.
   function indent2(code) {
     return code.replace(/^(.+)$/gm, "  $1");
@@ -842,7 +844,7 @@ function generateTS(ast, options, session) {
       "  return str + padString.slice(0, targetLength);",
       "}",
       "",
-      "export class SyntaxError extends Error {",
+      "export class " + errorName + " extends Error {",
       "  public static buildMessage(expected: Expectation[], found: string | null) {",
       "    function hex(ch: string): string {",
       "      return ch.charCodeAt(0).toString(16).toUpperCase();",
@@ -945,15 +947,15 @@ function generateTS(ast, options, session) {
       "    this.expected = expected;",
       "    this.found = found;",
       "    this.location = location;",
-      "    this.name = \"SyntaxError\";",
+      "    this.name = \"" + errorName + "\";",
       "",
       "    if (typeof (Object as any).setPrototypeOf === \"function\") {",
-      "      (Object as any).setPrototypeOf(this, SyntaxError.prototype);",
+      "      (Object as any).setPrototypeOf(this, " + errorName + ".prototype);",
       "    } else {",
-      "      (this as any).__proto__ = SyntaxError.prototype;",
+      "      (this as any).__proto__ = " + errorName + ".prototype;",
       "    }",
       "    if (typeof (Error as any).captureStackTrace === \"function\") {",
-      "      (Error as any).captureStackTrace(this, SyntaxError);",
+      "      (Error as any).captureStackTrace(this, " + errorName + ");",
       "    }",
       "  }",
       "",
@@ -1291,12 +1293,12 @@ function generateTS(ast, options, session) {
       "  }",
       "",
       "  function peg$buildSimpleError(message: string, location1: IFileRange) {",
-      "    return new SyntaxError(message, [], \"\", location1);",
+      "    return new " + errorName + "(message, [], \"\", location1);",
       "  }",
       "",
       "  function peg$buildStructuredError(expected1: Expectation[], found: string | null, location1: IFileRange) {",
-      "    return new SyntaxError(",
-      "      SyntaxError.buildMessage(expected1, found),",
+      "    return new " + errorName + "(",
+      "      " + errorName + ".buildMessage(expected1, found),",
       "      expected1,",
       "      found,",
       "      location1",
