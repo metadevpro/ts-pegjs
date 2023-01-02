@@ -132,7 +132,7 @@
         delimiterStopChar: delimiterStopChar
       });
     } catch (ex) {
-      if (ex instanceof SyntaxError) {
+      if (ex instanceof PeggySyntaxError) {
         (ex as any).line += lineOffset2;
       }
       throw ex;

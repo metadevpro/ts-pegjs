@@ -61,7 +61,7 @@ Supported options of `pegjs.generate`:
 
 -   `customHeader` — A string or an array of strings which are a valid TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports.
 -   `customHeaderFile` — A header file to include.
--   `errorName` — The name of the exported internal error class to override. For backward compatibility the default value is `SyntaxError`.
+-   `errorName` — The name of the exported internal error class to override. The default value from version 3.0.0 is `PeggySyntaxError`. Previous one was `SyntaxError`.
 -   `returnTypes` — An object containing rule names as keys and a valid TS return type as string.
 
 ### Generating a Parser from CLI
@@ -104,11 +104,11 @@ peggy --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 2. In client TS code:
 
 ```typescript
-import { SyntaxError, parse } from './arithmetics';
+import { PeggySyntaxError, parse } from './arithmetics';
 
 try {
     const sampleOutput = parse('my sample...');
-} catch (ex: SyntaxError) {
+} catch (ex: PeggySyntaxError) {
     // Handle parsing error
     // [...]
 }
