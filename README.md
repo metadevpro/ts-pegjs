@@ -131,4 +131,4 @@ Thanks to:
 
 ---
 
-(c) 2017-2022, [Pedro J. Molina](https://github.com/pjmolina) at [metadev.pro](https://metadev.pro)
+(c) 2017-2023, [Pedro J. Molina](https://github.com/pjmolina) at [metadev.pro](https://metadev.pro)
