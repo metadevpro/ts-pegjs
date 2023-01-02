@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.2.0
+
+- Added support for option `errorName`[#86](https://github.com/metadevpro/ts-pegjs/issues/86) Thanks to @iccicci. Needed after a breaking change in peggy.
+
 ## Version 2.1.0
 
 - Add support for the **pluck** operator. Thanks to @hildjj. [#66](https://github.com/metadevpro/ts-pegjs/issues/66)
