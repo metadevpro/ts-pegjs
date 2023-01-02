@@ -58,6 +58,7 @@ Supported options of `pegjs.generate`:
 ### Plugin options
 
 -   `custom-header` — A string or an array of strings which are a valid TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports. 
+-   `errorName` — The name of the exported internal error calss name. For backward compatibility the default value is `SyntaxError`, but it overrides the native type.
 -   `returnTypes` — An object containing rule names as keys and a valid TS return type as string.
 
 ### Generating a Parser from CLI
