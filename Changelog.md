@@ -1,5 +1,26 @@
 # Changelog
 
+## Version 3.0.0
+
+**Breaking changes!**
+
+- _Breaking change:_ Default for errorName changes from `SyntaxError` to `PeggySyntaxError` from [#86](https://github.com/metadevpro/ts-pegjs/pull/86). Reason: better aligment with Peggy. Allow users to override `SyntaxError` native type.
+- _Breaking change:_ Exported Interfaces now does not have the `I` prefix from [#75](https://github.com/metadevpro/ts-pegjs/issues/75). Reason: follow TypeScript conventions for interfaces with no prefix.
+  |**Interface**|**Renamed to**|
+  |---|---|
+  |`IParseOptions`|`ParseOptions`|
+  |`ICached`|`Cached`|
+  |`ITraceEvent`|`TraceEvent`|
+  |`IEndExpectation`|`EndExpectation`|
+  |`IOtherExpectation`|`OtherExpectation`|
+  |`IAnyExpectation`|`AnyExpectation`|
+  |`IClassExpectation`|`ClassExpectation`|
+  |`IClassParts`|`ClassParts`|
+  |`ILiteralExpectation`|`LiteralExpectation`|
+  |`IFileRange`|`FileRange`|
+  |`IFilePosition`|`FilePosition`|
+
+
 ## Version 2.2.1
 
 - Fix [#84](https://github.com/metadevpro/ts-pegjs/issues/84) Same convetion as peggy. Make `grammarSource` optional.

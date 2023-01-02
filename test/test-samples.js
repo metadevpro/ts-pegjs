@@ -1,5 +1,5 @@
 // Script for testing the arithmetics sample.
-// Currently it just tests that SyntaxError.format
+// Currently it just tests that PeggySyntaxError.format
 // works as advertised
 const { parse } = require('../output/arithmetics');
 const source = {
@@ -18,7 +18,7 @@ try {
     '  |    ^'
   ].join('\n');
   if (formattedError !== expected) {
-    console.error('Test Failure: SyntaxError.format did not run correctly. Expected:');
+    console.error('Test Failure: PeggySyntaxError.format did not run correctly. Expected:');
     console.error(expected);
     console.error('\n\n... but got ...\n\n');
     console.error(formattedError);
