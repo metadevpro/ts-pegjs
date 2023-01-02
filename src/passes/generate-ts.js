@@ -625,8 +625,7 @@ function generateTS(ast, options, session) {
             value = bc.slice(ip + baseLength, ip + n);
             value = paramsLength === 1
               ? stack.index(value[0])
-              : `[ ${
-                value.map(p => stack.index(p)).join(", ")
+              : `[ ${value.map(p => stack.index(p)).join(", ")
               } ]`;
             stack.pop(bc[ip + 1]);
             parts.push(stack.push(value));
@@ -959,13 +958,13 @@ function generateTS(ast, options, session) {
       "    }",
       "  }",
       "",
-      "  format(sources: { source: string; text: string }[]): string {",
+      "  format(sources: { grammarSource?: string; text: string }[]): string {",
       "    let str = 'Error: ' + this.message;",
       "    if (this.location) {",
       "      let src: string[] | null = null;",
       "      let k;",
       "      for (k = 0; k < sources.length; k++) {",
-      "        if (sources[k].source === this.location.source) {",
+      "        if (sources[k].grammarSource === this.location.source) {",
       "          src = sources[k].text.split(/\\r\\n|\\n|\\r/g);",
       "          break;",
       "        }",

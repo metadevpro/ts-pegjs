@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 2.2.1
+
+- Fix [#84](https://github.com/metadevpro/ts-pegjs/issues/84) Same convetion as peggy. Make `grammarSource` optional.
+
 ## Version 2.2.0
 
 - Added support for option `errorName`[#86](https://github.com/metadevpro/ts-pegjs/issues/86) Thanks to @iccicci. Needed after a breaking change in peggy.
