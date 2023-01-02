@@ -16,7 +16,7 @@ function generateTS(ast, options, session) {
   // pegjs 0.11+ api pass(ast, config, options);
   // peggy 2.0.1 api pass(ast, config, session);
 
-  let errorName = options.tspegjs && options.tspegjs.errorName ? options.tspegjs.errorName : "SyntaxError";
+  let errorName = options.tspegjs && options.tspegjs.errorName ? options.tspegjs.errorName : "PeggySyntaxError";
 
   // These only indent non-empty lines to avoid trailing whitespace.
   function indent2(code) {
@@ -68,7 +68,7 @@ function generateTS(ast, options, session) {
     if (options.cache) {
       parts.push([
         "const key = peg$currPos * " + ast.rules.length + " + " + ruleIndexCode + ";",
-        "const cached: ICached = peg$resultsCache[key];",
+        "const cached: Cached = peg$resultsCache[key];",
         "",
         "if (cached) {",
         "  peg$currPos = cached.nextPos;",
@@ -366,7 +366,7 @@ function generateTS(ast, options, session) {
       "        case " + op.FAIL + ":", // FAIL e
       "          stack.push(peg$FAILED);",
       "          if (peg$silentFails === 0) {",
-      "            peg$fail(peg$consts[bc[ip + 1]] as ILiteralExpectation);",
+      "            peg$fail(peg$consts[bc[ip + 1]] as LiteralExpectation);",
       "          }",
       "          ip += 2;",
       "          break;",
@@ -791,47 +791,47 @@ function generateTS(ast, options, session) {
     }
 
     parts.push([
-      "export interface IFilePosition {",
+      "export interface FilePosition {",
       "  offset: number;",
       "  line: number;",
       "  column: number;",
       "}",
       "",
-      "export interface IFileRange {",
-      "  start: IFilePosition;",
-      "  end: IFilePosition;",
+      "export interface FileRange {",
+      "  start: FilePosition;",
+      "  end: FilePosition;",
       "  source: string;",
       "}",
       "",
-      "export interface ILiteralExpectation {",
+      "export interface LiteralExpectation {",
       "  type: \"literal\";",
       "  text: string;",
       "  ignoreCase: boolean;",
       "}",
       "",
-      "export interface IClassParts extends Array<string | IClassParts> {}",
+      "export interface ClassParts extends Array<string | ClassParts> {}",
       "",
-      "export interface IClassExpectation {",
+      "export interface ClassExpectation {",
       "  type: \"class\";",
-      "  parts: IClassParts;",
+      "  parts: ClassParts;",
       "  inverted: boolean;",
       "  ignoreCase: boolean;",
       "}",
       "",
-      "export interface IAnyExpectation {",
+      "export interface AnyExpectation {",
       "  type: \"any\";",
       "}",
       "",
-      "export interface IEndExpectation {",
+      "export interface EndExpectation {",
       "  type: \"end\";",
       "}",
       "",
-      "export interface IOtherExpectation {",
+      "export interface OtherExpectation {",
       "  type: \"other\";",
       "  description: string;",
       "}",
       "",
-      "export type Expectation = ILiteralExpectation | IClassExpectation | IAnyExpectation | IEndExpectation | IOtherExpectation;",
+      "export type Expectation = LiteralExpectation | ClassExpectation | AnyExpectation | EndExpectation | OtherExpectation;",
       "",
       "function peg$padEnd(str: string, targetLength: number, padString: string) {",
       "  padString = padString || ' ';",
@@ -937,10 +937,10 @@ function generateTS(ast, options, session) {
       "  public message: string;",
       "  public expected: Expectation[];",
       "  public found: string | null;",
-      "  public location: IFileRange;",
+      "  public location: FileRange;",
       "  public name: string;",
       "",
-      "  constructor(message: string, expected: Expectation[], found: string | null, location: IFileRange) {",
+      "  constructor(message: string, expected: Expectation[], found: string | null, location: FileRange) {",
       "    super();",
       "    this.message = message;",
       "    this.expected = expected;",
@@ -991,11 +991,11 @@ function generateTS(ast, options, session) {
 
     if (options.trace) {
       parts.push([
-        "export interface ITraceEvent {",
+        "export interface TraceEvent {",
         "  type: string;",
         "  rule: string;",
         "  result?: any;",
-        "  location: IFileRange;",
+        "  location: FileRange;",
         "}",
         "",
         "export class DefaultTracer {",
@@ -1005,10 +1005,10 @@ function generateTS(ast, options, session) {
         "    this.indentLevel = 0;",
         "  }",
         "",
-        "  public trace(event: ITraceEvent) {",
+        "  public trace(event: TraceEvent) {",
         "    const that = this;",
         "",
-        "    function log(evt: ITraceEvent) {",
+        "    function log(evt: TraceEvent) {",
         "      function repeat(text: string, n: number) {",
         "         let result = \"\", i;",
         "",
@@ -1060,7 +1060,7 @@ function generateTS(ast, options, session) {
 
     if (options.cache) {
       parts.push([
-        "export interface ICached {",
+        "export interface Cached {",
         "  nextPos: number;",
         "  result: any;",
         "}",
@@ -1069,7 +1069,7 @@ function generateTS(ast, options, session) {
     }
 
     parts.push([
-      "function peg$parse(input: string, options?: IParseOptions) {",
+      "function peg$parse(input: string, options?: ParseOptions) {",
       "  options = options !== undefined ? options : {};",
       "",
       "  const peg$FAILED: Readonly<any> = {};",
@@ -1124,7 +1124,7 @@ function generateTS(ast, options, session) {
 
     if (options.cache) {
       parts.push([
-        "  const peg$resultsCache: {[id: number]: ICached} = {};",
+        "  const peg$resultsCache: {[id: number]: Cached} = {};",
         ""
       ].join("\n"));
     }
@@ -1182,11 +1182,11 @@ function generateTS(ast, options, session) {
       "    return input.substring(peg$savedPos, peg$currPos);",
       "  }",
       "",
-      "  function location(): IFileRange {",
+      "  function location(): FileRange {",
       "    return peg$computeLocation(peg$savedPos, peg$currPos);",
       "  }",
       "",
-      "  function expected(description: string, location1?: IFileRange) {",
+      "  function expected(description: string, location1?: FileRange) {",
       "    location1 = location1 !== undefined",
       "      ? location1",
       "      : peg$computeLocation(peg$savedPos, peg$currPos);",
@@ -1198,7 +1198,7 @@ function generateTS(ast, options, session) {
       "    );",
       "  }",
       "",
-      "  function error(message: string, location1?: IFileRange) {",
+      "  function error(message: string, location1?: FileRange) {",
       "    location1 = location1 !== undefined",
       "      ? location1",
       "      : peg$computeLocation(peg$savedPos, peg$currPos);",
@@ -1206,23 +1206,23 @@ function generateTS(ast, options, session) {
       "    throw peg$buildSimpleError(message, location1);",
       "  }",
       "",
-      "  function peg$literalExpectation(text1: string, ignoreCase: boolean): ILiteralExpectation {",
+      "  function peg$literalExpectation(text1: string, ignoreCase: boolean): LiteralExpectation {",
       "    return { type: \"literal\", text: text1, ignoreCase: ignoreCase };",
       "  }",
       "",
-      "  function peg$classExpectation(parts: IClassParts, inverted: boolean, ignoreCase: boolean): IClassExpectation {",
+      "  function peg$classExpectation(parts: ClassParts, inverted: boolean, ignoreCase: boolean): ClassExpectation {",
       "    return { type: \"class\", parts: parts, inverted: inverted, ignoreCase: ignoreCase };",
       "  }",
       "",
-      "  function peg$anyExpectation(): IAnyExpectation {",
+      "  function peg$anyExpectation(): AnyExpectation {",
       "    return { type: \"any\" };",
       "  }",
       "",
-      "  function peg$endExpectation(): IEndExpectation {",
+      "  function peg$endExpectation(): EndExpectation {",
       "    return { type: \"end\" };",
       "  }",
       "",
-      "  function peg$otherExpectation(description: string): IOtherExpectation {",
+      "  function peg$otherExpectation(description: string): OtherExpectation {",
       "    return { type: \"other\", description: description };",
       "  }",
       "",
@@ -1261,7 +1261,7 @@ function generateTS(ast, options, session) {
       "    }",
       "  }",
       "",
-      "  function peg$computeLocation(startPos: number, endPos: number): IFileRange {",
+      "  function peg$computeLocation(startPos: number, endPos: number): FileRange {",
       "    const startPosDetails = peg$computePosDetails(startPos);",
       "    const endPosDetails = peg$computePosDetails(endPos);",
       "",
@@ -1291,11 +1291,11 @@ function generateTS(ast, options, session) {
       "    peg$maxFailExpected.push(expected1);",
       "  }",
       "",
-      "  function peg$buildSimpleError(message: string, location1: IFileRange) {",
+      "  function peg$buildSimpleError(message: string, location1: FileRange) {",
       "    return new " + errorName + "(message, [], \"\", location1);",
       "  }",
       "",
-      "  function peg$buildStructuredError(expected1: Expectation[], found: string | null, location1: IFileRange) {",
+      "  function peg$buildStructuredError(expected1: Expectation[], found: string | null, location1: FileRange) {",
       "    return new " + errorName + "(",
       "      " + errorName + ".buildMessage(expected1, found),",
       "      expected1,",
@@ -1371,13 +1371,13 @@ function generateTS(ast, options, session) {
     }
 
     function generateParserObject() {
-      const optionsType = `export interface IParseOptions {
+      const optionsType = `export interface ParseOptions {
   filename?: string;
   startRule?: string;
   tracer?: any;
   [key: string]: any;
 }`;
-      const parseFunctionType = "export type ParseFunction = (input: string, options?: IParseOptions) => any;";
+      const parseFunctionType = "export type ParseFunction = (input: string, options?: ParseOptions) => any;";
       const parseExport = "export const parse: ParseFunction = peg$parse;";
 
       return options.trace ?
@@ -1387,7 +1387,7 @@ function generateTS(ast, options, session) {
           parseExport,
           ""
           // "{",
-          // "  SyntaxError: peg$SyntaxError,",
+          // "  PeggySyntaxError: peg$SyntaxError,",
           // "  DefaultTracer: peg$DefaultTracer,",
           // "  parse: peg$parse",
           // "}"
@@ -1398,7 +1398,7 @@ function generateTS(ast, options, session) {
           parseExport,
           ""
           // "{",
-          // "  SyntaxError: peg$SyntaxError,",
+          // "  PeggySyntaxError: peg$SyntaxError,",
           // "  parse: peg$parse",
           // "}"
         ].join("\n");
@@ -1408,14 +1408,14 @@ function generateTS(ast, options, session) {
       return options.trace ?
         [
           "{",
-          "  SyntaxError as SyntaxError,",
+          "  PeggySyntaxError as PeggySyntaxError,",
           "  DefaultTracer as DefaultTracer,",
           "  peg$parse as parse",
           "}"
         ].join("\n") :
         [
           "{",
-          "  SyntaxError as SyntaxError,",
+          "  PeggySyntaxError as PeggySyntaxError,",
           "  peg$parse as parse",
           "}"
         ].join("\n");
