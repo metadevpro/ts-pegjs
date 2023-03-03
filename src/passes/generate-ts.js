@@ -1449,7 +1449,7 @@ function generateTS(ast, options, session) {
 
         if (dependencyVars.length > 0) {
           dependencyVars.forEach(variable => {
-            parts.push("let " + variable +
+            parts.push("import " + variable +
               " = require(\"" +
               js.stringEscape(options.dependencies[variable]) +
               "\");"
