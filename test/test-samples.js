@@ -1,7 +1,8 @@
 // Script for testing the arithmetics sample.
 // Currently it just tests that PeggySyntaxError.format
 // works as advertised
-const { parse } = require('../output/arithmetics');
+import * as arithmetics from '../output/arithmetics.js';
+const parse = arithmetics.parse;
 const source = {
   grammarSource: 'somefile.txt',
   text: '3 ** 4'

@@ -3,11 +3,11 @@
 // Adapted from base: (original file: generate-bycode.js for codegen JS)
 // Adapted for Typescript codegen (c) 2017, Pedro J. Molina
 
-var asts = require("peggy/lib/compiler/asts");
-var js = require("./js");
-var op = require("peggy/lib/compiler/opcodes");
-var pluginVersion = require("../../package.json").version;
-var peggyVersion = require("peggy/package.json").version;
+import { indexOfRule } from "peggy/lib/compiler/asts.js";
+import { stringEscape } from "./js";
+import { PUSH, PUSH_UNDEFINED, PUSH_NULL, PUSH_FAILED, PUSH_EMPTY_ARRAY, PUSH_CURR_POS, POP, POP_CURR_POS, POP_N, NIP, APPEND, WRAP, TEXT, IF, IF_ERROR, IF_NOT_ERROR, WHILE_NOT_ERROR, MATCH_ANY, MATCH_STRING, MATCH_STRING_IC, MATCH_REGEXP, ACCEPT_N, ACCEPT_STRING, FAIL, LOAD_SAVED_POS, UPDATE_SAVED_POS, CALL, RULE, SILENT_FAILS_ON, SILENT_FAILS_OFF, PLUCK } from "peggy/lib/compiler/opcodes.js";
+import { version as pluginVersion } from "../../package.json";
+import { version as peggyVersion } from "peggy/package.json";
 
 // Generates parser JavaScript code.
 // eslint-disable-next-line no-unused-vars
@@ -37,7 +37,7 @@ function generateTS(ast, options, session) {
         "const peg$bytecode = [",
         indent2(ast.rules.map(rule =>
           "peg$decode(\"" +
-          js.stringEscape(rule.bytecode.map(
+          stringEscape(rule.bytecode.map(
             b => String.fromCharCode(b + 32)
           ).join("")) +
           "\")"
@@ -247,123 +247,123 @@ function generateTS(ast, options, session) {
       "  while (true) {",
       "    while (ip < end) {",
       "      switch (bc[ip]) {",
-      "        case " + op.PUSH + ":", // PUSH c
+      "        case " + PUSH + ":", // PUSH c
       "          stack.push(peg$consts[bc[ip + 1]]);",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.PUSH_UNDEFINED + ":", // PUSH_UNDEFINED
+      "        case " + PUSH_UNDEFINED + ":", // PUSH_UNDEFINED
       "          stack.push(undefined);",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.PUSH_NULL + ":", // PUSH_NULL
+      "        case " + PUSH_NULL + ":", // PUSH_NULL
       "          stack.push(null);",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.PUSH_FAILED + ":", // PUSH_FAILED
+      "        case " + PUSH_FAILED + ":", // PUSH_FAILED
       "          stack.push(peg$FAILED);",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.PUSH_EMPTY_ARRAY + ":", // PUSH_EMPTY_ARRAY
+      "        case " + PUSH_EMPTY_ARRAY + ":", // PUSH_EMPTY_ARRAY
       "          stack.push([]);",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.PUSH_CURR_POS + ":", // PUSH_CURR_POS
+      "        case " + PUSH_CURR_POS + ":", // PUSH_CURR_POS
       "          stack.push(peg$currPos);",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.POP + ":", // POP
+      "        case " + POP + ":", // POP
       "          stack.pop();",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.POP_CURR_POS + ":", // POP_CURR_POS
+      "        case " + POP_CURR_POS + ":", // POP_CURR_POS
       "          peg$currPos = stack.pop();",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.POP_N + ":", // POP_N n
+      "        case " + POP_N + ":", // POP_N n
       "          stack.length -= bc[ip + 1];",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.NIP + ":", // NIP
+      "        case " + NIP + ":", // NIP
       "          stack.splice(-2, 1);",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.APPEND + ":", // APPEND
+      "        case " + APPEND + ":", // APPEND
       "          stack[stack.length - 2].push(stack.pop());",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.WRAP + ":", // WRAP n
+      "        case " + WRAP + ":", // WRAP n
       "          stack.push(stack.splice(stack.length - bc[ip + 1], bc[ip + 1]));",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.TEXT + ":", // TEXT
+      "        case " + TEXT + ":", // TEXT
       "          stack.push(input.substring(stack.pop(), peg$currPos));",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.IF + ":", // IF t, f
+      "        case " + IF + ":", // IF t, f
       indent10(generateCondition("stack[stack.length - 1]", 0)),
       "",
-      "        case " + op.IF_ERROR + ":", // IF_ERROR t, f
+      "        case " + IF_ERROR + ":", // IF_ERROR t, f
       indent10(generateCondition(
         "stack[stack.length - 1] === peg$FAILED",
         0
       )),
       "",
-      "        case " + op.IF_NOT_ERROR + ":", // IF_NOT_ERROR t, f
+      "        case " + IF_NOT_ERROR + ":", // IF_NOT_ERROR t, f
       indent10(
         generateCondition("stack[stack.length - 1] !== peg$FAILED",
           0
         )),
       "",
-      "        case " + op.WHILE_NOT_ERROR + ":", // WHILE_NOT_ERROR b
+      "        case " + WHILE_NOT_ERROR + ":", // WHILE_NOT_ERROR b
       indent10(generateLoop("stack[stack.length - 1] !== peg$FAILED")),
       "",
-      "        case " + op.MATCH_ANY + ":", // MATCH_ANY a, f, ...
+      "        case " + MATCH_ANY + ":", // MATCH_ANY a, f, ...
       indent10(generateCondition("input.length > peg$currPos", 0)),
       "",
-      "        case " + op.MATCH_STRING + ":", // MATCH_STRING s, a, f, ...
+      "        case " + MATCH_STRING + ":", // MATCH_STRING s, a, f, ...
       indent10(generateCondition(
         "input.substr(peg$currPos, (peg$consts[bc[ip + 1]] as string).length) === peg$consts[bc[ip + 1]]",
         1
       )),
       "",
-      "        case " + op.MATCH_STRING_IC + ":", // MATCH_STRING_IC s, a, f, ...
+      "        case " + MATCH_STRING_IC + ":", // MATCH_STRING_IC s, a, f, ...
       indent10(generateCondition(
         "input.substr(peg$currPos, (peg$consts[bc[ip + 1]] as string).length).toLowerCase() === peg$consts[bc[ip + 1]]",
         1
       )),
       "",
-      "        case " + op.MATCH_REGEXP + ":", // MATCH_REGEXP r, a, f, ...
+      "        case " + MATCH_REGEXP + ":", // MATCH_REGEXP r, a, f, ...
       indent10(generateCondition(
         "(peg$consts[bc[ip + 1]] as RegExp).test(input.charAt(peg$currPos))",
         1
       )),
       "",
-      "        case " + op.ACCEPT_N + ":", // ACCEPT_N n
+      "        case " + ACCEPT_N + ":", // ACCEPT_N n
       "          stack.push(input.substr(peg$currPos, bc[ip + 1]));",
       "          peg$currPos += bc[ip + 1];",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.ACCEPT_STRING + ":", // ACCEPT_STRING s
+      "        case " + ACCEPT_STRING + ":", // ACCEPT_STRING s
       "          stack.push(peg$consts[bc[ip + 1]]);",
       "          peg$currPos += (peg$consts[bc[ip + 1]] as string).length;",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.FAIL + ":", // FAIL e
+      "        case " + FAIL + ":", // FAIL e
       "          stack.push(peg$FAILED);",
       "          if (peg$silentFails === 0) {",
       "            peg$fail(peg$consts[bc[ip + 1]] as LiteralExpectation);",
@@ -371,30 +371,30 @@ function generateTS(ast, options, session) {
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.LOAD_SAVED_POS + ":", // LOAD_SAVED_POS p
+      "        case " + LOAD_SAVED_POS + ":", // LOAD_SAVED_POS p
       "          peg$savedPos = stack[stack.length - 1 - bc[ip + 1]];",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.UPDATE_SAVED_POS + ":", // UPDATE_SAVED_POS
+      "        case " + UPDATE_SAVED_POS + ":", // UPDATE_SAVED_POS
       "          peg$savedPos = peg$currPos;",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.CALL + ":", // CALL f, n, pc, p1, p2, ..., pN
+      "        case " + CALL + ":", // CALL f, n, pc, p1, p2, ..., pN
       indent10(generateCall()),
       "",
-      "        case " + op.RULE + ":", // RULE r
+      "        case " + RULE + ":", // RULE r
       "          stack.push(peg$parseRule(bc[ip + 1]));",
       "          ip += 2;",
       "          break;",
       "",
-      "        case " + op.SILENT_FAILS_ON + ":", // SILENT_FAILS_ON
+      "        case " + SILENT_FAILS_ON + ":", // SILENT_FAILS_ON
       "          peg$silentFails++;",
       "          ip++;",
       "          break;",
       "",
-      "        case " + op.SILENT_FAILS_OFF + ":", // SILENT_FAILS_OFF
+      "        case " + SILENT_FAILS_OFF + ":", // SILENT_FAILS_OFF
       "          peg$silentFails--;",
       "          ip++;",
       "          break;",
@@ -546,79 +546,79 @@ function generateTS(ast, options, session) {
 
       while (ip < end) {
         switch (bc[ip]) {
-          case op.PUSH: // PUSH c
+          case PUSH: // PUSH c
             parts.push(stack.push(c(bc[ip + 1])));
             ip += 2;
             break;
 
-          case op.PUSH_CURR_POS: // PUSH_CURR_POS
+          case PUSH_CURR_POS: // PUSH_CURR_POS
             parts.push(stack.push("peg$currPos"));
             ip++;
             break;
 
-          case op.PUSH_UNDEFINED: // PUSH_UNDEFINED
+          case PUSH_UNDEFINED: // PUSH_UNDEFINED
             parts.push(stack.push("undefined"));
             ip++;
             break;
 
-          case op.PUSH_NULL: // PUSH_NULL
+          case PUSH_NULL: // PUSH_NULL
             parts.push(stack.push("null"));
             ip++;
             break;
 
-          case op.PUSH_FAILED: // PUSH_FAILED
+          case PUSH_FAILED: // PUSH_FAILED
             parts.push(stack.push("peg$FAILED"));
             ip++;
             break;
 
-          case op.PUSH_EMPTY_ARRAY: // PUSH_EMPTY_ARRAY
+          case PUSH_EMPTY_ARRAY: // PUSH_EMPTY_ARRAY
             parts.push(stack.push("[]"));
             ip++;
             break;
 
-          case op.POP: // POP
+          case POP: // POP
             stack.pop();
             ip++;
             break;
 
-          case op.POP_CURR_POS: // POP_CURR_POS
+          case POP_CURR_POS: // POP_CURR_POS
             parts.push("peg$currPos = " + stack.pop() + ";");
             ip++;
             break;
 
-          case op.POP_N: // POP_N n
+          case POP_N: // POP_N n
             stack.pop(bc[ip + 1]);
             ip += 2;
             break;
 
-          case op.NIP: // NIP
+          case NIP: // NIP
             value = stack.pop();
             stack.pop();
             parts.push(stack.push(value));
             ip++;
             break;
 
-          case op.APPEND: // APPEND
+          case APPEND: // APPEND
             value = stack.pop();
             parts.push(stack.top() + ".push(" + value + ");");
             ip++;
             break;
 
-          case op.WRAP: // WRAP n
+          case WRAP: // WRAP n
             parts.push(
               stack.push("[" + stack.pop(bc[ip + 1]).join(", ") + "]")
             );
             ip += 2;
             break;
 
-          case op.TEXT: // TEXT
+          case TEXT: // TEXT
             parts.push(
               stack.push("input.substring(" + stack.pop() + ", peg$currPos)")
             );
             ip++;
             break;
 
-          case op.PLUCK: {            // PLUCK n, k, p1, ..., pK
+          case PLUCK: {            // PLUCK n, k, p1, ..., pK
             const baseLength = 3;
             const paramsLength = bc[ip + baseLength - 1];
             const n = baseLength + paramsLength;
@@ -633,27 +633,27 @@ function generateTS(ast, options, session) {
             break;
           }
 
-          case op.IF: // IF t, f
+          case IF: // IF t, f
             compileCondition(stack.top(), 0);
             break;
 
-          case op.IF_ERROR: // IF_ERROR t, f
+          case IF_ERROR: // IF_ERROR t, f
             compileCondition(stack.top() + " as any === peg$FAILED", 0);
             break;
 
-          case op.IF_NOT_ERROR: // IF_NOT_ERROR t, f
+          case IF_NOT_ERROR: // IF_NOT_ERROR t, f
             compileCondition(stack.top() + " as any !== peg$FAILED", 0);
             break;
 
-          case op.WHILE_NOT_ERROR: // WHILE_NOT_ERROR b
+          case WHILE_NOT_ERROR: // WHILE_NOT_ERROR b
             compileLoop(stack.top() + " as any !== peg$FAILED", 0);
             break;
 
-          case op.MATCH_ANY: // MATCH_ANY a, f, ...
+          case MATCH_ANY: // MATCH_ANY a, f, ...
             compileCondition("input.length > peg$currPos", 0);
             break;
 
-          case op.MATCH_STRING: // MATCH_STRING s, a, f, ...
+          case MATCH_STRING: // MATCH_STRING s, a, f, ...
             compileCondition(
               eval(ast.consts[bc[ip + 1]]).length > 1 ?
                 "input.substr(peg$currPos, " +
@@ -666,7 +666,7 @@ function generateTS(ast, options, session) {
             );
             break;
 
-          case op.MATCH_STRING_IC: // MATCH_STRING_IC s, a, f, ...
+          case MATCH_STRING_IC: // MATCH_STRING_IC s, a, f, ...
             compileCondition(
               "input.substr(peg$currPos, " +
               eval(ast.consts[bc[ip + 1]]).length +
@@ -676,14 +676,14 @@ function generateTS(ast, options, session) {
             );
             break;
 
-          case op.MATCH_REGEXP: // MATCH_REGEXP r, a, f, ...
+          case MATCH_REGEXP: // MATCH_REGEXP r, a, f, ...
             compileCondition(
               c(bc[ip + 1]) + ".test(input.charAt(peg$currPos))",
               1
             );
             break;
 
-          case op.ACCEPT_N: // ACCEPT_N n
+          case ACCEPT_N: // ACCEPT_N n
             parts.push(stack.push(
               bc[ip + 1] > 1 ?
                 "input.substr(peg$currPos, " + bc[ip + 1] + ")" :
@@ -697,7 +697,7 @@ function generateTS(ast, options, session) {
             ip += 2;
             break;
 
-          case op.ACCEPT_STRING: // ACCEPT_STRING s
+          case ACCEPT_STRING: // ACCEPT_STRING s
             parts.push(stack.push(c(bc[ip + 1])));
             parts.push(
               eval(ast.consts[bc[ip + 1]]).length > 1 ?
@@ -707,37 +707,37 @@ function generateTS(ast, options, session) {
             ip += 2;
             break;
 
-          case op.FAIL: // FAIL e
+          case FAIL: // FAIL e
             parts.push(stack.push("peg$FAILED"));
             parts.push("if (peg$silentFails === 0) { peg$fail(" + c(bc[ip + 1]) + "); }");
             ip += 2;
             break;
 
-          case op.LOAD_SAVED_POS: // LOAD_SAVED_POS p
+          case LOAD_SAVED_POS: // LOAD_SAVED_POS p
             parts.push("peg$savedPos = " + stack.index(bc[ip + 1]) + ";");
             ip += 2;
             break;
 
-          case op.UPDATE_SAVED_POS: // UPDATE_SAVED_POS
+          case UPDATE_SAVED_POS: // UPDATE_SAVED_POS
             parts.push("peg$savedPos = peg$currPos;");
             ip++;
             break;
 
-          case op.CALL: // CALL f, n, pc, p1, p2, ..., pN
+          case CALL: // CALL f, n, pc, p1, p2, ..., pN
             compileCall();
             break;
 
-          case op.RULE: // RULE r
+          case RULE: // RULE r
             parts.push(stack.push("peg$parse" + ast.rules[bc[ip + 1]].name + "()"));
             ip += 2;
             break;
 
-          case op.SILENT_FAILS_ON: // SILENT_FAILS_ON
+          case SILENT_FAILS_ON: // SILENT_FAILS_ON
             parts.push("peg$silentFails++;");
             ip++;
             break;
 
-          case op.SILENT_FAILS_OFF: // SILENT_FAILS_OFF
+          case SILENT_FAILS_OFF: // SILENT_FAILS_OFF
             parts.push("peg$silentFails--;");
             ip++;
             break;
@@ -768,12 +768,12 @@ function generateTS(ast, options, session) {
     parts.push("  let " + stackVars.join(", ") + ";");
 
     parts.push(indent2(generateRuleHeader(
-      "\"" + js.stringEscape(rule.name) + "\"",
-      asts.indexOfRule(ast, rule.name)
+      "\"" + stringEscape(rule.name) + "\"",
+      indexOfRule(ast, rule.name)
     )));
     parts.push(indent2(code));
     parts.push(indent2(generateRuleFooter(
-      "\"" + js.stringEscape(rule.name) + "\"",
+      "\"" + stringEscape(rule.name) + "\"",
       s(0)
     )));
 
@@ -1080,11 +1080,11 @@ function generateTS(ast, options, session) {
     if (options.optimize === "size") {
       let startRuleIndices = "{ " +
         (options.allowedStartRules || []).map(
-          r => r + ": " + asts.indexOfRule(ast, r)
+          r => r + ": " + indexOfRule(ast, r)
         ).join(", ") +
         " }";
       let startRuleIndex = options.allowedStartRules
-        ? asts.indexOfRule(ast, options.allowedStartRules[0])
+        ? indexOfRule(ast, options.allowedStartRules[0])
         : 0;
 
       parts.push([
@@ -1133,7 +1133,7 @@ function generateTS(ast, options, session) {
       if (options.optimize === "size") {
         let ruleNames = "[" +
           ast.rules.map(
-            r => "\"" + js.stringEscape(r.name) + "\""
+            r => "\"" + stringEscape(r.name) + "\""
           ).join(", ") +
           "]";
 
@@ -1451,7 +1451,7 @@ function generateTS(ast, options, session) {
           dependencyVars.forEach(variable => {
             parts.push("import " + variable +
               " = require(\"" +
-              js.stringEscape(options.dependencies[variable]) +
+              stringEscape(options.dependencies[variable]) +
               "\");"
             );
           });
@@ -1482,7 +1482,7 @@ function generateTS(ast, options, session) {
           dependencyVars.forEach(variable => {
             parts.push("import " + variable +
               " from \"" +
-              js.stringEscape(options.dependencies[variable]) +
+              stringEscape(options.dependencies[variable]) +
               "\";"
             );
           });
@@ -1504,7 +1504,7 @@ function generateTS(ast, options, session) {
         let dependencyIds = dependencyVars.map(v => options.dependencies[v]);
         let dependencies = "[" +
           dependencyIds.map(
-            id => "\"" + js.stringEscape(id) + "\""
+            id => "\"" + stringEscape(id) + "\""
           ).join(", ") +
           "]";
         let params = dependencyVars.map(v => v + ": any").join(", ");
@@ -1542,11 +1542,11 @@ function generateTS(ast, options, session) {
         let dependencyIds = dependencyVars.map(v => options.dependencies[v]);
         let dependencies = "[" +
           dependencyIds.map(
-            id => "\"" + js.stringEscape(id) + "\""
+            id => "\"" + stringEscape(id) + "\""
           ).join(", ") +
           "]";
         let requires = dependencyIds.map(
-          id => "require(\"" + js.stringEscape(id) + "\")"
+          id => "require(\"" + stringEscape(id) + "\")"
         ).join(", ");
         let params = dependencyVars.map(v => v + ": any").join(", ");
 
@@ -1589,7 +1589,7 @@ function generateTS(ast, options, session) {
   ast.code = generateWrapper(generateToplevel());
 }
 
-module.exports = generateTS;
+export default generateTS;
 
 const getFirstRuleName = (ast) => {
   return ast.rules[0].name;

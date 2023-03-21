@@ -1,6 +1,7 @@
-var fs = require("fs");
-var peggy = require("peggy");
-var tspegjs = require("../src/tspegjs.js");
+import { readFile, writeFileSync, existsSync, mkdirSync } from "fs";
+import peggy from "peggy";
+import tspegjs from "../dist/tspegjs.js";
+const generate = peggy.generate;
 
 var examples = {
   "Arithmetics": "arithmetics.pegjs",
@@ -13,10 +14,10 @@ var examples = {
 };
 
 function generateParser(input_file, output_file) {
-  fs.readFile(input_file, function (err, data) {
+  readFile(input_file, function (err, data) {
     if (err) throw err;
 
-    var parser = peggy.generate(data.toString(), {
+    var parser = generate(data.toString(), {
       output: "source",
       trace: true,
       cache: true,
@@ -25,15 +26,15 @@ function generateParser(input_file, output_file) {
         customHeader: "// customHeader a\n// customHeader b"
       },
     });
-    fs.writeFileSync(output_file, parser);
+    writeFileSync(output_file, parser);
   });
 }
 
 function testTypedGenerationArithmetics(input_file, output_file) {
-  fs.readFile(input_file, function (err, data) {
+  readFile(input_file, function (err, data) {
     if (err) throw err;
 
-    var parser = peggy.generate(data.toString(), {
+    var parser = generate(data.toString(), {
       output: "source",
       trace: true,
       cache: true,
@@ -48,15 +49,15 @@ function testTypedGenerationArithmetics(input_file, output_file) {
         "Factor": "number"
       }
     });
-    fs.writeFileSync(output_file, parser);
+    writeFileSync(output_file, parser);
   });
 }
 
 function testTypedGenerationMinimal(input_file, output_file) {
-  fs.readFile(input_file, function (err, data) {
+  readFile(input_file, function (err, data) {
     if (err) throw err;
 
-    var parser = peggy.generate(data.toString(), {
+    var parser = generate(data.toString(), {
       output: "source",
       trace: true,
       cache: true,
@@ -68,12 +69,12 @@ function testTypedGenerationMinimal(input_file, output_file) {
         "START": "string"
       }
     });
-    fs.writeFileSync(output_file, parser);
+    writeFileSync(output_file, parser);
   });
 }
 
 
-if (!fs.existsSync("output")) fs.mkdirSync("output");
+if (!existsSync("output")) mkdirSync("output");
 
 for (var classname in examples) {
   generateParser("./examples/" + examples[classname],

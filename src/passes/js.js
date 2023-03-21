@@ -58,4 +58,5 @@ const js = {
   regexpClassEscape
 };
 
-module.exports = js;
+export default js;
+export {stringEscape, regexpClassEscape};
