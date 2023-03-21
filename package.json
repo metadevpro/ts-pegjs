@@ -2,7 +2,6 @@
     "name": "ts-pegjs",
     "version": "3.1.0",
     "description": "TS target for peggy parser generator",
-    "main": "dist/tspegjs.js",
     "author": "Pedro J. Molina",
     "license": "MIT",
     "bugs": {
@@ -21,9 +20,12 @@
         "parser",
         "generator"
     ],
-    "type": "module",
     "bin": {
-        "tspegjs": "dist/cli.js"
+        "tspegjs": "dist/cli.mjs"
+    },
+    "exports": {
+        "import": "./dist/tspegjs.mjs",
+        "require": "./dist/tspegjs.js"
     },
     "files": [
         "LICENSE",
@@ -38,14 +40,14 @@
         "test:es": "npm run gen:es && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:optimize-size": "npm run gen:samples-optimize-size && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
-        "test:samples": "node test/test-samples.js",
-        "gen:es": "node test/test.js --cache --trace --format es",
-        "gen:samples": "node test/test.js --cache --trace",
-        "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
-        "compile:samples": "tsc --target es6 --module es6 --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts output/bulkOpening.ts output/minimal-typed.ts ",
+        "test:samples": "node test/test-samples.mjs",
+        "gen:es": "node test/test.mjs --cache --trace --format es",
+        "gen:samples": "node test/test.mjs --cache --trace",
+        "gen:samples-optimize-size": "node test/test.mjs --cache --trace --optimize size",
+        "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts output/bulkOpening.ts output/minimal-typed.ts ",
         "tslint:samples": "tslint output/*.ts",
         "lint:samples": "eslint output/*.ts",
-        "test:cli": "peggy --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc --target es6 output/st2.ts && eslint output/st2.ts",
+        "test:cli": "peggy --plugin ./dist/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc --target es6 output/st2.ts && eslint output/st2.ts",
         "lint": "eslint src/",
         "release": "npm test && npm publish"
     },
