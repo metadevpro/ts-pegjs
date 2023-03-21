@@ -33,6 +33,7 @@
     "scripts": {
         "clean": "rimraf output/*.ts output/*.js",
         "pretest": "npm run clean",
+        "build": "vite build",
         "test": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:es": "npm run gen:es && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
         "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",

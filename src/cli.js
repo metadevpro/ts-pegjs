@@ -2,8 +2,8 @@
 
 import * as fs from "node:fs";
 import * as process from "node:process";
-import * as peggy from "peggy";
-import * as tspegjs from "./tspegjs.js";
+import peggy from "peggy";
+import tspegjs from "./tspegjs.js";
 import { version } from "../package.json";
 
 const generate = peggy.generate;
