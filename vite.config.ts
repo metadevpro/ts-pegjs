@@ -1,5 +1,5 @@
-import { defineConfig } from "vitest/config";
-import viteTsconfigPaths from "vite-tsconfig-paths";
+import { defineConfig } from 'vitest/config';
+import viteTsconfigPaths from 'vite-tsconfig-paths';
 
 /**
  * The main configuration for Vite. This config includes
@@ -7,12 +7,12 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
  */
 export default defineConfig({
   plugins: [viteTsconfigPaths()],
-  base: "./",
+  base: './',
   build: {
-    outDir: "dist",
+    outDir: 'dist',
     minify: false,
-    lib: { entry: ["./src/cli.js", "./src/tspegjs.js"], formats: ["es", "cjs"] },
-    rollupOptions: { external: [/^node:/, "peggy"] },
+    lib: { entry: ['./src/cli.js', './src/tspegjs.js'], formats: ['es', 'cjs'] },
+    rollupOptions: { external: [/^node:/, 'peggy'] }
   },
-  test: { globals: true },
+  test: { globals: true }
 });
