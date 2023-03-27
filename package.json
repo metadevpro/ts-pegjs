@@ -37,7 +37,6 @@
         "pretest": "npm run clean",
         "build": "vite build",
         "test": "vitest run",
-        "tslint:samples": "tslint output/*.ts",
         "lint": "eslint src/",
         "release": "npm test && npm publish"
     },
@@ -52,7 +51,6 @@
         "eslint-plugin-prettier": "^4.2.1",
         "prettier": "^2.8.4",
         "rimraf": "^3.0.2",
-        "tslint": "^5.20.1",
         "typescript": "^4.9.5",
         "vite": "^4.2.1",
         "vite-tsconfig-paths": "^4.0.7",
