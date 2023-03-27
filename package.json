@@ -2,7 +2,6 @@
     "name": "ts-pegjs",
     "version": "3.1.0",
     "description": "TS target for peggy parser generator",
-    "main": "src/tspegjs.js",
     "author": "Pedro J. Molina",
     "license": "MIT",
     "bugs": {
@@ -22,46 +21,22 @@
         "generator"
     ],
     "bin": {
-        "tspegjs": "src/cli.js"
+        "tspegjs": "dist/cli.mjs"
+    },
+    "exports": {
+        "import": "./dist/tspegjs.mjs",
+        "require": "./dist/tspegjs.js"
     },
     "files": [
         "LICENSE",
-        "package-lock.json",
         "package.json",
-        "README.md",
-        "tslint.json",
-        ".prettierrc",
-        "examples/arithmetics.pegjs",
-        "examples/css.pegjs",
-        "examples/javascript.pegjs",
-        "examples/json.pegjs",
-        "examples/digits.pegjs",
-        "examples/st.pegjs",
-        "src/.eslintrc",
-        "src/cli.js",
-        "src/tspegjs.js",
-        "src/passes/generate-bytecode-ts.js",
-        "src/passes/generate-ts.js",
-        "src/passes/js.js",
-        "output/.eslintrc",
-        "test/README",
-        "test/test.js"
+        "dist/**/*"
     ],
     "scripts": {
         "clean": "rimraf output/*.ts output/*.js",
         "pretest": "npm run clean",
-        "test": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
-        "test:es": "npm run gen:es && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
-        "test:non-optimized": "npm run gen:samples && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
-        "test:optimize-size": "npm run gen:samples-optimize-size && npm run compile:samples && npm run lint:samples && npm run lint && npm run test:samples",
-        "test:samples": "node test/test-samples.js",
-        "gen:es": "node test/test.js --cache --trace --format es",
-        "gen:samples": "node test/test.js --cache --trace",
-        "gen:samples-optimize-size": "node test/test.js --cache --trace --optimize size",
-        "compile:samples": "tsc --target es6 --module commonjs --declaration output/arithmetics.ts output/css.ts output/json.ts output/javascript.ts output/st.ts output/arithmetics-typed.ts output/bulkOpening.ts output/minimal-typed.ts ",
-        "tslint:samples": "tslint output/*.ts",
-        "lint:samples": "eslint output/*.ts",
-        "test:cli": "peggy --plugin ./src/tspegjs --extra-options-file test/genoptions2.json  --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o output/st2.ts examples/st.pegjs && tsc --target es6 output/st2.ts && eslint output/st2.ts",
+        "build": "vite build",
+        "test": "vitest run",
         "lint": "eslint src/",
         "release": "npm test && npm publish"
     },
@@ -76,7 +51,18 @@
         "eslint-plugin-prettier": "^4.2.1",
         "prettier": "^2.8.4",
         "rimraf": "^3.0.2",
-        "tslint": "^5.20.1",
-        "typescript": "^4.9.5"
+        "typescript": "^4.9.5",
+        "vite": "^4.2.1",
+        "vite-tsconfig-paths": "^4.0.7",
+        "vitest": "^0.29.7"
+    },
+    "dependencies": {
+    },
+    "prettier": {
+        "tabWidth": 2,
+        "semi": true,
+        "printWidth": 100,
+        "singleQuote": true,
+        "trailingComma": "none"
     }
 }

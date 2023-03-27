@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const peggy = require("peggy");
-const tspegjs = require("./tspegjs.js");
-const version = require("../package.json").version;
+import * as fs from "node:fs";
+import * as process from "node:process";
+import peggy from "peggy";
+import tspegjs from "./tspegjs.js";
+import { version } from "../package.json";
+
+const generate = peggy.generate;
 
 let args = process.argv;
 args.shift();
@@ -12,12 +15,13 @@ args.shift();
 const needHelp = args.find(a => a === "-h");
 
 if (args.length === 0 || needHelp) {
-  return showHelp();
+  showHelp();
+  process.exit(0);
 }
 
 const inFile = args[args.length - 1];
 let outFile = inFile.replace(".pegjs", ".ts");
-args.map((arg, index) => {
+args.forEach((arg, index) => {
   if (arg === "-o") {
     outFile = args[index + 1];
   }
@@ -26,7 +30,7 @@ let allowedStartRules = null;
 let customHeaderFile = null;
 let customHeader = null;
 
-args.map((arg, index) => {
+args.forEach((arg, index) => {
   if (arg === "--allowed-start-rules") {
     allowedStartRules = (args[index + 1] || "").split(",");
   }
@@ -71,7 +75,7 @@ function generateParser(input_file, output_file, trace, cache,
       opts.allowedStartRules = allowedStartRules;
     }
 
-    let parser = peggy.generate(data.toString(), opts);
+    let parser = generate(data.toString(), opts);
     fs.writeFileSync(output_file, parser);
   });
 }

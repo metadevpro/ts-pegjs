@@ -2,10 +2,10 @@
 
 // Base: (original file: generate-bycode.js for codegen JS)
 
-var asts = require("peggy/lib/compiler/asts");
-var js = require("./js");
-var op = require("peggy/lib/compiler/opcodes");
-var visitor = require("peggy/lib/compiler/visitor");
+import { indexOfRule } from "peggy/lib/compiler/asts.js";
+import { stringEscape, regexpClassEscape } from "./js";
+import { CALL, PUSH_CURR_POS, SILENT_FAILS_ON, SILENT_FAILS_OFF, IF_ERROR, IF_NOT_ERROR, POP, POP_CURR_POS, PUSH_UNDEFINED, PUSH_FAILED, UPDATE_SAVED_POS, IF, WHILE_NOT_ERROR, APPEND, FAIL, LOAD_SAVED_POS, NIP, POP_N, PLUCK, WRAP, TEXT, PUSH_NULL, PUSH_EMPTY_ARRAY, RULE, MATCH_STRING_IC, MATCH_STRING, ACCEPT_N, ACCEPT_STRING, PUSH, MATCH_REGEXP, MATCH_ANY } from "peggy/lib/compiler/opcodes.js";
+import { build } from "peggy/lib/compiler/visitor.js";
 
 // Generates bytecode.
 //
@@ -242,30 +242,30 @@ function generateBytecode(ast) {
   function buildCall(functionIndex, delta, env, sp) {
     let params = Object.keys(env).map(name => sp - env[name]);
 
-    return [op.CALL, functionIndex, delta, params.length].concat(params);
+    return [CALL, functionIndex, delta, params.length].concat(params);
   }
 
   function buildSimplePredicate(expression, negative, context) {
     return buildSequence(
-      [op.PUSH_CURR_POS],
-      [op.SILENT_FAILS_ON],
+      [PUSH_CURR_POS],
+      [SILENT_FAILS_ON],
       generate(expression, {
         sp: context.sp + 1,
         env: cloneEnv(context.env),
         action: null
       }),
-      [op.SILENT_FAILS_OFF],
+      [SILENT_FAILS_OFF],
       buildCondition(
-        [negative ? op.IF_ERROR : op.IF_NOT_ERROR],
+        [negative ? IF_ERROR : IF_NOT_ERROR],
         buildSequence(
-          [op.POP],
-          [negative ? op.POP : op.POP_CURR_POS],
-          [op.PUSH_UNDEFINED]
+          [POP],
+          [negative ? POP : POP_CURR_POS],
+          [PUSH_UNDEFINED]
         ),
         buildSequence(
-          [op.POP],
-          [negative ? op.POP_CURR_POS : op.POP],
-          [op.PUSH_FAILED]
+          [POP],
+          [negative ? POP_CURR_POS : POP],
+          [PUSH_FAILED]
         )
       )
     );
@@ -275,17 +275,17 @@ function generateBytecode(ast) {
     let functionIndex = addFunctionConst(Object.keys(context.env), code);
 
     return buildSequence(
-      [op.UPDATE_SAVED_POS],
+      [UPDATE_SAVED_POS],
       buildCall(functionIndex, 0, context.env, context.sp),
       buildCondition(
-        [op.IF],
+        [IF],
         buildSequence(
-          [op.POP],
-          negative ? [op.PUSH_FAILED] : [op.PUSH_UNDEFINED]
+          [POP],
+          negative ? [PUSH_FAILED] : [PUSH_UNDEFINED]
         ),
         buildSequence(
-          [op.POP],
-          negative ? [op.PUSH_UNDEFINED] : [op.PUSH_FAILED]
+          [POP],
+          negative ? [PUSH_UNDEFINED] : [PUSH_FAILED]
         )
       )
     );
@@ -293,12 +293,12 @@ function generateBytecode(ast) {
 
   function buildAppendLoop(expressionCode) {
     return buildLoop(
-      [op.WHILE_NOT_ERROR],
-      buildSequence([op.APPEND], expressionCode)
+      [WHILE_NOT_ERROR],
+      buildSequence([APPEND], expressionCode)
     );
   }
 
-  let generate = visitor.build({
+  let generate = build({
     grammar(node) {
       node.rules.forEach(generate);
 
@@ -316,7 +316,7 @@ function generateBytecode(ast) {
 
     named(node, context) {
       let nameIndex = addConst(
-        "peg$otherExpectation(\"" + js.stringEscape(node.name) + "\")"
+        "peg$otherExpectation(\"" + stringEscape(node.name) + "\")"
       );
 
       // The code generated below is slightly suboptimal because |FAIL| pushes
@@ -324,10 +324,10 @@ function generateBytecode(ast) {
       // dedicated instruction that would just report the failure and not touch
       // the stack.
       return buildSequence(
-        [op.SILENT_FAILS_ON],
+        [SILENT_FAILS_ON],
         generate(node.expression, context),
-        [op.SILENT_FAILS_OFF],
-        buildCondition([op.IF_ERROR], [op.FAIL, nameIndex], [])
+        [SILENT_FAILS_OFF],
+        buildCondition([IF_ERROR], [FAIL, nameIndex], [])
       );
     },
 
@@ -341,9 +341,9 @@ function generateBytecode(ast) {
           }),
           alternatives.length > 1
             ? buildCondition(
-              [op.IF_ERROR],
+              [IF_ERROR],
               buildSequence(
-                [op.POP],
+                [POP],
                 buildAlternativesCode(alternatives.slice(1), context)
               ),
               []
@@ -368,17 +368,17 @@ function generateBytecode(ast) {
 
       return emitCall
         ? buildSequence(
-          [op.PUSH_CURR_POS],
+          [PUSH_CURR_POS],
           expressionCode,
           buildCondition(
-            [op.IF_NOT_ERROR],
+            [IF_NOT_ERROR],
             buildSequence(
-              [op.LOAD_SAVED_POS, 1],
+              [LOAD_SAVED_POS, 1],
               buildCall(functionIndex, 1, env, context.sp + 2)
             ),
             []
           ),
-          [op.NIP]
+          [NIP]
         )
         : expressionCode;
     },
@@ -396,7 +396,7 @@ function generateBytecode(ast) {
               action: null
             }),
             buildCondition(
-              [op.IF_NOT_ERROR],
+              [IF_NOT_ERROR],
               buildElementsCode(elements.slice(1), {
                 sp: context.sp + 1,
                 env: context.env,
@@ -404,16 +404,16 @@ function generateBytecode(ast) {
                 action: context.action
               }),
               buildSequence(
-                processedCount > 1 ? [op.POP_N, processedCount] : [op.POP],
-                [op.POP_CURR_POS],
-                [op.PUSH_FAILED]
+                processedCount > 1 ? [POP_N, processedCount] : [POP],
+                [POP_CURR_POS],
+                [PUSH_FAILED]
               )
             )
           );
         } else {
           if (context.pluck.length > 0) {
             return buildSequence(
-              [op.PLUCK, node.elements.length + 1, context.pluck.length],
+              [PLUCK, node.elements.length + 1, context.pluck.length],
               context.pluck.map(eSP => context.sp - eSP)
             );
           }
@@ -425,23 +425,23 @@ function generateBytecode(ast) {
             );
 
             return buildSequence(
-              [op.LOAD_SAVED_POS, node.elements.length],
+              [LOAD_SAVED_POS, node.elements.length],
               buildCall(
                 functionIndex,
                 node.elements.length,
                 context.env,
                 context.sp
               ),
-              [op.NIP]
+              [NIP]
             );
           } else {
-            return buildSequence([op.WRAP, node.elements.length], [op.NIP]);
+            return buildSequence([WRAP, node.elements.length], [NIP]);
           }
         }
       }
 
       return buildSequence(
-        [op.PUSH_CURR_POS],
+        [PUSH_CURR_POS],
         buildElementsCode(node.elements, {
           sp: context.sp + 1,
           env: context.env,
@@ -474,16 +474,16 @@ function generateBytecode(ast) {
 
     text(node, context) {
       return buildSequence(
-        [op.PUSH_CURR_POS],
+        [PUSH_CURR_POS],
         generate(node.expression, {
           sp: context.sp + 1,
           env: cloneEnv(context.env),
           action: null
         }),
         buildCondition(
-          [op.IF_NOT_ERROR],
-          buildSequence([op.POP], [op.TEXT]),
-          [op.NIP]
+          [IF_NOT_ERROR],
+          buildSequence([POP], [TEXT]),
+          [NIP]
         )
       );
     },
@@ -504,8 +504,8 @@ function generateBytecode(ast) {
           action: null
         }),
         buildCondition(
-          [op.IF_ERROR],
-          buildSequence([op.POP], [op.PUSH_NULL]),
+          [IF_ERROR],
+          buildSequence([POP], [PUSH_NULL]),
           []
         )
       );
@@ -519,10 +519,10 @@ function generateBytecode(ast) {
       });
 
       return buildSequence(
-        [op.PUSH_EMPTY_ARRAY],
+        [PUSH_EMPTY_ARRAY],
         expressionCode,
         buildAppendLoop(expressionCode),
-        [op.POP]
+        [POP]
       );
     },
 
@@ -534,12 +534,12 @@ function generateBytecode(ast) {
       });
 
       return buildSequence(
-        [op.PUSH_EMPTY_ARRAY],
+        [PUSH_EMPTY_ARRAY],
         expressionCode,
         buildCondition(
-          [op.IF_NOT_ERROR],
-          buildSequence(buildAppendLoop(expressionCode), [op.POP]),
-          buildSequence([op.POP], [op.POP], [op.PUSH_FAILED])
+          [IF_NOT_ERROR],
+          buildSequence(buildAppendLoop(expressionCode), [POP]),
+          buildSequence([POP], [POP], [PUSH_FAILED])
         )
       );
     },
@@ -561,20 +561,20 @@ function generateBytecode(ast) {
     },
 
     rule_ref(node) {
-      return [op.RULE, asts.indexOfRule(ast, node.name)];
+      return [RULE, indexOfRule(ast, node.name)];
     },
 
     literal(node) {
       if (node.value.length > 0) {
         let stringIndex = addConst("\""
-          + js.stringEscape(
+          + stringEscape(
             node.ignoreCase ? node.value.toLowerCase() : node.value
           )
           + "\""
         );
         let expectedIndex = addConst(
           "peg$literalExpectation("
-          + "\"" + js.stringEscape(node.value) + "\", "
+          + "\"" + stringEscape(node.value) + "\", "
           + node.ignoreCase
           + ")"
         );
@@ -584,17 +584,17 @@ function generateBytecode(ast) {
         // save one |substr| call that would be needed if we used |ACCEPT_N|.
         return buildCondition(
           node.ignoreCase
-            ? [op.MATCH_STRING_IC, stringIndex]
-            : [op.MATCH_STRING, stringIndex],
+            ? [MATCH_STRING_IC, stringIndex]
+            : [MATCH_STRING, stringIndex],
           node.ignoreCase
-            ? [op.ACCEPT_N, node.value.length]
-            : [op.ACCEPT_STRING, stringIndex],
-          [op.FAIL, expectedIndex]
+            ? [ACCEPT_N, node.value.length]
+            : [ACCEPT_STRING, stringIndex],
+          [FAIL, expectedIndex]
         );
       } else {
         let stringIndex = addConst("\"\"");
 
-        return [op.PUSH, stringIndex];
+        return [PUSH, stringIndex];
       }
     },
 
@@ -603,17 +603,17 @@ function generateBytecode(ast) {
         + (node.inverted ? "^" : "")
         + node.parts.map(part =>
           Array.isArray(part)
-            ? js.regexpClassEscape(part[0])
+            ? regexpClassEscape(part[0])
             + "-"
-            + js.regexpClassEscape(part[1])
-            : js.regexpClassEscape(part)
+            + regexpClassEscape(part[1])
+            : regexpClassEscape(part)
         ).join("")
         + "]/" + (node.ignoreCase ? "i" : "");
       let parts = "["
         + node.parts.map(part =>
           Array.isArray(part)
-            ? "[\"" + js.stringEscape(part[0]) + "\", \"" + js.stringEscape(part[1]) + "\"]"
-            : "\"" + js.stringEscape(part) + "\""
+            ? "[\"" + stringEscape(part[0]) + "\", \"" + stringEscape(part[1]) + "\"]"
+            : "\"" + stringEscape(part) + "\""
         ).join(", ")
         + "]";
       let regexpIndex = addConst(regexp);
@@ -626,9 +626,9 @@ function generateBytecode(ast) {
       );
 
       return buildCondition(
-        [op.MATCH_REGEXP, regexpIndex],
-        [op.ACCEPT_N, 1],
-        [op.FAIL, expectedIndex]
+        [MATCH_REGEXP, regexpIndex],
+        [ACCEPT_N, 1],
+        [FAIL, expectedIndex]
       );
     },
 
@@ -636,9 +636,9 @@ function generateBytecode(ast) {
       let expectedIndex = addConst("peg$anyExpectation()");
 
       return buildCondition(
-        [op.MATCH_ANY],
-        [op.ACCEPT_N, 1],
-        [op.FAIL, expectedIndex]
+        [MATCH_ANY],
+        [ACCEPT_N, 1],
+        [FAIL, expectedIndex]
       );
     }
   });
@@ -646,4 +646,4 @@ function generateBytecode(ast) {
   generate(ast);
 }
 
-module.exports = generateBytecode;
+export default generateBytecode;
