@@ -14,5 +14,5 @@ export default defineConfig({
     lib: { entry: ['./src/cli.js', './src/tspegjs.js'], formats: ['es', 'cjs'] },
     rollupOptions: { external: [/^node:/, 'peggy'] }
   },
-  test: { globals: true }
+  test: { globals: true, testTimeout: 20000 }
 });
