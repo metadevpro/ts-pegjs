@@ -38,7 +38,7 @@ describe('Build and lint samples', () => {
       });
 
       it.concurrent(`Generated \`ts\` file passes eslint check`, async () => {
-        const { stdout, stderr } = await exec(`eslint '${outTsName}'`);
+        const { stdout, stderr } = await exec(`eslint "${outTsName}"`);
         if (stderr) {
           throw new Error(stderr);
         }
@@ -52,7 +52,7 @@ describe('Build and lint samples', () => {
 
       it.concurrent(`Can compile \`ts\` file to \`js\``, async () => {
         const { stdout, stderr } = await exec(
-          `tsc --target es6 --module commonjs --declaration '${outTsName}'`
+          `tsc --target es6 --module commonjs --declaration "${outTsName}"`
         );
         if (stderr) {
           throw new Error(stderr);
@@ -71,7 +71,7 @@ describe('Build and lint samples', () => {
       await generateParser(grammarFile, outTsName, `// Minimal`, { START: 'string' });
     });
     it.concurrent(`Generated \`ts\` file passes eslint check`, async () => {
-      const { stdout, stderr } = await exec(`eslint '${outTsName}'`);
+      const { stdout, stderr } = await exec(`eslint "${outTsName}"`);
       if (stderr) {
         throw new Error(stderr);
       }
@@ -83,7 +83,7 @@ describe('Build and lint samples', () => {
 
     it.concurrent(`Can compile \`ts\` file to \`js\``, async () => {
       const { stdout, stderr } = await exec(
-        `tsc --target es6 --module commonjs --declaration '${outTsName}'`
+        `tsc --target es6 --module commonjs --declaration "${outTsName}"`
       );
       if (stderr) {
         throw new Error(stderr);

@@ -24,21 +24,21 @@ describe('CLI Tests', () => {
   beforeEach(ensureCliIsBuilt);
   it(`Can import tspegjs as a Peggy plugin`, async () => {
     const { stdout, stderr } = await exec(
-      `npx peggy --plugin '${PLUGIN_PATH}' --extra-options-file '${OPTIONS_FILE}' --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o '${outTsName}' '${GRAMMAR_FILE}'`
+      `npx peggy --plugin "${PLUGIN_PATH}" --extra-options-file "${OPTIONS_FILE}" --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o "${outTsName}" "${GRAMMAR_FILE}"`
     );
     if (stderr) {
       throw new Error(stderr);
     }
   });
   it.concurrent(`Generated \`ts\` file passes eslint check`, async () => {
-    const { stdout, stderr } = await exec(`eslint '${outTsName}'`);
+    const { stdout, stderr } = await exec(`eslint "${outTsName}"`);
     if (stderr) {
       throw new Error(stderr);
     }
   });
   it.concurrent(`Can compile \`ts\` file to \`js\``, async () => {
     const { stdout, stderr } = await exec(
-      `tsc --target es6 --module commonjs --declaration '${outTsName}'`
+      `tsc --target es6 --module commonjs --declaration "${outTsName}"`
     );
     if (stderr) {
       throw new Error(stderr);
