@@ -31,7 +31,7 @@ describe('Can generate parser for `arithmetics.pegjs` with custom return type', 
     });
   });
   it.concurrent(`Generated \`ts\` file passes eslint check`, async () => {
-    const { stdout, stderr } = await exec(`eslint '${outTsName}'`);
+    const { stdout, stderr } = await exec(`eslint "${outTsName}"`);
     if (stderr) {
       throw new Error(stderr);
     }
@@ -44,7 +44,7 @@ describe('Can generate parser for `arithmetics.pegjs` with custom return type', 
 
   it(`Can compile \`ts\` file to \`js\``, async () => {
     const { stdout, stderr } = await exec(
-      `tsc --target es6 --module commonjs --declaration '${outTsName}'`
+      `tsc --target es6 --module commonjs --declaration "${outTsName}"`
     );
     if (stderr) {
       throw new Error(stderr);
