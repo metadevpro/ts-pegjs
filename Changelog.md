@@ -1,5 +1,7 @@
 # Changelog
 
+  - Added [PR #94](https://github.com/metadevpro/ts-pegjs/pull/93) Converted to vite build and esm. Thansk to @siefkenj
+
 ## Version 3.1.0
 
   - Added [PR #91](https://github.com/metadevpro/ts-pegjs/pull/91) Convert new peggy --dependencies or --dependency into TypeScript imports. Thanks to @M00TSDNS

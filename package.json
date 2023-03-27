@@ -1,68 +1,67 @@
 {
-    "name": "ts-pegjs",
-    "version": "3.1.0",
-    "description": "TS target for peggy parser generator",
-    "author": "Pedro J. Molina",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/metadevpro/ts-pegjs/issues"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/metadevpro/ts-pegjs.git"
-    },
-    "keywords": [
-        "peggy",
-        "pegjs",
-        "plugin",
-        "ts",
-        "typescript",
-        "parser",
-        "generator"
-    ],
-    "bin": {
-        "tspegjs": "dist/cli.mjs"
-    },
-    "exports": {
-        "import": "./dist/tspegjs.mjs",
-        "require": "./dist/tspegjs.js"
-    },
-    "files": [
-        "LICENSE",
-        "package.json",
-        "dist/**/*"
-    ],
-    "scripts": {
-        "clean": "rimraf output/*.ts output/*.js",
-        "pretest": "npm run clean",
-        "build": "vite build",
-        "test": "vitest run",
-        "lint": "eslint src/",
-        "release": "npm test && npm publish"
-    },
-    "peerDependencies": {
-        "peggy": "^2.0.1"
-    },
-    "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^5.54.0",
-        "@typescript-eslint/parser": "^5.54.0",
-        "eslint": "^8.35.0",
-        "eslint-config-prettier": "^8.6.0",
-        "eslint-plugin-prettier": "^4.2.1",
-        "prettier": "^2.8.4",
-        "rimraf": "^3.0.2",
-        "typescript": "^4.9.5",
-        "vite": "^4.2.1",
-        "vite-tsconfig-paths": "^4.0.7",
-        "vitest": "^0.29.7"
-    },
-    "dependencies": {
-    },
-    "prettier": {
-        "tabWidth": 2,
-        "semi": true,
-        "printWidth": 100,
-        "singleQuote": true,
-        "trailingComma": "none"
-    }
+  "name": "ts-pegjs",
+  "version": "3.2.0",
+  "description": "TS target for peggy parser generator",
+  "author": "Pedro J. Molina",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metadevpro/ts-pegjs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metadevpro/ts-pegjs.git"
+  },
+  "keywords": [
+    "peggy",
+    "pegjs",
+    "plugin",
+    "ts",
+    "typescript",
+    "parser",
+    "generator"
+  ],
+  "bin": {
+    "tspegjs": "dist/cli.mjs"
+  },
+  "exports": {
+    "import": "./dist/tspegjs.mjs",
+    "require": "./dist/tspegjs.js"
+  },
+  "files": [
+    "LICENSE",
+    "package.json",
+    "dist/**/*"
+  ],
+  "scripts": {
+    "clean": "rimraf output/*.ts output/*.js",
+    "pretest": "npm run clean",
+    "build": "vite build",
+    "test": "vite build && vitest run",
+    "lint": "eslint src/",
+    "release": "npm test && npm publish"
+  },
+  "peerDependencies": {
+    "peggy": "^2.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.7",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.0.2",
+    "vite": "^4.2.1",
+    "vite-tsconfig-paths": "^4.0.7",
+    "vitest": "^0.29.7"
+  },
+  "dependencies": {},
+  "prettier": {
+    "tabWidth": 2,
+    "semi": true,
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "none"
+  }
 }
