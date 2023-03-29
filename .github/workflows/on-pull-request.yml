@@ -28,6 +28,9 @@ jobs:
           cache: 'npm'
       - run: npm ci
 
+      - name: 'Lint'
+        run: npm run lint
+
       - name: 'Production Build'
         run: npm run build
 
