@@ -3,7 +3,7 @@
 import * as fs from "node:fs";
 import * as process from "node:process";
 import peggy from "peggy";
-import tspegjs from "./tspegjs.js";
+import tspegjs from "./tspegjs";
 import { version } from "../package.json";
 
 const generate = peggy.generate;
