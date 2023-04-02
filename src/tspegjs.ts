@@ -1,14 +1,14 @@
-import generateBytecode from './passes/generate-bytecode-ts';
-import generateTs from './passes/generate-ts';
-import type { Config, SourceBuildOptions } from 'peggy';
-
-type TsPegjsOptions = {
-  customHeader?: null | string;
-};
+import type { Config } from 'peggy';
+import { generateParser } from './passes/generate-ts';
+import { TsPegjsParserBuildOptions } from './types';
 
 export default {
-  use(config: Config, options: SourceBuildOptions & { tspegjs?: TsPegjsOptions }) {
-    config.passes.generate = [generateBytecode, generateTs];
+  use(config: Config, options: TsPegjsParserBuildOptions) {
+    // We depend on the code generated being an IIF
+    (options as any).format = 'bare';
+
+    config.passes.generate.push(generateParser);
+
     if (!options.tspegjs) {
       options.tspegjs = {};
     }
