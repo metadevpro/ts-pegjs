@@ -130,10 +130,14 @@ declare class _DefaultTracer {
 
   rootNode.add(`peggyParser.SyntaxError.prototype.name = ${JSON.stringify(errorName)};\n`);
 
+  let startRuleType = 'string';
+  if (options.allowedStartRules) {
+    startRuleType = options.allowedStartRules.map((x) => JSON.stringify(x)).join(' | ');
+  }
   rootNode.add(`
 export interface ParseOptions {
   filename?: string;
-  startRule?: string;
+  startRule?: ${startRuleType};
   tracer?: any;
   [key: string]: any;
 }
