@@ -37,7 +37,7 @@
     "pretest": "npm run clean",
     "build": "vite build",
     "test": "vite build && vitest run",
-    "lint": "eslint src/",
+    "lint": "eslint src/ --ext .ts",
     "release": "npm test && npm publish"
   },
   "peerDependencies": {

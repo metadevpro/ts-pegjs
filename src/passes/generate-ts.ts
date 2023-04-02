@@ -7,7 +7,7 @@ type SourceNode = NonNullable<ast.Grammar['code']> & { children: (SourceNode | s
 export const generateParser: Config['passes']['generate'][number] = (
   ast,
   options: TsPegjsParserBuildOptions,
-  session
+  _session
 ) => {
   const code = ast.code;
   if (!code) {

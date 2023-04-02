@@ -1,4 +1,4 @@
-import type { ParserBuildOptions, SourceOutputs, BuildOptionsBase } from 'peggy';
+import type { SourceOutputs, BuildOptionsBase } from 'peggy';
 
 export type TsPegjsOptions = {
   /**
