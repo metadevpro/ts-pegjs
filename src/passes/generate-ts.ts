@@ -1,5 +1,7 @@
 import type { Config, ast } from 'peggy';
+import { TypeExtractor } from '../libs/type-extractor';
 import { TsPegjsParserBuildOptions } from '../types';
+import { COMMON_TYPES_STR } from './constants';
 
 // The types for `SourceNode` are currently incorrect; override them with correct types.
 type SourceNode = NonNullable<ast.Grammar['code']> & { children: (SourceNode | string)[] };
@@ -14,6 +16,27 @@ export const generateParser: Config['passes']['generate'][number] = (
     throw new Error(
       `tspegjs requires peggy to generate source Javascript source code before continuing, but something went wrong and no generated source code was found`
     );
+  }
+
+  let computedTypes = '';
+  const typeExtractor = new TypeExtractor(ast, {
+    camelCaseTypeNames: !options.tspegjs?.doNotCamelCaseTypes
+  });
+  if (!options.tspegjs?.skipTypeComputation || options.tspegjs?.onlyGenerateGrammarTypes) {
+    computedTypes = typeExtractor.getTypes({
+      allowedStartRules: options.allowedStartRules,
+      typeOverrides: options.returnTypes
+    });
+  }
+
+  if (options.tspegjs?.onlyGenerateGrammarTypes) {
+    code.children.length = 0;
+    code.add(options.tspegjs.customHeader || '');
+    if (!(options.tspegjs.customHeader || '').endsWith('\n')) {
+      code.add('\n');
+    }
+    code.add(computedTypes);
+    return;
   }
 
   // We are using a mix of Typescript and Peggy-generated Javascript in this file.
@@ -50,75 +73,7 @@ export const generateParser: Config['passes']['generate'][number] = (
   );
 
   // These types are always the same
-  rootNode.add(`
-export interface FilePosition {
-  offset: number;
-  line: number;
-  column: number;
-}
-
-export interface FileRange {
-  start: FilePosition;
-  end: FilePosition;
-  source: string;
-}
-
-export interface LiteralExpectation {
-  type: "literal";
-  text: string;
-  ignoreCase: boolean;
-}
-
-export interface ClassParts extends Array<string | ClassParts> {}
-
-export interface ClassExpectation {
-  type: "class";
-  parts: ClassParts;
-  inverted: boolean;
-  ignoreCase: boolean;
-}
-
-export interface AnyExpectation {
-  type: "any";
-}
-
-export interface EndExpectation {
-  type: "end";
-}
-
-export interface OtherExpectation {
-  type: "other";
-  description: string;
-}
-
-export type Expectation = LiteralExpectation | ClassExpectation | AnyExpectation | EndExpectation | OtherExpectation;
-
-declare class _PeggySyntaxError extends Error {
-  public static buildMessage(expected: Expectation[], found: string | null): string;
-  public message: string;
-  public expected: Expectation[];
-  public found: string | null;
-  public location: FileRange;
-  public name: string;
-  constructor(message: string, expected: Expectation[], found: string | null, location: FileRange);
-  format(sources: {
-    grammarSource?: string;
-    text: string;
-  }[]): string;
-}
-
-export interface TraceEvent {
-    type: string;
-    rule: string;
-    result?: any;
-    location: FileRange;
-  }
-
-declare class _DefaultTracer {
-  private indentLevel: number;
-  public trace(event: TraceEvent): void;
-}
-\n`);
+  rootNode.add(COMMON_TYPES_STR);
 
   const errorName = options.tspegjs?.errorName || 'PeggySyntaxError';
   // Very basic test to make sure no horrible identifier has been passed in
@@ -130,10 +85,20 @@ declare class _DefaultTracer {
 
   rootNode.add(`peggyParser.SyntaxError.prototype.name = ${JSON.stringify(errorName)};\n`);
 
+  const defaultStartRule = (options.allowedStartRules || [])[0] || ast.rules[0]?.name;
+  if (!defaultStartRule) {
+    throw new Error(`Something wen't wrong...Could not determine the default start rule.`);
+  }
+
+  // Generate an explicit type listing all the start rules
+  // that are allowed by the parser.
   let startRuleType = 'string';
   if (options.allowedStartRules) {
     startRuleType = options.allowedStartRules.map((x) => JSON.stringify(x)).join(' | ');
   }
+  const parseFunctionType = computedTypes
+    ? createParseFunctionType(options.allowedStartRules || [], typeExtractor)
+    : `export type ParseFunction = (input: string, options?: ParseOptions) => any`;
   rootNode.add(`
 export interface ParseOptions {
   filename?: string;
@@ -141,16 +106,21 @@ export interface ParseOptions {
   tracer?: any;
   [key: string]: any;
 }
-export type ParseFunction = (input: string, options?: ParseOptions) => any;
+${parseFunctionType}
 export const parse: ParseFunction = peggyParser.parse;
 `);
-  rootNode.add(`
-export const ${errorName} = peggyParser.SyntaxError as typeof _PeggySyntaxError;
-`);
+  rootNode.add(
+    `\nexport const ${errorName} = peggyParser.SyntaxError as typeof _PeggySyntaxError;\n`
+  );
   if (options.trace) {
     rootNode.add(
       `\nexport const DefaultTracer = peggyParser.DefaultTracer as typeof _DefaultTracer;\n`
     );
+  }
+
+  if (computedTypes) {
+    rootNode.add('\n');
+    rootNode.add(computedTypes);
   }
 };
 
@@ -189,4 +159,32 @@ function tsIgnoreShouldApply(line: string): boolean {
     return false;
   }
   return true;
+}
+
+/**
+ * Create a type signature for the `parse` function that will infer the return type based on the value of
+ * `options.startRule`.
+ */
+function createParseFunctionType(
+  allowedStartRules: string[],
+  typeExtractor: TypeExtractor
+): string {
+  const defaultStartRule = typeExtractor.nameMap.get(allowedStartRules[0]);
+  if (!defaultStartRule) {
+    throw new Error('Cannot determine the default starting rule.');
+  }
+
+  let startRuleChain =
+    allowedStartRules
+      .map(
+        (rule) => `StartRule extends ${JSON.stringify(rule)} ? ${typeExtractor.nameMap.get(rule)} :`
+      )
+      .join('\n    ') + ` ${defaultStartRule}`;
+
+  return `export type ParseFunction = <Options extends ParseOptions>(
+    input: string,
+    options?: Options
+  ) => Options extends { startRule: infer StartRule } ?
+    ${startRuleChain}
+    : ${defaultStartRule};`;
 }
