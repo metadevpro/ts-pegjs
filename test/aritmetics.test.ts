@@ -126,6 +126,7 @@ async function generateParser(
 
   const source = await fs.readFile(inFile, { encoding: 'utf-8' });
   const parser = peggy.generate(source, {
+    // @ts-ignore
     output: 'source',
     //trace: true,
     cache: true,

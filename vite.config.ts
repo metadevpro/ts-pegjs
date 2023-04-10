@@ -12,7 +12,7 @@ export default defineConfig({
     outDir: 'dist',
     minify: false,
     lib: { entry: ['./src/cli.ts', './src/tspegjs.ts'], formats: ['es', 'cjs'] },
-    rollupOptions: { external: [/^node:/, 'peggy'] }
+    rollupOptions: { external: [/^node:/, 'peggy', 'ts-morph', /^prettier/] }
   },
   test: { globals: true, testTimeout: 20000 }
 });

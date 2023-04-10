@@ -63,6 +63,9 @@ Supported options of `pegjs.generate`:
 -   `customHeaderFile` — A header file to include.
 -   `errorName` — The name of the exported internal error class to override. The default value from version 3.0.0 is `PeggySyntaxError`. Previous one was `SyntaxError`.
 -   `returnTypes` — An object containing rule names as keys and a valid TS return type as string.
+-   `skipTypeComputation` — Boolean. If `true`, `ts-pegjs` will not try to use TS to infer types based on your grammar rules.
+-   `onlyGenerateGrammarTypes` — Boolean. If `true`, only types for your grammar rules (and no parser) will be generated. Cannot be used with `skipTypeComputation`.
+-   `doNotCamelCaseTypes` — Boolean. By default type names for grammar rules are converted to CamelCase. If `true`, this conversion is not done and type names will match the casing of your grammar rules.
 
 ### Generating a Parser from CLI
 
