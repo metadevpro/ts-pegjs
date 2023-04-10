@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 4.0.0
+
+  - [#97](https://github.com/metadevpro/ts-pegjs/pull/97) Ported project to TS. Thansk to @siefkenj
+  - [#98](https://github.com/metadevpro/ts-pegjs/pull/98) Use os `ts-morph` to infer the type for the rules. Thansk to @siefkenj
+
+## Version 3.2.0
+
   - Added [PR #94](https://github.com/metadevpro/ts-pegjs/pull/93) Converted to vite build and esm. Thansk to @siefkenj
 
 ## Version 3.1.0
