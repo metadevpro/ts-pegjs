@@ -33,7 +33,7 @@
     "dist/**/*"
   ],
   "scripts": {
-    "clean": "rimraf output/*.ts output/*.js",
+    "clean": "rimraf --glob output/*.ts output/*.js",
     "pretest": "npm run clean",
     "build": "vite build",
     "test": "vite build && vitest run",
@@ -51,7 +51,7 @@
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "rimraf": "^4.4.1",
+    "rimraf": "^5.0.0",
     "typescript": "^5.0.4",
     "vite": "^4.2.1",
     "vite-tsconfig-paths": "^4.0.8",
