@@ -74,11 +74,8 @@ describe('Can generate parser for `arithmetics.pegjs` with custom return type', 
         throw new Error(e.format([badSource]));
       }
     }).toThrow(
-      `Error: Expected "(" or integer but "*" found.
- --> someFile.txt:1:4
-  |
-1 | 3 ** 4
-  |    ^`
+      `Error: Expected "(", integer, or whitespace but "*" found.
+ at someFile.txt:1:4`
     );
   });
 });

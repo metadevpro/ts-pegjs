@@ -72,7 +72,7 @@ Sample usage:
 peggy --plugin ./src/tspegjs -o examples/arithmetics.ts --cache examples/arithmetics.pegjs
 ```
 
-(Note `./src/tspegjs` is the path to `tspegjs.js` in the project. If you installed ts-pegjs using npm, it should probably be `./node_modules/ts-pegjs/src/tspegjs`.)
+(Note `./src/tspegjs` is the path to `tspegjs.ts` in the project. If you installed ts-pegjs using npm, it should probably be `./node_modules/ts-pegjs/src/tspegjs`.)
 
 It will generarate the parser in the TS flavour.
 
