@@ -109,9 +109,7 @@ export interface ParseOptions {
 ${parseFunctionType}
 export const parse: ParseFunction = peggyParser.parse;
 `);
-  rootNode.add(
-    `\nexport const ${errorName} = peggyParser.SyntaxError as typeof _PeggySyntaxError;\n`
-  );
+  rootNode.add(`\nexport type ${errorName} = _PeggySyntaxError;\n`);
   if (options.trace) {
     rootNode.add(
       `\nexport const DefaultTracer = peggyParser.DefaultTracer as typeof _DefaultTracer;\n`
