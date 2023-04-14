@@ -53,7 +53,7 @@ declare class _PeggySyntaxError extends Error {
   public name: string;
   constructor(message: string, expected: Expectation[], found: string | null, location: FileRange);
   format(sources: {
-    grammarSource?: string;
+    source?: any;
     text: string;
   }[]): string;
 }

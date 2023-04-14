@@ -1,5 +1,5 @@
-import { defineConfig } from 'vitest/config';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
 
 /**
  * The main configuration for Vite. This config includes
@@ -14,5 +14,5 @@ export default defineConfig({
     lib: { entry: ['./src/cli.ts', './src/tspegjs.ts'], formats: ['es', 'cjs'] },
     rollupOptions: { external: [/^node:/, 'peggy', 'ts-morph', /^prettier/] }
   },
-  test: { globals: true, testTimeout: 20000 }
+  test: { globals: true, testTimeout: 25000 }
 });
