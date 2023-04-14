@@ -1,0 +1,2 @@
+START
+  = "a" { return foo }

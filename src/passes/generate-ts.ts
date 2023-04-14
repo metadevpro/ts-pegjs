@@ -1,4 +1,5 @@
 import type { Config, ast } from 'peggy';
+import { escapedString } from '../libs/helpers';
 import { TypeExtractor } from '../libs/type-extractor';
 import { TsPegjsParserBuildOptions } from '../types';
 import { COMMON_TYPES_STR } from './constants';
@@ -58,6 +59,13 @@ export const generateParser: Config['passes']['generate'][number] = (
 
   // Set a new rootNode that we control
   ast.code = rootNode;
+
+  if (options.dependencies) {
+    const dependencyImports = Object.entries(options.dependencies).map(
+      ([varName, importPath]) => `import ${varName} from ${escapedString(importPath)};`
+    );
+    rootNode.prepend('\n' + dependencyImports.join('\n') + '\n');
+  }
 
   // Custom import statements should come near the top, if there are any
   if (options.tspegjs?.customHeader) {
