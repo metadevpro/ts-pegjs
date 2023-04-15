@@ -35,4 +35,5 @@ interface _ParserBuildOptions extends BuildOptionsBase {
 export type TsPegjsParserBuildOptions = _ParserBuildOptions & {
   tspegjs?: TsPegjsOptions;
   returnTypes?: Record<string, string>;
+  dependencies?: Record<string, string>;
 };

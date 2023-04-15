@@ -9,7 +9,6 @@ import peggy from 'peggy';
 
 // Local imports
 import packageJson from '../package.json';
-import tspegjs from '../src/tspegjs';
 
 const exec = promisify(execNode);
 
@@ -42,6 +41,38 @@ describe('CLI Tests', () => {
     );
     if (stderr) {
       throw new Error(stderr);
+    }
+  });
+  it(`Can specify dependency list`, async () => {
+    const GRAMMAR_FILE = path.join(ROOT_DIR, 'examples/minimal-with-dep.pegjs');
+    const outTsName = path.join(ROOT_DIR, 'output/minimal-with-dep.ts');
+    const barSource = path.join(ROOT_DIR, 'examples/bar.ts');
+    const barDest = path.join(ROOT_DIR, 'output/bar.ts');
+    // Copy the dependency to the output directory
+    await exec(`cp "${barSource}" "${barDest}"`);
+    {
+      // Create the parser
+      const { stdout, stderr } = await exec(
+        `npx peggy --plugin "${PLUGIN_PATH}" --dependency foo:./bar -o "${outTsName}" "${GRAMMAR_FILE}"`
+      );
+      if (stderr) {
+        throw new Error(stderr);
+      }
+    }
+    {
+      // Compile the parser
+      const { stdout, stderr } = await exec(
+        `tsc --target es6 --module commonjs --declaration "${outTsName}"`
+      );
+      if (stderr) {
+        throw new Error(stderr);
+      }
+    }
+    {
+      // Run the parser
+      const parserPath = path.join(ROOT_DIR, 'output/minimal-with-dep.js');
+      const parser = await import(parserPath);
+      expect(parser.parse('a')).toEqual('I AM THE CONST FOO');
     }
   });
 });
