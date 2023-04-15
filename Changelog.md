@@ -35,7 +35,7 @@
 
 ## Version 2.2.1
 
-- Fix [#84](https://github.com/metadevpro/ts-pegjs/issues/84) Same convetion as peggy. Make `grammarSource` optional.
+- Fix [#84](https://github.com/metadevpro/ts-pegjs/issues/84) Same convention as peggy. Make `grammarSource` optional.
 
 ## Version 2.2.0
 
