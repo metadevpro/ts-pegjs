@@ -1,17 +1,25 @@
 # Changelog
 
+## Version 4.1.0
+
+- Fix [#103](https://github.com/metadevpro/ts-pegjs/pull/103) Fix exception handler export: `PeggySyntaxError` & `DefaultTracer`
+- Fix [#104](https://github.com/metadevpro/ts-pegjs/pull/104) Rename grammarSource->source
+- Feature [#105](https://github.com/metadevpro/ts-pegjs/pull/105) Add ability to specify `--dependency` style deps by @siefkenj
+- Upgrade to `rimraf` 5.0 adding `--glob`
+
 ## Version 4.0.0
 
-  - [#97](https://github.com/metadevpro/ts-pegjs/pull/97) Ported project to TS. Thansk to @siefkenj
-  - [#98](https://github.com/metadevpro/ts-pegjs/pull/98) Use os `ts-morph` to infer the type for the rules. Thansk to @siefkenj
+- [#97](https://github.com/metadevpro/ts-pegjs/pull/97) Ported project to TS. Thansk to @siefkenj
+- [#98](https://github.com/metadevpro/ts-pegjs/pull/98) Use os `ts-morph` to infer the type for the rules. Thansk to @siefkenj
 
 ## Version 3.2.0
 
-  - Added [PR #94](https://github.com/metadevpro/ts-pegjs/pull/93) Converted to vite build and esm. Thansk to @siefkenj
+- Added [PR #94](https://github.com/metadevpro/ts-pegjs/pull/93) Converted to vite build and esm. Thansk to @siefkenj
 
 ## Version 3.1.0
 
-  - Added [PR #91](https://github.com/metadevpro/ts-pegjs/pull/91) Convert new peggy --dependencies or --dependency into TypeScript imports. Thanks to @M00TSDNS
+- Added [PR #91](https://github.com/metadevpro/ts-pegjs/pull/91) Convert new peggy --dependencies or --dependency into TypeScript imports. Thanks to @M00TSDNS
+
 ## Version 3.0.0
 
 **Breaking changes!**
@@ -31,7 +39,6 @@
   |`ILiteralExpectation`|`LiteralExpectation`|
   |`IFileRange`|`FileRange`|
   |`IFilePosition`|`FilePosition`|
-
 
 ## Version 2.2.1
 
@@ -54,6 +61,7 @@
 - Added support for peggy 2.0.1
 - Fix [#78](https://github.com/metadevpro/ts-pegjs/issues/78)
 - Fix missing helper function
+
 ## Version 1.2.2
 
 - Remove prod. dependency for peggy [#65](https://github.com/metadevpro/ts-pegjs/issues/65)
