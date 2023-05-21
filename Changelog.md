@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.1.1
+
+- Fix [#109](https://github.com/metadevpro/ts-pegjs/pull/109) Add shebang to bash scripts in vite by @siefkenj
+
 ## Version 4.1.0
 
 - Fix [#103](https://github.com/metadevpro/ts-pegjs/pull/103) Fix exception handler export: `PeggySyntaxError` & `DefaultTracer`
