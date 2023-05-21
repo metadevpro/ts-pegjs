@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
-import * as fs from 'node:fs/promises';
+import { exec as execNode } from 'node:child_process';
 import { existsSync } from 'node:fs';
+import * as fs from 'node:fs/promises';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
-import { exec as execNode } from 'node:child_process';
 import peggy from 'peggy';
+import { describe, expect, it } from 'vitest';
 
 // Local imports
 import tspegjs from '../src/tspegjs';
