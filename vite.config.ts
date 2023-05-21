@@ -1,12 +1,16 @@
 import { defineConfig } from 'vitest/config';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import rollupPluginShebang from 'rollup-plugin-add-shebang';
 
 /**
  * The main configuration for Vite. This config includes
  * a custom plugin to pre-process `html` files when run in development mode.
  */
 export default defineConfig({
-  plugins: [viteTsconfigPaths()],
+  plugins: [
+    viteTsconfigPaths(),
+    rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' })
+  ],
   base: './',
   build: {
     outDir: 'dist',
