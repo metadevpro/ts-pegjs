@@ -1,6 +1,7 @@
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import rollupPluginShebang from 'rollup-plugin-add-shebang';
 import { defineConfig } from 'vitest/config';
+import dts from 'vite-plugin-dts';
 
 /**
  * The main configuration for Vite. This config includes
@@ -9,7 +10,10 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [
     viteTsconfigPaths(),
-    rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' })
+    rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' }),
+    dts({
+      exclude: ["./src/cli.ts"]
+    }),
   ],
   base: './',
   build: {

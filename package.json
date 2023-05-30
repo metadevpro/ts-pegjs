@@ -27,6 +27,7 @@
     "import": "./dist/tspegjs.mjs",
     "require": "./dist/tspegjs.js"
   },
+  "types": "./dist/tspegjs.d.ts",
   "files": [
     "LICENSE",
     "package.json",
@@ -55,6 +56,7 @@
     "rollup-plugin-add-shebang": "^0.3.1",
     "typescript": "^5.0.4",
     "vite": "^4.3.8",
+    "vite-plugin-dts": "^2.3.0",
     "vite-tsconfig-paths": "^4.2.0",
     "vitest": "^0.31.1"
   },
