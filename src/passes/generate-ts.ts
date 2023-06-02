@@ -25,7 +25,6 @@ export const generateParser: Config['passes']['generate'][number] = (
   });
   if (!options.tspegjs?.skipTypeComputation || options.tspegjs?.onlyGenerateGrammarTypes) {
     computedTypes = typeExtractor.getTypes({
-      allowedStartRules: options.allowedStartRules,
       typeOverrides: options.returnTypes
     });
   }

@@ -123,29 +123,12 @@ export class TypeExtractor {
   /**
    * Create typescript source code for the types in the grammar.
    *
-   * @param allowedStartRules - A rule or array of rules that are allowed as start rules for your grammar. These will always be exported
    * @param typeOverrides - An object whose keys are rule names and values are types. These will override any computed type. They can be full typescript expressions (e.g. `Foo | Bar`).
    */
   getTypes(options?: {
-    allowedStartRules?: string | string[];
     typeOverrides?: Record<string, string>;
   }) {
-    let { allowedStartRules, typeOverrides } = options || {};
-    if (typeof allowedStartRules === 'string') {
-      allowedStartRules = [allowedStartRules];
-    }
-    if (!allowedStartRules) {
-      // The default is for the allowed start rule to be the first rule in the grammar
-      allowedStartRules = [this.grammar.rules[0].name || 'UNKNOWN_RULE'];
-    }
-    const allowedStartRuleSet: Set<string> = new Set();
-    for (const ruleName of allowedStartRules) {
-      // We don't know if they passed in the CamelCase name of the rule or the
-      // regular name of the rule. Since `this.nameMap` contains circular references
-      // of CamelCase -> regular and regular -> CamelCase, it is safe to add them both.
-      allowedStartRuleSet.add(ruleName);
-      allowedStartRuleSet.add(this.nameMap.get(ruleName) || 'UNKNOWN_RULE');
-    }
+    let { typeOverrides } = options || {};
 
     const file = this.project.createSourceFile('__types__.ts', TYPES_HEADER, { overwrite: true });
 
@@ -186,15 +169,8 @@ export class TypeExtractor {
         });
       })
       .map((dec) => {
-        return file.addTypeAlias(dec);
+        return file.addTypeAlias(dec).setIsExported(true);
       });
-
-    for (const declaration of declarations) {
-      const name = declaration.getName();
-      if (allowedStartRuleSet.has(name)) {
-        declaration.setIsExported(true);
-      }
-    }
 
     pruneCircularReferences(file);
 
