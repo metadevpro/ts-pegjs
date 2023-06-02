@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.2.0
+
+- Added [#111](https://github.com/metadevpro/ts-pegjs/pull/112) Emit all type aliases as default by @ppodds
+
 ## Version 4.1.1
 
 - Fix [#109](https://github.com/metadevpro/ts-pegjs/pull/109) Add shebang to bash scripts in vite by @siefkenj
