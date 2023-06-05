@@ -1,6 +1,9 @@
-import { Project, ScriptTarget, ts } from 'ts-morph';
 import type { ast } from 'peggy';
 import * as peggy from 'peggy';
+import * as prettierPluginTypescript from 'prettier/parser-typescript';
+import prettier from 'prettier/standalone';
+import { Project, ScriptTarget, ts } from 'ts-morph';
+import { getUniqueName, isKeyword } from './get-unique-name';
 import {
   escapedString,
   formatUnionType,
@@ -8,11 +11,8 @@ import {
   isLiteral,
   wrapNodeInAsConstDeclaration
 } from './helpers';
-import prettier from 'prettier/standalone';
-import * as prettierPluginTypescript from 'prettier/parser-typescript';
-import { snakeToCamel } from './snake-to-camel';
-import { getUniqueName, isKeyword } from './get-unique-name';
 import { pruneCircularReferences } from './prune-circular-references';
+import { snakeToCamel } from './snake-to-camel';
 
 type Grammar = ast.Grammar;
 type Expression = ast.Expression;
@@ -125,9 +125,7 @@ export class TypeExtractor {
    *
    * @param typeOverrides - An object whose keys are rule names and values are types. These will override any computed type. They can be full typescript expressions (e.g. `Foo | Bar`).
    */
-  getTypes(options?: {
-    typeOverrides?: Record<string, string>;
-  }) {
+  getTypes(options?: { typeOverrides?: Record<string, string> }) {
     let { typeOverrides } = options || {};
 
     const file = this.project.createSourceFile('__types__.ts', TYPES_HEADER, { overwrite: true });
@@ -150,7 +148,7 @@ export class TypeExtractor {
 
     // XXX: For some reason adding all types at once with `file.addTypeAliases()` fails
     // while adding the types one-by-one succeeds...
-    const declarations = this.grammar.rules
+    const _declarations = this.grammar.rules
       .map((rule) => {
         if (typeOverrides?.[rule.name]) {
           return ensureCached({
