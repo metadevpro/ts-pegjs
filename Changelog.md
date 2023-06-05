@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.2.1
+
+- Added [#113](https://github.com/metadevpro/ts-pegjs/pull/113) Added missing type exports for: `TsPegjsParserBuildOptions` and `TsPegjsOptions` by @ppodds
+
 ## Version 4.2.0
 
 - Added [#111](https://github.com/metadevpro/ts-pegjs/pull/112) Emit all type aliases as default by @ppodds
