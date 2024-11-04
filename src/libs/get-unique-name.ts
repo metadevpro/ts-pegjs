@@ -116,6 +116,7 @@ const RESERVED_WORDS = new Set([
   'length',
   'location',
   'locationbar',
+  'Map',
   'Math',
   'menubar',
   'moveBy',
@@ -148,6 +149,7 @@ const RESERVED_WORDS = new Set([
   'scrollBy',
   'scrollTo',
   'self',
+  'Set',
   'setInterval',
   'setTimeout',
   'status',
@@ -162,8 +164,8 @@ const RESERVED_WORDS = new Set([
   'valueOf',
   'watch',
   'window',
-  // Typescript
 
+  // Typescript
   'as',
   'implements',
   'interface',
