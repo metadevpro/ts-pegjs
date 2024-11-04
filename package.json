@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "prettier": "^2.8.8",
-    "ts-morph": "^18.0.0"
+    "ts-morph": "^24.0.0"
   },
   "prettier": {
     "tabWidth": 2,
