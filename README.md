@@ -6,8 +6,6 @@ TS PEG.js is a TS code generation plugin for [peggy](https://www.npmjs.com/packa
 [![Known Vulnerabilities](https://snyk.io/test/github/metadevpro/ts-pegjs/badge.svg)](https://snyk.io/test/github/metadevpro/ts-pegjs)
 [![npm version](https://badge.fury.io/js/ts-pegjs.svg)](http://badge.fury.io/js/ts-pegjs)
 
-[![NPM](https://nodei.co/npm/ts-pegjs.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/ts-pegjs/)
-
 ## Requirements
 
 - [peggy](https://www.npmjs.com/package/peggy) (previous versions use: [pegjs](https://pegjs.org))
