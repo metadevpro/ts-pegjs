@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.2.2
+
+- Updated libs to remove vulnerable versions.
+
 ## Version 4.2.1
 
 - Added [#113](https://github.com/metadevpro/ts-pegjs/pull/113) Added missing type exports for: `TsPegjsParserBuildOptions` and `TsPegjsOptions` by @ppodds
@@ -38,19 +42,20 @@
 
 - _Breaking change:_ Default for errorName changes from `SyntaxError` to `PeggySyntaxError` from [#86](https://github.com/metadevpro/ts-pegjs/pull/86). Reason: better aligment with Peggy. Allow users to override `SyntaxError` native type.
 - _Breaking change:_ Exported Interfaces now does not have the `I` prefix from [#75](https://github.com/metadevpro/ts-pegjs/issues/75). Reason: follow TypeScript conventions for interfaces with no prefix.
-  |**Interface**|**Renamed to**|
-  |---|---|
-  |`IParseOptions`|`ParseOptions`|
-  |`ICached`|`Cached`|
-  |`ITraceEvent`|`TraceEvent`|
-  |`IEndExpectation`|`EndExpectation`|
-  |`IOtherExpectation`|`OtherExpectation`|
-  |`IAnyExpectation`|`AnyExpectation`|
-  |`IClassExpectation`|`ClassExpectation`|
-  |`IClassParts`|`ClassParts`|
-  |`ILiteralExpectation`|`LiteralExpectation`|
-  |`IFileRange`|`FileRange`|
-  |`IFilePosition`|`FilePosition`|
+
+  | **Interface**         | **Renamed to**       |
+  | --------------------- | -------------------- |
+  | `IParseOptions`       | `ParseOptions`       |
+  | `ICached`             | `Cached`             |
+  | `ITraceEvent`         | `TraceEvent`         |
+  | `IEndExpectation`     | `EndExpectation`     |
+  | `IOtherExpectation`   | `OtherExpectation`   |
+  | `IAnyExpectation`     | `AnyExpectation`     |
+  | `IClassExpectation`   | `ClassExpectation`   |
+  | `IClassParts`         | `ClassParts`         |
+  | `ILiteralExpectation` | `LiteralExpectation` |
+  | `IFileRange`          | `FileRange`          |
+  | `IFilePosition`       | `FilePosition`       |
 
 ## Version 2.2.1
 

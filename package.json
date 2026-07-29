@@ -35,11 +35,14 @@
   ],
   "scripts": {
     "clean": "rimraf --glob output/*.ts output/*.js",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
     "pretest": "npm run clean",
     "build": "vite build",
     "test": "vite build && vitest run",
     "lint": "eslint src/",
-    "release": "npm test && npm publish"
+    "ci": "npm run format:check && npm run lint && npm test",
+    "release": "npm run ci && npm publish"
   },
   "peerDependencies": {
     "peggy": "^3.0.2"
