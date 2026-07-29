@@ -48,6 +48,7 @@ export const generateParser: Config['passes']['generate'][number] = (
   // generate also won't be checked.
   annotateWithTsIgnore(code);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- `code`'s constructor isn't statically typed by peggy
   const SourceNode = code.constructor as any;
   const rootNode: SourceNode = new SourceNode();
 
@@ -183,7 +184,7 @@ function createParseFunctionType(
     throw new Error('Cannot determine the default starting rule.');
   }
 
-  let startRuleChain =
+  const startRuleChain =
     allowedStartRules
       .map(
         (rule) => `StartRule extends ${JSON.stringify(rule)} ? ${typeExtractor.nameMap.get(rule)} :`

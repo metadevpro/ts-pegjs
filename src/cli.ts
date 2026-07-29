@@ -9,7 +9,7 @@ import { TsPegjsParserBuildOptions } from './types';
 
 const generate = peggy.generate;
 
-let args = process.argv;
+const args = process.argv;
 args.shift();
 args.shift();
 
@@ -47,7 +47,7 @@ const trace = args.find((a) => a === '--trace') ? true : false;
 const cache = args.find((a) => a === '--cache') ? true : false;
 
 function showHelp() {
-  /* eslint-disable no-console */
+   
   console.log('tspegjs v.' + version + '      TS target for pegjs');
   console.log('Usage:');
   console.log(
@@ -86,7 +86,7 @@ function generateParser(
 
     // We must cast `opts` as a workaround for https://github.com/peggyjs/peggy/issues/403
     // Remove when issue fixed
-    let parser = generate(data.toString(), opts as ParserBuildOptions);
+    const parser = generate(data.toString(), opts as ParserBuildOptions);
     fs.writeFileSync(output_file, parser.toString());
   });
 }

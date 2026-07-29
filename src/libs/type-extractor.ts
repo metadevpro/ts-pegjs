@@ -1,7 +1,5 @@
 import type { ast } from 'peggy';
 import * as peggy from 'peggy';
-import * as prettierPluginTypescript from 'prettier/parser-typescript';
-import prettier from 'prettier/standalone';
 import { Project, ScriptTarget, ts } from 'ts-morph';
 import { getUniqueName, isKeyword } from './get-unique-name';
 import {
@@ -11,6 +9,7 @@ import {
   isLiteral,
   wrapNodeInAsConstDeclaration
 } from './helpers';
+import { formatTypeScriptSync } from './prettier-sync';
 import { pruneCircularReferences } from './prune-circular-references';
 import { snakeToCamel } from './snake-to-camel';
 
@@ -99,10 +98,7 @@ export class TypeExtractor {
   };
   formatter = (str: string) => {
     try {
-      return prettier.format(str, {
-        parser: 'typescript',
-        plugins: [prettierPluginTypescript]
-      });
+      return formatTypeScriptSync(str);
     } catch (e) {
       console.warn('Encountered error when formatting types with Prettier', e);
     }
@@ -126,7 +122,7 @@ export class TypeExtractor {
    * @param typeOverrides - An object whose keys are rule names and values are types. These will override any computed type. They can be full typescript expressions (e.g. `Foo | Bar`).
    */
   getTypes(options?: { typeOverrides?: Record<string, string> }) {
-    let { typeOverrides } = options || {};
+    const { typeOverrides } = options || {};
 
     const file = this.project.createSourceFile('__types__.ts', TYPES_HEADER, { overwrite: true });
 
@@ -425,7 +421,7 @@ export class TypeExtractor {
           const name = c.getTypeName();
           const identifier = name.getText();
           if (paramsToType.has(identifier)) {
-            c.replaceWithText(`(${paramsToType.get(identifier)})` || `ERROR`);
+            c.replaceWithText(`(${paramsToType.get(identifier) || 'ERROR'})`);
           }
         }
       });
