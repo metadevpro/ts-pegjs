@@ -37,7 +37,7 @@
     "clean": "rimraf --glob output/*.ts output/*.js",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
-    "pretest": "npm run clean",
+    "pretest": "node -e \"require('fs').mkdirSync('output', { recursive: true })\" && npm run clean",
     "build": "vite build",
     "test": "vite build && vitest run",
     "lint": "eslint src/",
