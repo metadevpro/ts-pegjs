@@ -52,7 +52,7 @@ describe('Build and lint samples', () => {
 
       it.concurrent(`Can compile \`ts\` file to \`js\``, async () => {
         const { stdout, stderr } = await exec(
-          `tsc --target es6 --module commonjs --declaration "${outTsName}"`
+          `tsc --target es6 --module commonjs --declaration --ignoreConfig "${outTsName}"`
         );
         if (stderr) {
           throw new Error(stderr);
@@ -83,7 +83,7 @@ describe('Build and lint samples', () => {
 
     it.concurrent(`Can compile \`ts\` file to \`js\``, async () => {
       const { stdout, stderr } = await exec(
-        `tsc --target es6 --module commonjs --declaration "${outTsName}"`
+        `tsc --target es6 --module commonjs --declaration --ignoreConfig "${outTsName}"`
       );
       if (stderr) {
         throw new Error(stderr);

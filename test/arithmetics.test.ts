@@ -44,7 +44,7 @@ describe('Can generate parser for `arithmetics.pegjs` with custom return type', 
 
   it(`Can compile \`ts\` file to \`js\``, async () => {
     const { stdout, stderr } = await exec(
-      `tsc --target es6 --module commonjs --declaration "${outTsName}"`
+      `tsc --target es6 --module commonjs --declaration --ignoreConfig "${outTsName}"`
     );
     if (stderr) {
       throw new Error(stderr);
@@ -106,7 +106,7 @@ describe('Can generate parser for `minimal.pegjs` with custom return type', () =
 
   it(`Can compile \`ts\` file to \`js\``, async () => {
     const { stdout, stderr } = await exec(
-      `tsc --target es6 --module commonjs --declaration "${outTsName}"`
+      `tsc --target es6 --module commonjs --declaration --ignoreConfig "${outTsName}"`
     );
     if (stderr) {
       throw new Error(stderr);

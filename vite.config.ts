@@ -1,4 +1,3 @@
-import viteTsconfigPaths from 'vite-tsconfig-paths';
 import rollupPluginShebang from 'rollup-plugin-add-shebang';
 import { defineConfig } from 'vitest/config';
 import dts from 'vite-plugin-dts';
@@ -8,8 +7,10 @@ import dts from 'vite-plugin-dts';
  * a custom plugin to pre-process `html` files when run in development mode.
  */
 export default defineConfig({
+  resolve: {
+    tsconfigPaths: true
+  },
   plugins: [
-    viteTsconfigPaths(),
     rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' }),
     dts({
       exclude: ["./src/cli.ts"]
