@@ -1,5 +1,5 @@
 {
-    "tspegjs": {
-        "customHeader": "// customHeader a\n// customHeader b"
-    }
+  "tspegjs": {
+    "customHeader": "// customHeader a\n// customHeader b"
+  }
 }

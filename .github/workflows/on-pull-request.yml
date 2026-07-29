@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [26.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -27,6 +27,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
+
+      - name: 'Format check'
+        run: npm run format:check
 
       - name: 'Lint'
         run: npm run lint

@@ -2,7 +2,7 @@ import type { Config } from 'peggy';
 import { generateParser } from './passes/generate-ts';
 import { TsPegjsParserBuildOptions } from './types';
 
-export * from "./types";
+export * from './types';
 
 export default {
   use(config: Config, options: TsPegjsParserBuildOptions) {

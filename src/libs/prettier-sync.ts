@@ -7,7 +7,9 @@ import { createSyncFn } from 'synckit';
 // `typeof __dirname` is safe even in ESM: `typeof` never throws on an unbound identifier.
 declare const __dirname: string | undefined;
 const currentDir =
-  typeof __dirname !== 'undefined' ? __dirname : fileURLToPath(new URL(/* @vite-ignore */ '.', import.meta.url));
+  typeof __dirname !== 'undefined'
+    ? __dirname
+    : fileURLToPath(new URL(/* @vite-ignore */ '.', import.meta.url));
 
 let syncFormat: ((code: string) => string) | undefined;
 

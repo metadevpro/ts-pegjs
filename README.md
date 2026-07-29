@@ -10,7 +10,7 @@ TS PEG.js is a TS code generation plugin for [peggy](https://www.npmjs.com/packa
 
 ## Requirements
 
--   [peggy](https://www.npmjs.com/package/peggy) (previous versions use: [pegjs](https://pegjs.org))
+- [peggy](https://www.npmjs.com/package/peggy) (previous versions use: [pegjs](https://pegjs.org))
 
 ## Installation
 
@@ -35,12 +35,12 @@ To generate a TS parser, pass to `pegjs.generate` ts-pegjs plugin and your gramm
 
 ```typescript
 var parser = pegjs.generate("start = ('a' / 'b')+", {
-    output: 'source',
-    format: 'commonjs',
-    plugins: [tspegjs],
-    tspegjs: {
-        customHeader: "// import lib\nimport { Lib } from 'mylib';"
-    }
+  output: 'source',
+  format: 'commonjs',
+  plugins: [tspegjs],
+  tspegjs: {
+    customHeader: "// import lib\nimport { Lib } from 'mylib';"
+  }
 });
 ```
 
@@ -48,24 +48,24 @@ The method will return source code of generated parser as a string.
 
 Supported options of `pegjs.generate`:
 
--   `cache` — if `true`, makes the parser cache results, avoiding exponential
-    parsing time in pathological cases but making the parser slower (default:
-    `false`). This is strongly recommended for big grammars
-    (like javascript.pegjs or css.pegjs in example folder)
--   `allowedStartRules` — rules the parser will be allowed to start parsing from
-    (default: the first rule in the grammar)
+- `cache` — if `true`, makes the parser cache results, avoiding exponential
+  parsing time in pathological cases but making the parser slower (default:
+  `false`). This is strongly recommended for big grammars
+  (like javascript.pegjs or css.pegjs in example folder)
+- `allowedStartRules` — rules the parser will be allowed to start parsing from
+  (default: the first rule in the grammar)
 
 ### Plugin options
 
 **Note:** Options in CLI mode are written in POSIX (long names as kebab-case) convention e.g. `--custom-header` but with camelcase on JavaScript e.g. `customHeader`.
 
--   `customHeader` — A string or an array of strings which are a valid TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports.
--   `customHeaderFile` — A header file to include.
--   `errorName` — The name of the exported internal error class to override. The default value from version 3.0.0 is `PeggySyntaxError`. Previous one was `SyntaxError`.
--   `returnTypes` — An object containing rule names as keys and a valid TS return type as string.
--   `skipTypeComputation` — Boolean. If `true`, `ts-pegjs` will not try to use TS to infer types based on your grammar rules.
--   `onlyGenerateGrammarTypes` — Boolean. If `true`, only types for your grammar rules (and no parser) will be generated. Cannot be used with `skipTypeComputation`.
--   `doNotCamelCaseTypes` — Boolean. By default type names for grammar rules are converted to CamelCase. If `true`, this conversion is not done and type names will match the casing of your grammar rules.
+- `customHeader` — A string or an array of strings which are a valid TS code to be injected on the header of the output file. E.g. provides a convenient place for adding library imports.
+- `customHeaderFile` — A header file to include.
+- `errorName` — The name of the exported internal error class to override. The default value from version 3.0.0 is `PeggySyntaxError`. Previous one was `SyntaxError`.
+- `returnTypes` — An object containing rule names as keys and a valid TS return type as string.
+- `skipTypeComputation` — Boolean. If `true`, `ts-pegjs` will not try to use TS to infer types based on your grammar rules.
+- `onlyGenerateGrammarTypes` — Boolean. If `true`, only types for your grammar rules (and no parser) will be generated. Cannot be used with `skipTypeComputation`.
+- `doNotCamelCaseTypes` — Boolean. By default type names for grammar rules are converted to CamelCase. If `true`, this conversion is not done and type names will match the casing of your grammar rules.
 
 ### Generating a Parser from CLI
 
@@ -87,15 +87,16 @@ peggy --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 
 ```json
 {
-    "tspegjs": {
-        "customHeader": "// import lib\nimport { Lib } from 'mylib';"
-    },
-    "returnTypes": {
-        "Integer": "number",
-        "Expression": "number",
-    }
+  "tspegjs": {
+    "customHeader": "// import lib\nimport { Lib } from 'mylib';"
+  },
+  "returnTypes": {
+    "Integer": "number",
+    "Expression": "number"
+  }
 }
 ```
+
 > For rules not listed in `returnTypes` object `any` type is declared by default.
 
 > Make sure to pass any additional CLI options, like `--extra-options-file` before the parameter `-o` as these will otherwise be treated as arguments to that one.
@@ -110,10 +111,10 @@ peggy --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 import { PeggySyntaxError, parse } from './arithmetics';
 
 try {
-    const sampleOutput = parse('my sample...');
+  const sampleOutput = parse('my sample...');
 } catch (ex: PeggySyntaxError) {
-    // Handle parsing error
-    // [...]
+  // Handle parsing error
+  // [...]
 }
 ```
 
@@ -125,8 +126,8 @@ try {
 
 Thanks to:
 
--   [David Majda](https://github.com/dmajda) for creating pegjs
--   [Elantcev Mikhail](https://github.com/Nordth) for providing the pegjs PHP plugin, inspiration on this one.
+- [David Majda](https://github.com/dmajda) for creating pegjs
+- [Elantcev Mikhail](https://github.com/Nordth) for providing the pegjs PHP plugin, inspiration on this one.
 
 ## License
 

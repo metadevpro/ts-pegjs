@@ -28,10 +28,7 @@ export function wrapNodeInAsConstDeclaration(node: Node<ts.Expression>) {
  */
 export function getEnclosingFunction(node: Node) {
   return node.getParentWhile((n) => !isFunctionLike(n))?.getParent() as
-    | FunctionDeclaration
-    | FunctionExpression
-    | ArrowFunction
-    | undefined;
+    FunctionDeclaration | FunctionExpression | ArrowFunction | undefined;
 }
 
 /** Returns whether a node is function-like */

@@ -1,16 +1,12 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {
-        "max-classes-per-file": false
-    },
-    "rulesDirectory": [],
-    "linterOptions": {
-        "exclude": [
-            "output/*d.ts"
-        ]
-    }
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "max-classes-per-file": false
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["output/*d.ts"]
+  }
 }

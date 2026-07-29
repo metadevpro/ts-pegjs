@@ -47,7 +47,6 @@ const trace = args.find((a) => a === '--trace') ? true : false;
 const cache = args.find((a) => a === '--cache') ? true : false;
 
 function showHelp() {
-   
   console.log('tspegjs v.' + version + '      TS target for pegjs');
   console.log('Usage:');
   console.log(

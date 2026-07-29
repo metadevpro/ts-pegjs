@@ -14,7 +14,7 @@ export default defineConfig({
   plugins: [
     rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' }),
     dts({
-      exclude: ["./src/cli.ts"]
+      exclude: ['./src/cli.ts']
     }),
     {
       // `prettier-sync.ts` loads this file directly as a worker thread at runtime
