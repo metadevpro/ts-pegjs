@@ -18,7 +18,7 @@ TS PEG.js is a TS code generation plugin for [peggy](https://www.npmjs.com/packa
 
 Installs ts-pegjs + peggy
 
-    $ npm install ts-pegjs
+    npm install ts-pegjs
 
 ## Usage
 
@@ -135,4 +135,4 @@ Thanks to:
 
 ---
 
-(c) 2017-2023, [Pedro J. Molina](https://github.com/pjmolina) at [metadev.pro](https://metadev.pro)
+(c) 2017-2026, [Pedro J. Molina](https://github.com/pjmolina) at [metadev.pro](https://metadev.pro)
