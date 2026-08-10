@@ -15,6 +15,10 @@ const exec = promisify(execNode);
 const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
 const PLUGIN_PATH = path.join(ROOT_DIR, packageJson.exports.require);
 const CLI_PATH = path.join(ROOT_DIR, packageJson.bin.tspegjs);
+// Invoke peggy's CLI script directly with `node` instead of `npx peggy`.
+// `npx` shells out through npm, and newer npm versions emit `npm notice run …`
+// lines on stderr even on success, which would trip up the `stderr` checks below.
+const PEGGY_CLI = path.join(ROOT_DIR, 'node_modules/peggy/bin/peggy.js');
 const OPTIONS_FILE = path.join(ROOT_DIR, 'test/genoptions2.json');
 const GRAMMAR_FILE = path.join(ROOT_DIR, 'examples/st.pegjs');
 const outTsName = path.join(ROOT_DIR, 'output/st2.ts');
@@ -23,7 +27,7 @@ describe('CLI Tests', () => {
   beforeEach(ensureCliIsBuilt);
   it(`Can import tspegjs as a Peggy plugin`, async () => {
     const { stdout, stderr } = await exec(
-      `npx peggy --plugin "${PLUGIN_PATH}" --extra-options-file "${OPTIONS_FILE}" --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o "${outTsName}" "${GRAMMAR_FILE}"`
+      `node "${PEGGY_CLI}" --plugin "${PLUGIN_PATH}" --extra-options-file "${OPTIONS_FILE}" --allowed-start-rules groupFile,templateFile,templateFileRaw,templateAndEOF -o "${outTsName}" "${GRAMMAR_FILE}"`
     );
     if (stderr) {
       throw new Error(stderr);
@@ -53,7 +57,7 @@ describe('CLI Tests', () => {
     {
       // Create the parser
       const { stdout, stderr } = await exec(
-        `npx peggy --plugin "${PLUGIN_PATH}" --dependency foo:./bar -o "${outTsName}" "${GRAMMAR_FILE}"`
+        `node "${PEGGY_CLI}" --plugin "${PLUGIN_PATH}" --dependency foo:./bar -o "${outTsName}" "${GRAMMAR_FILE}"`
       );
       if (stderr) {
         throw new Error(stderr);
