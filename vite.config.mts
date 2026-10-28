@@ -28,7 +28,15 @@ export default defineConfig({
     outDir: 'dist',
     minify: false,
     lib: { entry: ['./src/cli.ts', './src/tspegjs.ts'], formats: ['es', 'cjs'] },
-    rollupOptions: { external: [/^node:/, 'peggy', 'ts-morph', /^prettier/, 'synckit'] }
+    rollupOptions: {
+      external: [/^node:/, 'peggy', 'ts-morph', /^prettier/, 'synckit'],
+      onLog(level, log, handler) {
+        // `prettier-sync.ts` only reads `import.meta.url` when `__dirname` is missing (ESM),
+        // so emptying it in the CJS output is harmless.
+        if (log.code === 'EMPTY_IMPORT_META') return;
+        handler(level, log);
+      }
+    }
   },
   test: { globals: true, testTimeout: 25000 }
 });
