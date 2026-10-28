@@ -1,5 +1,4 @@
 import { copyFileSync } from 'node:fs';
-import rollupPluginShebang from 'rollup-plugin-add-shebang';
 import { defineConfig } from 'vitest/config';
 import dts from 'vite-plugin-dts';
 
@@ -12,7 +11,6 @@ export default defineConfig({
     tsconfigPaths: true
   },
   plugins: [
-    rollupPluginShebang({ include: ['**/cli.js', '**/cli.mjs'], shebang: '#!/usr/bin/env node' }),
     dts({
       exclude: ['./src/cli.ts']
     }),
