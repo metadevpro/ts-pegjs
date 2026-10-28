@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 4.2.3
+
+- Updated libs to remove vulnerable versions.
+
 ## Version 4.2.2
 
 - Updated libs to remove vulnerable versions.
