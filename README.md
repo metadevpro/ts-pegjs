@@ -97,6 +97,16 @@ peggy --plugin ./src/tspegjs --extra-options-file pegconfig.json -o examples/ari
 
 > For rules not listed in `returnTypes` object `any` type is declared by default.
 
+> Type inference assumes rules return the AST shape of what they match. A rule whose action returns something else, e.g. one that folds the matched sequence with `Array.prototype.reduce`, is inferred as the element/tuple type of that sequence, so give it a `returnTypes` override:
+>
+> ```
+> Expression = head:Term tail:(_ ("+" / "-") _ Term)* {
+>   return tail.reduce((acc, [, op, , t]) => (op === "+" ? acc + t : acc - t), head);
+> }
+> ```
+>
+> with `"returnTypes": { "Expression": "number" }`.
+
 > Make sure to pass any additional CLI options, like `--extra-options-file` before the parameter `-o` as these will otherwise be treated as arguments to that one.
 
 ## Using the Parser
